@@ -1,6 +1,14 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
+## To install 
+npm install
+## install following dependencies
+npm i firebase
+npm i mongoose
+npm i mongodb
+
+## You have to create your .env.locale file
 
 First, run the development server:
 
