@@ -3,13 +3,9 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./image.module.css";
 import "./global.css";
-import Login from "@/views/login/login";
+import Login from "@/views/login/Login"; // Ensure this matches the file path and case
 
-const IndexView = ({
-  params,
-}: {
-  params: { params: { children: React.ReactNode } };
-}) => {
+const IndexView = () => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -17,22 +13,22 @@ const IndexView = ({
 
   return (
     <>
-      <nav className={`${styles.nav}`}>
+      <nav className={styles.nav}>
         <div className="container mx-auto flex justify-between items-center">
           <Link
             href="#"
             className={`${styles.logos} text-black text-2xl font-bold`}
           >
-            <img className={styles.logo} src="/edupay.png" alt="" />
+            <img className={styles.logo} src="/edupay.png" alt="EduFee Logo" />
             <strong className={styles.edupay}>EduFee</strong>
           </Link>
           <div className="space-x-4">
-            <Link href="" className={`${styles.custom_underline} text-black `}>
+            <Link href="/" className={`${styles.custom_underline} text-black`}>
               Home
             </Link>
             <Link
               href="#contact"
-              className={`${styles.custom_underline} text-black `}
+              className={`${styles.custom_underline} text-black`}
             >
               Contact
             </Link>
@@ -48,7 +44,7 @@ const IndexView = ({
       <div className={styles.content}></div>
 
       {/* Dialog Component */}
-      <Login />
+      <Login open={open} handleClose={handleClose} />
     </>
   );
 };
