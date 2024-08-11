@@ -1,14 +1,23 @@
+"use client";
+import { useState } from "react";
 import Link from "next/link";
 import styles from "./image.module.css";
 import "./global.css";
+import Login from "@/views/login/login";
+
 const IndexView = ({
   params,
 }: {
   params: { params: { children: React.ReactNode } };
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <>
-      <nav className={`${styles.nav} `}>
+      <nav className={`${styles.nav}`}>
         <div className="container mx-auto flex justify-between items-center">
           <Link
             href="#"
@@ -27,17 +36,21 @@ const IndexView = ({
             >
               Contact
             </Link>
-            <Link
-              href="/login"
-              className={`${styles.custom_underline} text-black `}
+            <button
+              className={`${styles.custom_underline} text-black bg-transparent border-none cursor-pointer`}
+              onClick={handleOpen}
             >
               Login
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
       <div className={styles.content}></div>
+
+      {/* Dialog Component */}
+      <Login />
     </>
   );
 };
+
 export default IndexView;

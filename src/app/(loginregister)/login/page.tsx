@@ -1,11 +1,15 @@
+"use client";
 import Login from "@/views/login/login";
-export default function LoginPage(){
+import { useState } from "react";
 
-return (
+export default function LoginPage() {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  return (
     <>
-        <Login/>
+      <Login open={open} handleClose={handleClose} />
     </>
-
-);
-
+  );
 }
