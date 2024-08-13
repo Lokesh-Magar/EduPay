@@ -3,13 +3,18 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./image.module.css";
 import "./global.css";
-import Login from "@/views/login/Login"; // Ensure this matches the file path and case
+import Login from "../views/login/login";
+import Register from "../views/register/register";
 
 const IndexView = () => {
-  const [open, setOpen] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpenLogin = () => setOpenLogin(true);
+  const handleCloseLogin = () => setOpenLogin(false);
+
+  const handleOpenRegister = () => setOpenRegister(true);
+  const handleCloseRegister = () => setOpenRegister(false);
 
   return (
     <>
@@ -34,7 +39,7 @@ const IndexView = () => {
             </Link>
             <button
               className={`${styles.custom_underline} text-black bg-transparent border-none cursor-pointer`}
-              onClick={handleOpen}
+              onClick={handleOpenLogin}
             >
               Login
             </button>
@@ -43,8 +48,22 @@ const IndexView = () => {
       </nav>
       <div className={styles.content}></div>
 
-      {/* Dialog Component */}
-      <Login open={open} handleClose={handleClose} />
+      {/* Login Dialog */}
+      <Login
+        open={openLogin}
+        handleClose={handleCloseLogin}
+        openRegisterDialog={() => {
+          handleCloseLogin();
+          handleOpenRegister();
+        }}
+      />
+
+      {/* Register Dialog */}
+      <Register
+        open={openRegister}
+        handleClose={handleCloseRegister}
+        openLoginDialog={handleOpenLogin}
+      />
     </>
   );
 };

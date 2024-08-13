@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -9,7 +8,6 @@ import {
   Typography,
   TextField,
   Button,
-  Divider,
   Stack,
   IconButton,
   InputAdornment,
@@ -23,22 +21,29 @@ import KeySharpIcon from "@mui/icons-material/KeySharp";
 import MailSharpIcon from "@mui/icons-material/MailSharp";
 import Image from "next/image";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
+import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
 
 interface LoginProps {
   title?: string;
   subtext?: JSX.Element | JSX.Element[];
   open?: boolean;
   handleClose?: () => void;
+  openRegisterDialog?: () => void; // New prop for opening the Register dialog
 }
 
-const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
+const Login: React.FC<LoginProps> = ({
+  title,
+  subtext,
+  open,
+  handleClose,
+  openRegisterDialog,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
-  // Determine if the component should render as a Dialog or a standalone page
   const isDialog = open !== undefined && handleClose !== undefined;
 
   return isDialog ? (
@@ -46,10 +51,18 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
       open={open}
       onClose={handleClose}
       fullWidth
-      PaperProps={{ style: { width: "25%", height: "81%" } }}
+      PaperProps={{
+        style: { width: "25%", height: "81%", position: "relative" },
+      }}
     >
       <DialogTitle>
-        <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          mb={2}
+          position="relative"
+        >
           <Image src="/edupay.png" alt="EduFee Logo" width={140} height={140} />
           <Typography
             variant="h6"
@@ -58,6 +71,14 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
           >
             {title || "Login"}
           </Typography>
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleClose}
+            style={{ position: "absolute", top: 0, right: 0 }}
+          >
+            <CloseIcon />
+          </IconButton>
         </Box>
       </DialogTitle>
       <DialogContent>
@@ -131,7 +152,8 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
             </Typography>
           </Stack>
 
-          <Divider sx={{ my: 2 }} />
+          {/* Remove Divider */}
+          {/* <Divider sx={{ my: 2 }} /> */}
 
           <Stack spacing={2}>
             <Button
@@ -148,9 +170,10 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
                 New to EduFee?{" "}
                 <Typography
                   component="a"
-                  href="/register"
+                  href="#"
                   color="primary"
                   fontWeight="500"
+                  onClick={openRegisterDialog} // Open Register dialog
                 >
                   Sign Up
                 </Typography>
@@ -159,11 +182,6 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
           </Stack>
         </Stack>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="secondary">
-          Cancel
-        </Button>
-      </DialogActions>
     </Dialog>
   ) : (
     <Box
@@ -252,7 +270,6 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
               Forgot Password?
             </Typography>
           </Stack>
-          <Divider sx={{ my: 2 }} />
           <Stack spacing={2}>
             <Button
               color="primary"
@@ -268,9 +285,10 @@ const Login: React.FC<LoginProps> = ({ title, subtext, open, handleClose }) => {
                 New to EduFee?{" "}
                 <Typography
                   component="a"
-                  href="/signup"
+                  href="#"
                   color="primary"
                   fontWeight="500"
+                  onClick={openRegisterDialog}
                 >
                   Sign Up
                 </Typography>
