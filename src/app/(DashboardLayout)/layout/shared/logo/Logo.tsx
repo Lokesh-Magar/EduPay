@@ -11,8 +11,15 @@ const LinkStyled = styled(Link)(() => ({
 
 const Logo = () => {
   return (
-    <LinkStyled href="/">
-      <Image src="/edupay.png" alt="logo" height={70} width={174} priority />
+    <LinkStyled href="#">
+      <Image
+        src="/edupay.png"
+        alt="logo"
+        height={100}
+        width={100}
+        priority
+        style={{ marginTop: "20%" }}
+      />
     </LinkStyled>
   );
 };

@@ -1,3 +1,5 @@
+// src/views/login/login.tsx
+"use client";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -21,13 +23,13 @@ import KeySharpIcon from "@mui/icons-material/KeySharp";
 import MailSharpIcon from "@mui/icons-material/MailSharp";
 import Image from "next/image";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
-import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
+import CloseIcon from "@mui/icons-material/Close";
 
 interface LoginProps {
   title?: string;
   subtext?: JSX.Element | JSX.Element[];
-  open?: boolean;
-  handleClose?: () => void;
+  open: boolean;
+  handleClose: () => void;
   openRegisterDialog?: () => void; // New prop for opening the Register dialog
 }
 
@@ -44,9 +46,7 @@ const Login: React.FC<LoginProps> = ({
     setShowPassword((prevState) => !prevState);
   };
 
-  const isDialog = open !== undefined && handleClose !== undefined;
-
-  return isDialog ? (
+  return (
     <Dialog
       open={open}
       onClose={handleClose}
@@ -152,9 +152,6 @@ const Login: React.FC<LoginProps> = ({
             </Typography>
           </Stack>
 
-          {/* Remove Divider */}
-          {/* <Divider sx={{ my: 2 }} /> */}
-
           <Stack spacing={2}>
             <Button
               color="primary"
@@ -183,121 +180,6 @@ const Login: React.FC<LoginProps> = ({
         </Stack>
       </DialogContent>
     </Dialog>
-  ) : (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      p={2}
-    >
-      <Box
-        sx={{
-          width: "100%",
-          maxWidth: "500px",
-          p: 4,
-          boxShadow: 9,
-          borderRadius: 1,
-          bgcolor: "background.paper",
-        }}
-      >
-        <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-          <Logo />
-        </Box>
-        <Typography variant="h6" textAlign="center" mb={2}>
-          {title || "Login"}
-        </Typography>
-        <Box
-          component="form"
-          sx={{ "& > :not(style)": { m: 1, width: "100%" } }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            type="email"
-            id="email"
-            label="Email"
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <MailSharpIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            type={showPassword ? "text" : "password"}
-            id="password"
-            label="Password"
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <KeySharpIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={handleTogglePasswordVisibility}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Stack
-            justifyContent="space-between"
-            direction="row"
-            alignItems="center"
-            my={2}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Remember this Device"
-              />
-            </FormGroup>
-            <Typography
-              component="a"
-              href="/"
-              fontWeight="500"
-              sx={{ textDecoration: "none", color: "primary.main" }}
-            >
-              Forgot Password?
-            </Typography>
-          </Stack>
-          <Stack spacing={2}>
-            <Button
-              color="primary"
-              variant="contained"
-              size="large"
-              fullWidth
-              type="submit"
-            >
-              Sign In
-            </Button>
-            <Box textAlign="center">
-              <Typography variant="body2">
-                New to EduFee?{" "}
-                <Typography
-                  component="a"
-                  href="#"
-                  color="primary"
-                  fontWeight="500"
-                  onClick={openRegisterDialog}
-                >
-                  Sign Up
-                </Typography>
-              </Typography>
-            </Box>
-          </Stack>
-        </Box>
-      </Box>
-    </Box>
   );
 };
 

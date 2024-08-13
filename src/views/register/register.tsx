@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Box,
   Typography,
@@ -176,6 +177,10 @@ const Register: React.FC<RegisterProps> = ({
                 }}
               />
             </Box>
+
+            {/* Remove Divider */}
+            {/* <Divider sx={{ my: 2 }} /> */}
+
             <Stack spacing={2}>
               <Button
                 color="primary"
