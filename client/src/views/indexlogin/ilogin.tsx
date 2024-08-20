@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { Grid, Box, Card, Stack, Typography, TextField, InputAdornment, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
+import { Grid, Box, Card, Stack, Typography, TextField, InputAdornment, FormGroup, FormControlLabel, Checkbox, CircularProgress, Container } from "@mui/material";
 // components
 
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
@@ -12,15 +12,59 @@ import KeySharpIcon from "@mui/icons-material/KeySharp";
 import MailSharpIcon from "@mui/icons-material/MailSharp";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import { useForm } from 'react-hook-form';
+import axios from "axios";
 
 const ILogin = () => {
     const [showPassword, setShowPassword] = useState(false);
 
+    
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState(null);
+  
+    
+
     const handleTogglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
     };
-  return (
 
+
+    
+
+    const onSubmit = async (data) => {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
+
+      console.log(data);
+      
+      try {
+          const response = await axios.post('http://localhost:3000/api/auth/signin', data);
+          console.log(response);
+          setSuccess(response.data.message);
+       
+      
+
+          
+          
+      } catch (err) {
+          if (err.response) {
+              setError(err.response.data.message || 'An error occurred');
+          } else {
+              setError('An error occurred');
+          }
+      } finally {
+          setLoading(false);
+      }
+  };
+
+
+
+  return (
+    <Container component='main'>
     <Box
     sx={{
       position: "relative",
@@ -73,8 +117,13 @@ const ILogin = () => {
             <TextField
               type="email"
               id="email"
-              label="Email" // Fixed the typo here
-              variant="outlined"
+              label="Email"
+              className="email"
+              autoComplete="email"
+              autoFocus
+              {...register('email', { required: 'Email is required' })}
+              error={!!errors.username}
+              helperText={errors.email?.message}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -85,9 +134,11 @@ const ILogin = () => {
             />
             <TextField
               type={showPassword ? "text" : "password"} // Updated to show/hide password
-              id="password" // Changed to unique id
-              label="Password"
-              variant="outlined"
+              id="password"
+                className="password"
+                autoComplete="password"
+                autoFocus
+                {...register('password',{required:'Password is required.'})}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -136,16 +187,17 @@ const ILogin = () => {
       </Stack>
 
       <Box>
+      {error && <Typography color="error">{error}</Typography>}
+      {success && <Typography color="success">{success}</Typography>}
         <Button
-          color="primary"
-          variant="contained"
-          size="large"
-          fullWidth
-          component={Link}
-          href="/" // Change to the correct route for form submission if needed
-          type="submit"
+             color="primary"
+             variant="contained"
+             size="large"
+             type='submit'
+             onClick={handleSubmit(onSubmit)}
+             fullWidth
         >
-         Sign In
+         Sign In {loading ? <CircularProgress size={24} /> : ''}
         </Button>
       </Box>
 
@@ -191,7 +243,7 @@ const ILogin = () => {
       </Grid>
     </Grid>
     </Box>
-  
+    </Container>
   );
 };
 export default ILogin;

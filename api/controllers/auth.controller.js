@@ -12,7 +12,7 @@ export const signup = async (req, res, next) => {
     !password ||
     username === '' ||
     email === '' ||
-    phone=== ''||
+    phone=== 0||
     password === ''
   ) {
     next(errorHandler(400, 'All fields are required'));
@@ -64,7 +64,15 @@ export const signin = async (req, res, next) => {
       .cookie('access_token', token, {
         httpOnly: true,
       })
-      .json(rest);
+      .json(rest)
+
+    res.cookie('access_token', token, {
+      httpOnly: true, // Prevents JavaScript from accessing the cookie
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      maxAge: 3600000, // 1 hour
+    })
+    res.status(302).redirect("http://localhost:3001/dashboard");
+
   } catch (error) {
     next(error);
   }
