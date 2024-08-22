@@ -11,6 +11,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  CircularProgress,
 } from "@mui/material";
 import React, { useState } from "react";
 import Image from "next/image";
@@ -21,6 +22,9 @@ import MailSharpIcon from "@mui/icons-material/MailSharp";
 import SentimentSatisfiedAltSharpIcon from "@mui/icons-material/SentimentSatisfiedAltSharp";
 import ContactPhoneSharpIcon from "@mui/icons-material/ContactPhoneSharp";
 import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 interface RegisterProps {
   title?: string;
@@ -36,12 +40,41 @@ const Register: React.FC<RegisterProps> = ({
   openLoginDialog, // Add this prop
 }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
 
-  const handleTogglePasswordVisibility = () => {
-    setShowPassword((prevState) => !prevState);
-  };
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState(null);
+  
+    const handleTogglePasswordVisibility = () => {
+      setShowPassword((prevState) => !prevState);
+    };
 
+const router = useRouter();
+const onSubmit = async (data:any) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    console.log(data);
+    
+    try {
+        const response = await axios.post('/auth/signup', data);
+        console.log(response.data);
+        setSuccess(response.data.message);
+        
+        router.push('/login')
+    } catch (err:any) {
+        if (err.response) {
+            setError(err.response.data.message || 'An error occurred');
+        } else {
+            setError('An error occurred');
+        }
+    } finally {
+        setLoading(false);
+    }
+};
   return (
     <Dialog
       open={open}
@@ -98,9 +131,18 @@ const Register: React.FC<RegisterProps> = ({
               autoComplete="off"
             >
               <TextField
-                type="text"
-                id="username"
-                label="Username"
+             margin="normal"
+             fullWidth
+             id="username"
+             label="Username"
+             className="username"
+             
+             autoComplete="username"
+             autoFocus
+             {...register('username', { required: 'Username is required' })}
+             error={!!errors.username}
+            //  helperText={errors.username?.message}
+            
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -110,10 +152,19 @@ const Register: React.FC<RegisterProps> = ({
                   ),
                 }}
               />
+
               <TextField
-                type="email"
-                id="email"
-                label="Email"
+              margin="normal"
+              fullWidth
+              id="email"
+              label="Email"
+              className="email"
+              autoComplete="email"
+              autoFocus
+              {...register('email', { required: 'Email is required' })}
+              error={!!errors.username}
+              // helperText={errors.email?.message}
+              
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -125,38 +176,51 @@ const Register: React.FC<RegisterProps> = ({
               />
               <TextField
                 variant="outlined"
-                placeholder="Enter your number"
+                id="phone"
+                className="phone"
                 label="Phone Number"
-                value={phoneNumber}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
-                  setPhoneNumber(value);
-                }}
+                placeholder="Enter your number"
+                autoComplete="phone"
+                // helperText={errors.phone?.message}
+                autoFocus
+                {...register('phone',{required:'Phone number is required.'})}
+                
+                
+                // onChange={/*(e) => {
+                //   const value = e.target.value.replace(/[^0-9]/g, ""); // It will allow only numbers
+                //   setFormData(value);
+                // }*/onChanged}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <ContactPhoneSharpIcon />
+                      <ContactPhoneSharpIcon /> {/* Phone icon */}
                       <span style={{ marginLeft: "8px" }}>+977</span>
+                      {/* Country code with space */}
                     </InputAdornment>
                   ),
                   endAdornment: (
                     <InputAdornment position="end">
                       <img
-                        src="/nepal.png"
+                        src="/nepal.png" // Local image path to the Nepal flag
                         alt="Nepal Flag"
-                        style={{ width: "20px", margin: "0 4px" }}
+                        style={{ width: "20px", margin: "0 4px" }} // Adjust size and margins
                       />
                     </InputAdornment>
                   ),
                   inputProps: {
-                    maxLength: 10, // 10-digit phone number
+                    maxLength: 10, //   10-digit phone number
                   },
                 }}
               />
               <TextField
                 type={showPassword ? "text" : "password"}
-                id="password"
                 label="Password"
+                id="password"
+                className="password"
+                autoComplete="password"
+                autoFocus
+                {...register('password',{required:'Password is required.'})}
+                
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -175,28 +239,32 @@ const Register: React.FC<RegisterProps> = ({
                     </InputAdornment>
                   ),
                 }}
-              />
+                // helperText={errors.password?.message}
+             />
             </Box>
 
-            {/* Remove Divider */}
-            {/* <Divider sx={{ my: 2 }} /> */}
+            {/* Remove Divider /}
+            {/ <Divider sx={{ my: 2 }} /> */}
 
             <Stack spacing={2}>
+            {error && <Typography color="error">{error}</Typography>}
+            {success && <Typography color="success">{success}</Typography>}
               <Button
                 color="primary"
                 variant="contained"
                 size="large"
                 fullWidth
                 type="submit"
+                onClick={handleSubmit(onSubmit)}
               >
-                Sign Up
+                Sign Up {loading ? <CircularProgress size={24} /> : ''}
               </Button>
               <Box textAlign="center">
                 <Typography variant="body2">
                   Already have an account?{" "}
                   <Typography
                     component="a"
-                    href="#"
+                  
                     color="primary"
                     fontWeight="500"
                     onClick={() => {

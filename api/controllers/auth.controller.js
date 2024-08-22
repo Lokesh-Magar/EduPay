@@ -45,6 +45,7 @@ export const signin = async (req, res, next) => {
 
   try {
     const validUser = await User.findOne({ email });
+    
     if (!validUser) {
       return next(errorHandler(404, 'User not found'));
     }
@@ -61,17 +62,11 @@ export const signin = async (req, res, next) => {
 
     res
       .status(200)
-      .cookie('access_token', token, {
-        httpOnly: true,
-      })
+      .cookie('access_token', token, )
       .json(rest)
 
-    res.cookie('access_token', token, {
-      httpOnly: true, // Prevents JavaScript from accessing the cookie
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      maxAge: 3600000, // 1 hour
-    })
-    res.status(302).redirect("http://localhost:3001/dashboard");
+    
+    
 
   } catch (error) {
     next(error);

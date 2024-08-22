@@ -1,0 +1,9 @@
+.cards {
+    box-shadow: 0 0 10px 10px rgb(59, 243, 3) !important;
+  }
+  
+  .cross {
+    margin-left: 90%;
+    margin-top: -60%;
+    color: black;
+  }

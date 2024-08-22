@@ -16,6 +16,10 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Container,
+  Card,
+  Grid,
+  CircularProgress,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -24,6 +28,10 @@ import MailSharpIcon from "@mui/icons-material/MailSharp";
 import Image from "next/image";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import CloseIcon from "@mui/icons-material/Close";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import Link from "next/link";
 
 interface LoginProps {
   title?: string;
@@ -42,17 +50,52 @@ const Login: React.FC<LoginProps> = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const router = useRouter()
+
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState(null);
+
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  const onSubmit = async (data:any) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    console.log(data);
+    
+    try {
+        const response = await axios.post('/auth/signin', data);
+        console.log(response);
+        setSuccess(response.data.message);
+
+        
+        router.push('/dashboard')
+ 
+    } catch (err:any) {
+        if (err.response) {
+            setError(err.response.data.message || 'An error occurred');
+        } else {
+            setError("An error occurred");
+        }
+    } finally {
+        setLoading(false);
+    }
+};
+
+
   return (
+    
     <Dialog
       open={open}
       onClose={handleClose}
       fullWidth
       PaperProps={{
-        style: { width: "25%", height: "81%", position: "relative" },
+        style: { width: "25%", height: "70%", position: "relative" },
       }}
     >
       <DialogTitle>
@@ -81,8 +124,10 @@ const Login: React.FC<LoginProps> = ({
           </IconButton>
         </Box>
       </DialogTitle>
+      
       <DialogContent>
         {subtext && <Box mb={2}>{subtext}</Box>}
+        
         <Stack spacing={2}>
           <Box mt="20px">
             <Box
@@ -91,45 +136,51 @@ const Login: React.FC<LoginProps> = ({
               noValidate
               autoComplete="off"
             >
+               <TextField
+              type="email"
+              id="email"
+              label="Email"
+              className="email"
+              autoComplete="email"
+              autoFocus
+              {...register('email', { required: 'Email is required' })}
+              error={!!errors.username}
+              helperText={errors.email?.message}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailSharpIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
               <TextField
-                type="email"
-                id="email"
-                label="Email"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <MailSharpIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                type={showPassword ? "text" : "password"}
-                id="password"
-                label="Password"
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <KeySharpIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleTogglePasswordVisibility}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              type={showPassword ? "text" : "password"} // Updated to show/hide password
+              id="password"
+                className="password"
+                autoComplete="password"
+                autoFocus
+                {...register('password',{required:'Password is required.'})}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <KeySharpIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleTogglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
             </Box>
           </Box>
-
           <Stack
             justifyContent="space-between"
             direction="row"
@@ -151,7 +202,8 @@ const Login: React.FC<LoginProps> = ({
               Forgot Password?
             </Typography>
           </Stack>
-
+          {error && <Typography color="error">{error}</Typography>}
+          {success && <Typography color="success">{success}</Typography>}
           <Stack spacing={2}>
             <Button
               color="primary"
@@ -159,15 +211,16 @@ const Login: React.FC<LoginProps> = ({
               size="large"
               fullWidth
               type="submit"
+              onClick={handleSubmit(onSubmit)}
             >
-              Sign In
+              Sign In {loading ? <CircularProgress size={24} /> : ''}
             </Button>
             <Box textAlign="center">
               <Typography variant="body2">
                 New to EduFee?{" "}
                 <Typography
                   component="a"
-                  href="#"
+                  
                   color="primary"
                   fontWeight="500"
                   onClick={openRegisterDialog} // Open Register dialog
@@ -179,7 +232,8 @@ const Login: React.FC<LoginProps> = ({
           </Stack>
         </Stack>
       </DialogContent>
-    </Dialog>
+          </Dialog>
+  
   );
 };
 

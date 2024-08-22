@@ -5,7 +5,7 @@ const nextConfig = {
     async rewrites(){
     return [
       {
-        source: '/api/:path*',
+        source: '/:path*',
         destination: 'http://localhost:3000/api/:path*', // Proxy to backend
       },
   ]

@@ -1,17 +1,20 @@
 "use client";
 import { Grid, Box, Card, Typography, Stack, Button, InputAdornment, IconButton, TextField, Container, CircularProgress } from "@mui/material";
-import Link from "next/link";
-import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
+
 import { useState } from "react";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { title } from "process";
+
 import KeySharpIcon from "@mui/icons-material/KeySharp";
 import MailSharpIcon from "@mui/icons-material/MailSharp";
 import SentimentSatisfiedAltSharpIcon from "@mui/icons-material/SentimentSatisfiedAltSharp";
 import ContactPhoneSharpIcon from "@mui/icons-material/ContactPhoneSharp";
 import axios from "axios";
 import { useForm } from 'react-hook-form';
+import { Router } from "express";
+import { useRouter } from "next/navigation";
+import styles from '../../app/Form.module.css'
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
+import Image from "next/image";
 
 const IRegister:React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -26,42 +29,13 @@ const IRegister:React.FC = () => {
       setShowPassword((prevState) => !prevState);
     };
 
-//     const [formData, setFormData] = useState({
-//       username: '',
-//       email: '',
-//       phone:0,
-//       password: ''
-//   });
+    const handleClose = () => {
+      window.location.href = "/";
+    };
 
-//   const {username,email,phone,password}= formData;
+    const router = useRouter()
 
-//   const onChanged = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-// };
-
-//   const onSubmitted = async (e) => {
-//     e.preventDefault();
-//     try {
-//         const res = await axios.post('/api/auth/signup', formData);
-//         console.log(res.data);
-//     } catch (err) {
-//         if (err.response) {
-//             // Server responded with a status code outside of the 2xx range
-//             console.error('Response data:', err.response.data);
-//             console.error('Response status:', err.response.status);
-//             console.error('Response headers:', err.response.headers);
-//         } else if (err.request) {
-//             // Request was made but no response was received
-//             console.error('Request data:', err.request);
-//         } else {
-//             // Something went wrong setting up the request
-//             console.error('Error message:', err.message);
-//         }
-//         console.error('Error config:', err.config);
-//     }
-// };
-
-const onSubmit = async (data) => {
+const onSubmit = async (data:any) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -69,14 +43,16 @@ const onSubmit = async (data) => {
     console.log(data);
     
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/signup', data);
+        const response = await axios.post('/auth/signup', data);
         console.log(response.data);
         setSuccess(response.data.message);
-    } catch (err) {
+        router.push('/')
+        
+    } catch (err:any) {
         if (err.response) {
             setError(err.response.data.message || 'An error occurred');
         } else {
-            setError('An error occurred');
+            setError(err.response.data.message('An error occurred'));
         }
     } finally {
         setLoading(false);
@@ -85,7 +61,7 @@ const onSubmit = async (data) => {
 
 
 return(
-  <Container component="main">
+  
     <Box
       sx={{
         position: "relative",
@@ -116,19 +92,39 @@ return(
           justifyContent="center"
           alignItems="center"
         >
-          <Card
+          <Card className={styles.cards}
             elevation={9}
-            sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
+            sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px", boxShadow:'none' }}
           >
             <Box display="flex" alignItems="center" justifyContent="center">
              
-            <Logo />
+            <Image
+                src="/edupay.png"
+                alt="EduFee Logo"
+                width={140}
+                height={140}
+                style={{ marginTop: "-7%" }}
+              />
               
             </Box>
+
+            <Button onClick={handleClose} className={styles.cross}>
+              <CloseSharpIcon />
+            </Button>
+            <h2
+              style={{
+                marginBottom: "5%",
+                marginLeft: "3%",
+                fontSize: "1.5em",
+                fontWeight: "bold",
+              }}
+            >
+              Register
+            </h2>
         
       <Box>
         <Stack mb={3}>
-          <Box mt="45px">
+          <Box >
             <Box
               component="form"
               sx={{
@@ -150,7 +146,7 @@ return(
              autoFocus
              {...register('username', { required: 'Username is required' })}
              error={!!errors.username}
-             helperText={errors.username?.message}
+            //  helperText={errors.username?.message}
             
                 variant="outlined"
                 InputProps={{
@@ -171,7 +167,7 @@ return(
               autoFocus
               {...register('email', { required: 'Email is required' })}
               error={!!errors.username}
-              helperText={errors.email?.message}
+              // helperText={errors.email?.message}
               
                 variant="outlined"
                 InputProps={{
@@ -189,7 +185,7 @@ return(
                 label="Phone Number"
                 placeholder="Enter your number"
                 autoComplete="phone"
-                helperText={errors.phone?.message}
+                // helperText={errors.phone?.message}
                 autoFocus
                 {...register('phone',{required:'Phone number is required.'})}
                 
@@ -248,7 +244,7 @@ return(
                     </InputAdornment>
                   ),
                 }}
-                helperText={errors.password?.message}
+                // helperText={errors.password?.message}
              />
             </Box>
           </Box>
@@ -262,47 +258,33 @@ return(
           type='submit'
           onClick={handleSubmit(onSubmit)}
           fullWidth >
-          Sign Up 
+          Sign Up {loading ? <CircularProgress size={24} /> : ''}
         </Button>
-        {loading ? <CircularProgress size={24} /> : ''}
+        <Box textAlign="center">
+                <Typography variant="body2"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              marginTop="5%">
+                  Already have an account?{" "}
+                  <Typography
+                    component="a"
+                    href="/login"
+                    color="primary"
+                    fontWeight="500"
+                    
+                  >
+                    Sign In
+                  </Typography>
+                </Typography>
+              </Box>
+        
       </Box>
           </Card>
         </Grid>
       </Grid>
-    </Box></Container>
-    // <form onSubmit={onSubmit}>
-    //         <input
-    //             type="text"
-    //             name="username"
-    //             value={username}
-    //             onChange={onChanged}
-    //             placeholder="Name"
-    //         />
-    //         <input
-    //             type="email"
-    //             name="email"
-    //             value={email}
-    //             onChange={onChanged}
-    //             placeholder="Email"
-    //         />
-    //         <input 
-    //             type="number"
-    //             name="phone"
-    //             value={phone}
-    //             onChange={onChanged}
-    //             placeholder="Phone Number"
-
-    //         />
-    //         <input
-    //             type="password"
-    //             name="password"
-    //             value={password}
-    //             onChange={onChanged}
-    //             placeholder="Password"
-    //         />
-    //         <button type="submit">Register</button>
-    //     </form>
-  
+    </Box>
+    
 )
 };
 

@@ -21,7 +21,7 @@ const IndexView = () => {
       <nav className={styles.nav}>
         <div className="container mx-auto flex justify-between items-center">
           <Link
-            href="#"
+            href="/"
             className={`${styles.logos} text-black text-2xl font-bold`}
           >
             <img className={styles.logo} src="/edupay.png" alt="EduFee Logo" />
@@ -32,7 +32,7 @@ const IndexView = () => {
               Home
             </Link>
             <Link
-              href="#contact"
+              href="/"
               className={`${styles.custom_underline} text-black`}
             >
               Contact

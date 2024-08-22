@@ -36,27 +36,11 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000!');
-});
+
 //Routes
 app.use(express.json())
 app.use('/api/auth',authRoutes);
 //Routes
-app.use('/api/user', userRoutes);
-app.use('/api/post', postRoutes);
-app.use('/api/comment', commentRoutes);
-app.use('/api/auth/signup',authRoutes);
-
-app.use(express.static(path.join(__dirname, '/client/dist')));
-
-
-
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
-
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
@@ -65,4 +49,23 @@ app.use((err, req, res, next) => {
     statusCode,
     message,
   });
+});
+app.use('/api/user', userRoutes);
+app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
+app.use('/api/auth/signup',authRoutes);
+
+// app.use(express.static(path.join(__dirname, '/client/dist')));
+
+
+
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+// });
+
+
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000!');
 });

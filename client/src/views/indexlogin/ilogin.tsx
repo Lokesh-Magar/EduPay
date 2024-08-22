@@ -2,10 +2,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Grid, Box, Card, Stack, Typography, TextField, InputAdornment, FormGroup, FormControlLabel, Checkbox, CircularProgress, Container } from "@mui/material";
-// components
 
-import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import Button from '@mui/material/Button';
 import IconButton from "@mui/material/IconButton";
 import KeySharpIcon from "@mui/icons-material/KeySharp";
@@ -14,11 +13,14 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { useForm } from 'react-hook-form';
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import styles from '../../app/Form.module.css';
+import Image from "next/image";
 
 const ILogin = () => {
     const [showPassword, setShowPassword] = useState(false);
 
-    
+    const router = useRouter()
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
@@ -30,11 +32,11 @@ const ILogin = () => {
     const handleTogglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
     };
+    const handleClose = () => {
+      window.location.href = "/";
+    };
 
-
-    
-
-    const onSubmit = async (data) => {
+    const onSubmit = async (data:any) => {
       setLoading(true);
       setError(null);
       setSuccess(null);
@@ -42,15 +44,14 @@ const ILogin = () => {
       console.log(data);
       
       try {
-          const response = await axios.post('http://localhost:3000/api/auth/signin', data);
+          const response = await axios.post('/auth/signin', data);
           console.log(response);
           setSuccess(response.data.message);
-       
-      
 
           
-          
-      } catch (err) {
+          router.push('/dashboard')
+   
+      } catch (err:any) {
           if (err.response) {
               setError(err.response.data.message || 'An error occurred');
           } else {
@@ -61,10 +62,8 @@ const ILogin = () => {
       }
   };
 
-
-
   return (
-    <Container component='main'>
+    
     <Box
     sx={{
       position: "relative",
@@ -96,16 +95,36 @@ const ILogin = () => {
         alignItems="center"
       >
         <Card
-          elevation={9}
+          elevation={9} className={styles.cards}
           sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}
         >
           <Box display="flex" alignItems="center" justifyContent="center">
-            <Logo />
+          <Image
+                src="/edupay.png"
+                alt="EduFee Logo"
+                width={140}
+                height={140}
+                style={{ marginTop: "-7%" }}
+              />
           </Box>
-          <>
+
+          <Button onClick={handleClose} className={styles.cross}>
+              <CloseSharpIcon />
+            </Button>
+            <h2
+              style={{
+                marginBottom: "5%",
+                marginLeft: "3%",
+                fontSize: "1.5em",
+                fontWeight: "bold",
+              }}
+            >
+             Login
+            </h2>
+          
      
       <Stack>
-        <Box mt="45px">
+        <Box >
           <Box
             component="form"
             sx={{
@@ -123,7 +142,7 @@ const ILogin = () => {
               autoFocus
               {...register('email', { required: 'Email is required' })}
               error={!!errors.username}
-              helperText={errors.email?.message}
+              // helperText={errors.email?.message}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -202,7 +221,7 @@ const ILogin = () => {
       </Box>
 
       
-    </>
+    
           
               <Typography
                 variant="subtitle1"
@@ -243,7 +262,7 @@ const ILogin = () => {
       </Grid>
     </Grid>
     </Box>
-    </Container>
+    
   );
 };
 export default ILogin;
