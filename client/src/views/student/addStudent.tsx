@@ -21,7 +21,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 // Components Imports
-import CustomTextField from "@/app/(PortalLayout)/components/forms/theme-elements/CustomTextField";
+import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
+import QRCODE from "../qrCode/qrCode";
 
 // Define the FormDataType
 type FormDataType = {
@@ -154,7 +155,7 @@ const AddStudent = () => {
     };
 
   return (
-    <Card>
+    <Card sx={{ height: "120%", width: "100%" }}>
       <TabContext value={value}>
         <TabList
           variant="scrollable"
@@ -234,6 +235,8 @@ const AddStudent = () => {
                   />
                 </Grid>
               </Grid>
+              {/* QRCODE GENERATOR SECTION */}
+              <QRCODE />
             </TabPanel>
             <TabPanel value="account_details">
               <Grid container spacing={6}>
@@ -349,7 +352,6 @@ const AddStudent = () => {
               </Grid>
             </TabPanel>
           </CardContent>
-          <Divider />
           <CardActions>
             <Button
               type="submit"
