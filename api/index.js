@@ -55,7 +55,7 @@ app.use('/api/auth/signup',authRoutes);
 app.use('/api/auth/signout',authRoutes);
 app.use('/api/notifications',notificationRoutes)
 
-//student api routes
+//Student Api routes
 
 app.use('/api/student', studentRoutes);
 app.use('/api/student/studsignup',studentRoutes);
