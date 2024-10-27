@@ -7,6 +7,7 @@ npm install
 npm i firebase
 npm i mongoose
 npm i mongodb
+npm i axios
 
 ## You have to create your .env.locale file
 
