@@ -2,16 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
 
-    async rewrites(){
+  async rewrites() {
     return [
       {
-        source: '/:path*',
-        destination: 'http://localhost:3000/api/:path*', // Proxy to backend
+        source: "/:path*",
+        destination: "http://localhost:3000/api/:path*", // Proxy to backend
       },
-  ]
-
-
-  }
+    ];
+  },
 };
 
 module.exports = nextConfig;

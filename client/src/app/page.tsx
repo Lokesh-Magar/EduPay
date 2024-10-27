@@ -31,10 +31,7 @@ const IndexView = () => {
             <Link href="/" className={`${styles.custom_underline} text-black`}>
               Home
             </Link>
-            <Link
-              href="/"
-              className={`${styles.custom_underline} text-black`}
-            >
+            <Link href="/" className={`${styles.custom_underline} text-black`}>
               Contact
             </Link>
             <button

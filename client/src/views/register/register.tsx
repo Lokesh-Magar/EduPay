@@ -40,41 +40,48 @@ const Register: React.FC<RegisterProps> = ({
   openLoginDialog, // Add this prop
 }) => {
   const [showPassword, setShowPassword] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(null);
-    const [error, setError] = useState(null);
-  
-    const handleTogglePasswordVisibility = () => {
-      setShowPassword((prevState) => !prevState);
-    };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-const router = useRouter();
-const onSubmit = async (data:any) => {
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
+  const router = useRouter();
+  const onSubmit = async (data: any) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     console.log(data);
-    
+
     try {
-        const response = await axios.post('/auth/signup', data);
-        console.log(response.data);
-        setSuccess(response.data.message);
-        
-        router.push('/login')
-    } catch (err:any) {
-        if (err.response) {
-            setError(err.response.data.message || 'An error occurred');
-        } else {
-            setError('An error occurred');
-        }
+      const response = await axios.post("/auth/signup", data);
+      console.log(response.data);
+      setSuccess(response.data.message);
+
+      reset();
+
+      openLoginDialog();
+    } catch (err: any) {
+      if (err.response) {
+        setError(err.response.data.message || "An error occurred");
+      } else {
+        setError("An error occurred");
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
   return (
     <Dialog
       open={open}
@@ -131,18 +138,18 @@ const onSubmit = async (data:any) => {
               autoComplete="off"
             >
               <TextField
-             margin="normal"
-             fullWidth
-             id="username"
-             label="Username"
-             className="username"
-             
-             autoComplete="username"
-             autoFocus
-             {...register('username', { required: 'Username is required' })}
-             error={!!errors.username}
-            //  helperText={errors.username?.message}
-            
+                margin="normal"
+                fullWidth
+                id="username"
+                label="Username"
+                required
+                className="username"
+                autoComplete="username"
+                autoFocus
+                {...register("username", { required: "Username is required" })}
+                error={!!errors.username}
+                //  helperText={errors.username?.message}
+
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -154,17 +161,18 @@ const onSubmit = async (data:any) => {
               />
 
               <TextField
-              margin="normal"
-              fullWidth
-              id="email"
-              label="Email"
-              className="email"
-              autoComplete="email"
-              autoFocus
-              {...register('email', { required: 'Email is required' })}
-              error={!!errors.username}
-              // helperText={errors.email?.message}
-              
+                margin="normal"
+                fullWidth
+                id="email"
+                label="Email"
+                required
+                className="email"
+                autoComplete="email"
+                autoFocus
+                {...register("email", { required: "Email is required" })}
+                error={!!errors.username}
+                // helperText={errors.email?.message}
+
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -179,13 +187,14 @@ const onSubmit = async (data:any) => {
                 id="phone"
                 className="phone"
                 label="Phone Number"
+                required
                 placeholder="Enter your number"
                 autoComplete="phone"
                 // helperText={errors.phone?.message}
                 autoFocus
-                {...register('phone',{required:'Phone number is required.'})}
-                
-                
+                {...register("phone", {
+                  required: "Phone number is required.",
+                })}
                 // onChange={/*(e) => {
                 //   const value = e.target.value.replace(/[^0-9]/g, ""); // It will allow only numbers
                 //   setFormData(value);
@@ -217,10 +226,10 @@ const onSubmit = async (data:any) => {
                 label="Password"
                 id="password"
                 className="password"
+                required
                 autoComplete="password"
                 autoFocus
-                {...register('password',{required:'Password is required.'})}
-                
+                {...register("password", { required: "Password is required." })}
                 variant="outlined"
                 InputProps={{
                   startAdornment: (
@@ -240,15 +249,15 @@ const onSubmit = async (data:any) => {
                   ),
                 }}
                 // helperText={errors.password?.message}
-             />
+              />
             </Box>
 
             {/* Remove Divider /}
             {/ <Divider sx={{ my: 2 }} /> */}
 
             <Stack spacing={2}>
-            {error && <Typography color="error">{error}</Typography>}
-            {success && <Typography color="success">{success}</Typography>}
+              {error && <Typography color="error">{error}</Typography>}
+              {success && <Typography color="success">{success}</Typography>}
               <Button
                 color="primary"
                 variant="contained"
@@ -257,20 +266,20 @@ const onSubmit = async (data:any) => {
                 type="submit"
                 onClick={handleSubmit(onSubmit)}
               >
-                Sign Up {loading ? <CircularProgress size={24} /> : ''}
+                Sign Up
               </Button>
               <Box textAlign="center">
                 <Typography variant="body2">
                   Already have an account?{" "}
                   <Typography
                     component="a"
-                  
                     color="primary"
                     fontWeight="500"
                     onClick={() => {
                       handleClose?.();
                       openLoginDialog?.(); // Open Login dialog
                     }}
+                    style={{ cursor: "pointer" }}
                   >
                     Sign In
                   </Typography>
