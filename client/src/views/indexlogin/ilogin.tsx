@@ -19,7 +19,6 @@ import Image from "next/image";
 
 const ILogin = () => {
     const [showPassword, setShowPassword] = useState(false);
-
     const router = useRouter()
 
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -27,8 +26,6 @@ const ILogin = () => {
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState<string | null>(null);
   
-    
-
     const handleTogglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
     };
@@ -41,14 +38,9 @@ const ILogin = () => {
       setError(null);
       setSuccess(null);
 
-      console.log(data);
-      
       try {
           const response = await axios.post('/auth/signin', data);
-          // console.log(response);
-          setSuccess(response.data.message);
-
-          
+            setSuccess(response.data.message);
           router.push('/dashboard')
    
       } catch (err:any) {
@@ -61,9 +53,8 @@ const ILogin = () => {
           setLoading(false);
       }
   };
-
   return (
-    
+  
     <Box
     sx={{
       position: "relative",
@@ -119,7 +110,7 @@ const ILogin = () => {
                 fontWeight: "bold",
               }}
             >
-             Login
+             Admin Login
             </h2>
           
      
@@ -243,7 +234,7 @@ const ILogin = () => {
                 </Typography>
                 <Typography
                   component={Link}
-                  href="/register"
+                  href="/backregister"
                   fontWeight="500"
                   sx={{
                     textDecoration: "none",

@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 
-const SalesOverview = () => {
+const FeesOverview = () => {
 
     // select
     const [month, setMonth] = React.useState('1');
@@ -91,7 +91,7 @@ const SalesOverview = () => {
 
     return (
 
-        <DashboardCard title="Sales Overview" action={
+        <DashboardCard title="Fees Overview" action={
             <Select
                 labelId="month-dd"
                 id="month-dd"
@@ -114,4 +114,4 @@ const SalesOverview = () => {
     );
 };
 
-export default SalesOverview;
+export default FeesOverview;

@@ -1,20 +1,32 @@
-import { RouteMatcher } from "next/dist/server/future/route-matchers/route-matcher";
-import { NextRequest, NextResponse } from "next/server"
-
 //Redirecting if the requested url is entered.
-export function middleware(request:NextRequest){
+export function middleware(req){
 
-    console.log(`Middleware ran. The direct instance of ${request.url} was invoked.`);
+    console.log(`Middleware ran from src.The path ${req.url} is accessed.`);
+    // const token = req.cookies.get('access_token');
+    
+    // try {
+        
+    //     if (req.nextUrl.pathname === '/backlogin') {
+           
+    //         return NextResponse.redirect(new URL('/dashboard', req.url));
+    //     }
 
-  
+    //      else if (req.nextUrl.pathname === '/') {
+    //         return NextResponse.redirect(new URL('/portal', req.url));
+    //     }
 
-    //  return NextResponse.redirect(new URL('/login',request.url));
-//  if(request.nextUrl.pathname="/dashboard"){
-  //  }
-
+    //     return NextResponse.next();
+    // } 
+    // catch {
+    //     console.log("Invalid token");
+       
+    //     // return NextResponse.redirect(new URL('/backlogin', req.url));
+    //     // Invalid token, redirect to login
+    
+    // }
 }
-// export const config = {
-//     // matcher:["/userlist/:path*"],
-//     matcher:["/dashboard"],
-// }   
 
+// export const config = {
+//     matcher: ['/dashboard/:path*','/portal/:path*'], 
+//     // Apply to all dashboard routes
+// };

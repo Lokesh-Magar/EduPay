@@ -25,6 +25,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","global.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","global.d.ts", "src/app/(DashboardLayout)/dashboard/middleware.ts"],
   "exclude": ["node_modules"]
 }

@@ -2,7 +2,6 @@ import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
 import jwt from 'jsonwebtoken';
-// const Notification = require('../models/notification.model');
 import Notification from '../models/notification.model.js';
 export const signup = async (req, res, next) => {
   const { username, email,phone, password } = req.body;
@@ -142,3 +141,4 @@ export const google = async (req, res, next) => {
     next(error);
   }
 };
+

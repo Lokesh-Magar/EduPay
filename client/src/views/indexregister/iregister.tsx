@@ -1,16 +1,13 @@
 "use client";
 import { Grid, Box, Card, Typography, Stack, Button, InputAdornment, IconButton, TextField, Container, CircularProgress } from "@mui/material";
-
 import { useState } from "react";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
-
 import KeySharpIcon from "@mui/icons-material/KeySharp";
 import MailSharpIcon from "@mui/icons-material/MailSharp";
 import SentimentSatisfiedAltSharpIcon from "@mui/icons-material/SentimentSatisfiedAltSharp";
 import ContactPhoneSharpIcon from "@mui/icons-material/ContactPhoneSharp";
 import axios from "axios";
 import { useForm } from 'react-hook-form';
-import { Router } from "express";
 import { useRouter } from "next/navigation";
 import styles from '../../app/Form.module.css'
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
@@ -58,7 +55,6 @@ const onSubmit = async (data:any) => {
         setLoading(false);
     }
 };
-
 
 return(
   
@@ -122,17 +118,17 @@ return(
               Register
             </h2>
         
-      <Box>
-        <Stack mb={3}>
-          <Box >
-            <Box
+            <Box>
+              <Stack mb={3}>
+              <Box>
+              <Box
               component="form"
               sx={{
                 "& > :not(style)": { m: 1, width: "30ch" },
               }}
               noValidate
-            //   autoComplete="off"
-              // onSubmit={handleSubmit(onSubmit)}
+                //   autoComplete="off"
+                // onSubmit={handleSubmit(onSubmit)}
 
             >
               <TextField
@@ -188,8 +184,6 @@ return(
                 // helperText={errors.phone?.message}
                 autoFocus
                 {...register('phone',{required:'Phone number is required.'})}
-                
-                
                 // onChange={/*(e) => {
                 //   const value = e.target.value.replace(/[^0-9]/g, ""); // It will allow only numbers
                 //   setFormData(value);

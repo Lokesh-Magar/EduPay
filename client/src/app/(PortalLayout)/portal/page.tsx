@@ -20,11 +20,11 @@ const checkAuthentication= async()=>{
   try{
     const response = await axios.get('/auth/checkAuth',{withCredentials:true})
     if (response.status !== 200) {
-      router.push('/'); // Redirect if not authenticated
+      router.push('/'); 
     }
   }
   catch(error){
-    router.push('/'); // Redirect if not authenticated
+    router.push('/'); 
   }
   finally{
     setLoading(false);
@@ -34,6 +34,8 @@ checkAuthentication();
 },[router])
 
 if(loading) {return <div>Loading...</div>}
+
+
   return (
     <PageContainer title="Student Portal" description="This is student portal.">
       <Box>

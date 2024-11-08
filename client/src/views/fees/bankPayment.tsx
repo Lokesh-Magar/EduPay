@@ -5,7 +5,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import "react-datepicker/dist/react-datepicker.css";
-import { useRef } from "react";
+import { useRef ,useEffect,useState} from "react";
 import Button from "@mui/material/Button";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -14,8 +14,11 @@ import { createTheme } from "@mui/material/styles";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {useRouter} from "next/navigation";
+import axios from "axios";
 export const BankPaymentList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
+  
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -35,6 +38,27 @@ export const BankPaymentList = () => {
       },
     },
   });
+  // ---- Check Authentication ----
+  const router=useRouter();
+  const [loading, setLoading] = useState(true);
+  useEffect(()=>{
+    const checkAuthentication= async()=>{
+    
+      try{
+        const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+        if (response.status !== 200) {
+          router.push('/backlogin'); // Redirect if not authenticated
+        }
+      }
+      catch(error){
+        router.push('/backlogin'); // Redirect if not authenticated
+      }
+      finally{
+        setLoading(false);
+      }
+    }
+    checkAuthentication();
+    },[router]);
   return (
     <>
       <div className="flex">

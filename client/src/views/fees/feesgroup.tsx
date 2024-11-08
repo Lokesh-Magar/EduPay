@@ -17,6 +17,8 @@ import { createTheme } from "@mui/material/styles";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const FeesGroupList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -40,6 +42,28 @@ const FeesGroupList = () => {
       },
     },
   });
+
+   // ---- Check Authentication ----
+   const router=useRouter();
+   const [loading, setLoading] = React.useState(true);
+   React.useEffect(()=>{
+     const checkAuthentication= async()=>{
+     
+       try{
+         const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+         if (response.status !== 200) {
+           router.push('/backlogin'); // Redirect if not authenticated
+         }
+       }
+       catch(error){
+         router.push('/backlogin'); // Redirect if not authenticated
+       }
+       finally{
+         setLoading(false);
+       }
+     }
+     checkAuthentication();
+     },[router]);
 
   return (
     <>

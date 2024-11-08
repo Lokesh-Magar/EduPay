@@ -1,5 +1,6 @@
 import FeesInvoiceList from "../../../../views/student/feeinvoice";
 
+
 const FeesGroup = () => {
   return <FeesInvoiceList />;
 };

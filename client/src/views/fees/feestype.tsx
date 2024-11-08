@@ -4,10 +4,14 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import Typography from "@mui/material/Typography";
+import KeySharpIcon from "@mui/icons-material/KeySharp";
+import MailSharpIcon from "@mui/icons-material/MailSharp";
+import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import CheckSharpIcon from "@mui/icons-material/CheckSharp";
-import { TextField, InputAdornment, MenuItem } from "@mui/material";
+import SentimentSatisfiedAltSharpIcon from "@mui/icons-material/SentimentSatisfiedAltSharp";
+import ContactPhoneSharpIcon from "@mui/icons-material/ContactPhoneSharp";
+import { TextField, InputAdornment,Box, CircularProgress, Grid, IconButton, Stack, Menu, MenuItem } from "@mui/material";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useRef } from "react";
@@ -17,9 +21,65 @@ import { createTheme } from "@mui/material/styles";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+
+import { useForm,Controller } from "react-hook-form";
+
+//Toast imports
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react"; 
+
 
 const FeesGroupList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(null);
+  const [error, setError] = React.useState<string | null>(null);
+
+//useEffect For loading Fee Invoice Data
+React.useEffect(() => {
+  const fetchData = async()=>{
+    try{
+      const response =await fetch('/data');
+    }
+    catch (error){
+      console.log("Error fetching the invoice data",error);}
+  }
+  // finally {
+  //   setLoading(false);
+  // }
+  fetchData();
+},[])
+ 
+const onSubmit = async (data:any,event:any) => {
+  setLoading(true);
+  setError(null);
+  setSuccess(null);
+  event.preventDefault();
+  // console.log(data);
+  
+  try {
+      const response = await axios.post('/invoice/invoicecreate', data);
+      console.log(response.data);
+      // setSuccess(response.data.message);
+    
+      toast.success(response.data.message);
+
+      router.push('/dashboard');
+  } catch (err:any) {
+    
+          // setError(err.response.data.message('An error occurred'));
+          toast.error("An error occurred");
+      
+  } finally {
+      setLoading(false);
+  }
+};
+
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -40,6 +100,27 @@ const FeesGroupList = () => {
       },
     },
   });
+
+   // ---- Check Authentication ----
+   const router=useRouter();
+   React.useEffect(()=>{
+     const checkAuthentication= async()=>{
+     
+       try{
+         const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+         if (response.status !== 200) {
+           router.push('/backlogin'); // Redirect if not authenticated
+         }
+       }
+       catch(error){
+         router.push('/backlogin'); // Redirect if not authenticated
+       }
+       finally{
+         setLoading(false);
+       }
+     }
+     checkAuthentication();
+     },[router]);
 
   return (
     <>
@@ -66,63 +147,155 @@ const FeesGroupList = () => {
         </nav>
       </div>
       <div className="flex" style={{ display: "flex" }}>
-        {/* Add fees group first card */}
-        <div className="feesGroup mt-7">
-          <Card sx={{ width: 280, height: 440 }}>
+        {/* Add invoice first card */}
+        <div className="invoiceGroup mt-7">
+          <Card sx={{ width: 400, height: 550 }}>
             <CardContent>
-              <Typography variant="h6" component="h3">
-                Add Fees Type
+              <Typography variant="h6" component="h3" className="mb-1">
+                Add Invoice
               </Typography>
-
-              <Typography variant="body2" component="div">
-                <CustomTextField
-                  required
-                  label="NAME"
-                  style={{ marginTop: 20, width: "100%" }}
-                />
-              </Typography>
-
-              <Typography variant="body2" component="div">
-                <CustomTextField
-                  select
-                  fullWidth
-                  defaultValue="Fees Group"
-                  label="FEES GROUP *"
-                  id="custom-select"
-                  style={{ marginTop: 20 }}
-                >
-                  <CustomTextField
-                    placeholder="Search..."
-                    style={{ padding: "0 0 8px 6px" }}
-                  />
-                  <MenuItem value="Fees Group">
-                    <span style={{ fontStyle: "normal" }}>Fees Group</span>
-                  </MenuItem>
-                  <MenuItem value={"School Fee"}>School Fee</MenuItem>
-                  <MenuItem value={"Plus Two Fee"}>Plus Two Fee</MenuItem>
-                  <MenuItem value={"Bachelor Fee"}>Bachelor Fee</MenuItem>
-                </CustomTextField>
-              </Typography>
-
-              <Typography variant="body2" component="div">
-                <CustomTextField
-                  label="DESCRIPTION"
-                  multiline
-                  rows={4}
-                  style={{ marginTop: 20, width: "100%" }} // Ensure consistent width
-                />
-              </Typography>
+              <Box
+      sx={{
+        position: "relative",
+        "&:before": {
+          content: '""',
+          backgroundSize: "400% 400%",
+          animation: "gradient 15s ease infinite",
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          opacity: "0.3",
+        },
+      }}
+    >
+            <Box>
+              <Stack mb={3}>
+              <Box>
+              <Box
+              component="form"
+              sx={{
+                "& > :not(style)": { m: 1, width: "35ch" },
+              }}
+              noValidate
+                //   autoComplete="off"
+                // onSubmit={handleSubmit(onSubmit)}
+            >
+              <TextField
+             margin="normal"
+             fullWidth
+             id="studentID"
+             label="StudentID"
+             className="studentID"
+             
+             autoComplete="studentID"
+             autoFocus
+             {...register('studentID', { required: 'Student ID is required' })}
+             error={!!errors.studentID}
+            //  helperText={errors.username?.message}
+            
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SentimentSatisfiedAltSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+              margin="normal"
+              fullWidth
+              id="email"
+              label="Email"
+              className="email"
+              autoComplete="email"
+              autoFocus
+              {...register('email', { required: 'Email is required' })}
+              error={!!errors.email}
+              // helperText={errors.email?.message}
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MailSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                variant="outlined"
+                id="amount"
+                className="amount"
+                label="Amount"
+                placeholder="Enter the number"
+                autoComplete="amount"
+                // helperText={errors.phone?.message}
+                autoFocus
+                {...register('amount',{required:'Amount is required.'})}
+            
+              />
+              <TextField
+              
+                label="Pending Amount"
+                id="pendingAmount"
+                className="pendingAmount"
+                
+                autoFocus
+                {...register('pendingAmount',{required:'Pending Amount is required.'})}
+                variant="outlined"
+                // helperText={errors.password?.message}
+             />
+               <TextField
+                variant="outlined"
+                id="dueDate"
+                className="dueDate"
+                label="Due Date"
+               type='date'
+                // helperText={errors.phone?.message}
+                autoFocus
+                {...register('dueDate',{required:'Due Date is required.'})}
+                InputLabelProps={{
+                  shrink: true, // Keeps label visible when date is selected
+                }}
+              />
+             
+                <TextField
+                variant="outlined"
+                id="status"
+                className="status"
+                select
+                defaultValue="unpaid"
+                label="Status"
+                autoFocus
+                {...register('status',{required:'Status is required.'})}
+            
+              >
+                <MenuItem value="unpaid">Unpaid</MenuItem>
+                <MenuItem value="paid">Paid</MenuItem>
+                </TextField>
+            </Box>
+          </Box>
+        </Stack>
+        {error && <Typography color="error">{error}</Typography>}
+        {success && <Typography color="success">{success}</Typography>}
+        <ToastContainer position="top-right" autoClose={5000} hideProgressBar />
+        <Button
+          color="primary"
+          variant="contained"
+          size="large"
+          type='submit'
+          onClick={handleSubmit(onSubmit)}
+          fullWidth >
+          Add Fee Invoice {loading ? <CircularProgress size={24} /> : ''}
+        </Button>
+      </Box>
+    </Box>
             </CardContent>
-            <CardActions style={{ justifyContent: "center" }}>
-              <Button variant="contained" style={{ marginTop: 10 }}>
-                <CheckSharpIcon style={{ marginRight: 5 }} />
-                SAVE
-              </Button>
-            </CardActions>
           </Card>
         </div>
 
-        {/* Fees Group list 2nd card */}
+
+        {/* Invoice Group list 2nd card */}
         <div className="feesList mt-7 mx-6" style={{ flex: 1 }}>
           <Card sx={{ width: "102%", height: "105%" }}>
             <CardContent>

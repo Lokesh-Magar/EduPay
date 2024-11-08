@@ -6,8 +6,32 @@ import CardContent from "@mui/material/CardContent";
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import Button from "@mui/material/Button";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const FeesCarryList = () => {
+   // ---- Check Authentication ----
+   const router=useRouter();
+   const [loading, setLoading] = useState(true);
+   useEffect(()=>{
+     const checkAuthentication= async()=>{
+     
+       try{
+         const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+         if (response.status !== 200) {
+           router.push('/backlogin'); // Redirect if not authenticated
+         }
+       }
+       catch(error){
+         router.push('/backlogin'); // Redirect if not authenticated
+       }
+       finally{
+         setLoading(false);
+       }
+     }
+     checkAuthentication();
+     },[router]);
   return (
     <>
       <div className="flex">

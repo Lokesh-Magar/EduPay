@@ -1,7 +1,7 @@
 "use client";
 import { Grid, Box } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
-import SalesOverview from "@/app/(DashboardLayout)/components/dashboard/SalesOverview";
+import FeesOverview from "@/app/(DashboardLayout)/components/dashboard/FeesOverview";
 import YearlyBreakup from "@/app/(DashboardLayout)/components/dashboard/YearlyBreakup";
 import RecentTransactions from "@/app/(DashboardLayout)/components/dashboard/RecentTransactions";
 import ProductPerformance from "@/app/(DashboardLayout)/components/dashboard/ProductPerformance";
@@ -20,27 +20,26 @@ const checkAuthentication= async()=>{
   try{
     const response = await axios.get('/auth/checkAuth',{withCredentials:true})
     if (response.status !== 200) {
-      router.push('/'); // Redirect if not authenticated
+      router.push('/backlogin'); // Redirect if not authenticated
     }
   }
   catch(error){
-    router.push('/'); // Redirect if not authenticated
+    router.push('/backlogin'); // Redirect if not authenticated
   }
   finally{
     setLoading(false);
   }
 }
 checkAuthentication();
-},[router])
+},[router]);
 
 if(loading) {return <div>Loading...</div>}
-
   return (
-    <PageContainer title="Dashboard" description="this is Dashboard">
+    <PageContainer title="Dashboard" description="This is Dashboard">
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <SalesOverview />
+            <FeesOverview />
           </Grid>
           <Grid item xs={12} lg={4}>
             <Grid container spacing={3}>
@@ -63,5 +62,4 @@ if(loading) {return <div>Loading...</div>}
     </PageContainer>
   );
 };
-
 export default Dashboard;
