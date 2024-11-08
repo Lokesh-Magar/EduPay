@@ -8,7 +8,7 @@ import studentRoutes from './routes/student.route.js';
 import commentRoutes from './routes/comment.route.js';
 import notificationRoutes from './routes/notification.route.js';
 import invoiceRoutes from './routes/invoice.route.js';
-import dataRoutes from './routes/data.route.js';
+
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
@@ -66,9 +66,9 @@ app.use('/api/notifications',notificationRoutes);
 //Invoice Api routes
 app.use('/api/invoice',invoiceRoutes);
 app.use('/api/invoice/invoicecreate',invoiceRoutes);
+app.use('/api/invoice/fetchInvData',invoiceRoutes);
 
-//Fetch Data Api Routes
-app.use('/api/invdata',dataRoutes);
+
 
 //Student Api routes
 app.use('/api/student',studentRoutes);

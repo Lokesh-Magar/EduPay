@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { TextField, InputAdornment, CircularProgress } from "@mui/material";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { createTheme } from "@mui/material/styles";
@@ -36,16 +36,17 @@ const FeesInvoiceList = () => {
       },
     },
   });
+
   //useEffect For loading Fee Invoice Data
   const [data, setData] = useState([]);
-React.useEffect(() => {
+useEffect(() => {
   const fetchData = async()=>{
     try{
-      const response =await fetch('http://localhost:5000/api/invdata');
+      const response =await axios.get('/invoice/fetchInvData');
      
-      const result= await response.json();
-      setData(result);
-      console.log('Fetched data:', result); 
+      // const result= await response.json();
+      setData(response.data);
+      console.log('Fetched data:', response.data); 
     }
     catch (error){
       console.log("Error fetching the invoice data",error);}
@@ -203,12 +204,12 @@ React.useEffect(() => {
                   <span style={{ marginLeft: 8 }}>{index + 1}</span>
                 </td>
                 <td style={{ padding: '8px' }}>{item.studentId}</td>
-                <td style={{ padding: '8px' }}>${item.email}</td>
+                <td style={{ padding: '8px' }}>{item.email}</td>
                 <td style={{ padding: '8px' }}>{item.amount}</td>
-                <td style={{ padding: '8px' }}>${item.pendingAmount}</td>
-                <td style={{ padding: '8px' }}>${item.dueDate}</td>
+                <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
+                <td style={{ padding: '8px' }}>{item.dueDate}</td>
                 <td style={{ padding: '8px' }}>{item.status ? 'Yes' : 'No'}</td>
-                <td style={{ padding: '8px' }}>${item.balance}</td>
+                <td style={{ padding: '8px' }}>{item.balance}</td>
                 <td style={{ padding: '5px' }}>
                   <Button variant="outlined" size="small" style={{ borderRadius: '5px' }}>
                     {item.status}
