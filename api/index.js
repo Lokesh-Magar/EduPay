@@ -42,6 +42,7 @@ const corsOptions={
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
 //Routes used
 app.use(express.json())
 app.use('/api/auth',authRoutes);
@@ -67,6 +68,7 @@ app.use('/api/notifications',notificationRoutes);
 app.use('/api/invoice',invoiceRoutes);
 app.use('/api/invoice/invoicecreate',invoiceRoutes);
 app.use('/api/invoice/fetchInvData',invoiceRoutes);
+app.use('/api/invoice/fetchStudInvData',invoiceRoutes);
 
 
 
@@ -75,6 +77,8 @@ app.use('/api/student',studentRoutes);
 app.use('/api/student/studsignup',studentRoutes);
 app.use('/api/student/studsignin',studentRoutes);
 app.use('/api/student/studsignout',studentRoutes);
+app.use('/api/student/getStudent',studentRoutes);
+
 
 // Payment API Routes 
 app.post("/initialize-esewa", async (req, res) => {

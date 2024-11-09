@@ -40,20 +40,7 @@ const FeesGroupList = () => {
   const [success, setSuccess] = React.useState(null);
   const [error, setError] = React.useState<string | null>(null);
 
-//useEffect For loading Fee Invoice Data
-React.useEffect(() => {
-  const fetchData = async()=>{
-    try{
-      const response =await fetch('/data');
-    }
-    catch (error){
-      console.log("Error fetching the invoice data",error);}
-  }
-  // finally {
-  //   setLoading(false);
-  // }
-  fetchData();
-},[])
+
  
 const onSubmit = async (data:any,event:any) => {
   setLoading(true);

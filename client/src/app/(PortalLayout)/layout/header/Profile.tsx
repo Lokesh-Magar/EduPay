@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -28,11 +28,30 @@ const Profile = () => {
     setAnchorEl2(null);
   };
 
+  //Check authentication useEffect
+  useEffect(()=>{
+  const checkAuthentication= async()=>{
+  
+    try{
+      const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+      if (response.status !== 200) {
+        router.push('/'); 
+      }
+    }
+    catch(error){
+      router.push('/'); 
+    }
+    finally{
+      setLoading(false);
+    }
+  }
+  checkAuthentication();
+  },[router]);
   const signout = async () => {
     setError(null);
     setLoading(true);  // Start loading
     
-    console.log("Logout Pressed");
+    // console.log("Logout Pressed");
 
     try {
       const response = await axios.post('/student/studsignout',

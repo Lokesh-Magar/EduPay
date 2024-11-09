@@ -5,7 +5,7 @@ import {Box} from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { TextField, InputAdornment } from "@mui/material";
+import { TextField, InputAdornment ,CircularProgress} from "@mui/material";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useEffect, useRef } from "react";
@@ -26,6 +26,11 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import CryptoJS from 'crypto-js';
+import cookies from 'next-cookies';
+
+//Toast imports
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -45,8 +50,6 @@ const FeesInvoiceList = () => {
   // const [loading, setLoading] = useState(false);
   // const [success, setSuccess] = useState(null);
   // const [error, setError] = useState<string | null>(null);
-
-
   // const [orders, setOrders] = useState([]);
 
   const handleFocus = () => {
@@ -68,6 +71,49 @@ const FeesInvoiceList = () => {
       },
     },
   });
+//-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
+const [data, setData] = useState([]);
+useEffect(() => {
+const fetchData = async()=>{
+  try{
+    const response =await axios.get('/invoice/fetchStudInvData');
+
+    // const result= await response.json();
+    setData(response.data);
+    // console.log('Fetched data:', response.data); 
+ 
+  }
+  catch (error){
+    console.log("Error fetching the invoice data",error);}
+}
+
+fetchData();
+},[]);
+
+ // ---- Check Authentication ----
+ const router=useRouter();
+ const [loading, setLoading] = React.useState(true);
+ useEffect(()=>{
+   const checkAuthentication= async()=>{
+   
+     try{
+       const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+       if (response.status !== 200) {
+         router.push('/backlogin'); // Redirect if not authenticated
+       }
+     }
+     catch(error){
+       router.push('/backlogin'); 
+     }
+     finally{
+       setLoading(false);
+     }
+   }
+   checkAuthentication();
+   },[router]);
+
+
+
 
 //   const onSubmit = async (payment_method: string) => {
 //     setLoading(true);
@@ -119,6 +165,10 @@ const generateHash = () => {
 //Form Submit under Add button setting
  const signature = generateHash();
 console.log(signature);
+
+// ---- Loading State ----
+// const router=useRouter();
+
 
   return (
     <>
@@ -264,432 +314,59 @@ console.log(signature);
                 </ButtonGroup>
               </div>
             </div>
-            {/* Table */}
-            <div style={{ marginTop: "20px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                        borderRadius: "5px 0 0 5px",
-                        position: "relative", // Required for rounded corners
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>SL</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                        position: "relative", // Required for rounded corners
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Student</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Amount</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Waiver</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Fine</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Paid</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Balance</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Status</span>
-                      </div>
-                    </th>
 
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Date</span>
-                      </div>
-                    </th>
-                    <th
-                      style={{
-                        padding: "8px",
-                        textAlign: "left",
-                        backgroundColor: "lightgray",
-                        borderRadius: "0 5px 5px 0",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <ArrowDownwardIcon style={{ marginRight: "8px" }} />
-                        <span>Action</span>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                {/*------ Body Section ------ */}
-                <tbody>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>1</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>2</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>3</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>4</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>5</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>6</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>7</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>8</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>9</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                  <tr style={{ borderBottom: "1px solid #ddd" }}>
-                    <td
-                      style={{
-                        padding: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginLeft: 8 }}>10</span>{" "}
-                      {/* Adjust margin for spacing */}
-                    </td>
-                    <td style={{ padding: "8px" }}>STUDENT NAME</td>
-                    <td style={{ padding: "8px" }}>AMOUNT</td>
-                    <td style={{ padding: "8px" }}>WAIVER</td>
-                    <td style={{ padding: "8px" }}>FINE </td>
-                    <td style={{ padding: "8px" }}>PAID</td>
-                    <td style={{ padding: "8px" }}>BALANCE</td>
-                    <td style={{ padding: "5px" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        style={{ borderRadius: "5px" }}
-                      >
-                        STATUS
-                      </Button>
-                    </td>
-                    <td style={{ padding: "8px" }}>DATE</td>
-                    <td style={{ padding: "8px" }}>ACTIONS</td>
-                  </tr>
-                </tbody>
-              </table>
+            {/* Table */}
+            
+            <div style={{ marginTop: "20px" }}>
+              
+              {loading ? (
+        <CircularProgress />
+      ) : (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid #ddd' }}>
+              <th style={{ padding: '8px' }}>#</th>
+              <th style={{ padding: '8px' }}>STUDENT ID</th>
+              <th style={{ padding: '8px' }}>EMAIL</th>
+              <th style={{ padding: '8px' }}>AMOUNT</th>
+              <th style={{ padding: '8px' }}>PENDING AMOUNT</th>
+              <th style={{ padding: '8px' }}>DUE DATE</th>
+              
+              <th style={{ padding: '5px' }}>STATUS</th>
+              
+              <th style={{ padding: '8px' }}>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
+                <td style={{ padding: '8px', display: 'flex', alignItems: 'center' }}>
+                  <span style={{ marginLeft: 8 }}>{index + 1}</span>
+                </td>
+                <td style={{ padding: '8px' }}>{item.studentId}</td>
+                <td style={{ padding: '8px' }}>{item.email}</td>
+                <td style={{ padding: '8px' }}>{item.amount}</td>
+                <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
+                <td style={{ padding: '8px' }}>{new Date(item.dueDate).toLocaleDateString()}</td>
+                <td style={{ padding: '8px' }}>{item.status ? 'Yes' : 'No'}</td>
+                <td style={{ padding: '8px' }}>{item.balance}</td>
+                <td style={{ padding: '5px' }}>
+                  <Button variant="outlined" size="small" style={{ borderRadius: '5px' }}>
+                    {item.status}
+                  </Button>
+                </td>
+               
+                <td style={{ padding: '8px' }}>
+                  <Button variant="contained" size="small">Edit</Button>
+                  <Button variant="outlined" size="small" style={{ marginLeft: '5px' }}>
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
             </div>
           </CardContent>
           {/* Pagination */}

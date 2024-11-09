@@ -35,31 +35,31 @@ const Menuitems = [
     id: uniqueId(),
     title: "Fees Type",
     icon: IconFileTypography,
-    href: "/student/feestype",
+    href: "/portal/student/feestype",
   },
   {
     id: uniqueId(),
     title: "Fees Group",
     icon: IconBoxMultiple0,
-    href: "/student/feesgroup",
+    href: "/portal/student/feesgroup",
   },
   {
     id: uniqueId(),
     title: "Fees Invoice",
     icon: IconFileInvoice,
-    href: "/student/feesinvoice",
+    href: "/portal/student/feesinvoice",
   },
   {
     id: uniqueId(),
     title: "Fees Carry",
     icon: IconBabyCarriage,
-    href: "/student/feescarryforward",
+    href: "/portal/student/feescarryforward",
   },
   {
     id: uniqueId(),
     title: "Bank Payment",
     icon: IconBuildingBank,
-    href: "/student/bankpayment",
+    href: "/portal/student/bankpayment",
   },
   
   // Uncomment these if needed

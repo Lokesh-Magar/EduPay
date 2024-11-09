@@ -37,16 +37,17 @@ const FeesInvoiceList = () => {
     },
   });
 
-  //useEffect For loading Fee Invoice Data
+  //-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
   const [data, setData] = useState([]);
-useEffect(() => {
+  useEffect(() => {
   const fetchData = async()=>{
     try{
       const response =await axios.get('/invoice/fetchInvData');
-     
+
       // const result= await response.json();
       setData(response.data);
-      console.log('Fetched data:', response.data); 
+      // console.log('Fetched data:', response.data); 
+   
     }
     catch (error){
       console.log("Error fetching the invoice data",error);}

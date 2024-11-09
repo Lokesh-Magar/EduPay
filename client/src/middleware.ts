@@ -1,32 +1,11 @@
 //Redirecting if the requested url is entered.
-export function middleware(req){
+// const jwt = require('jsonwebtoken');
 
-    console.log(`Middleware ran from src.The path ${req.url} is accessed.`);
-    // const token = req.cookies.get('access_token');
+export function middleware(req:any,response:any,next){
+
+    console.log(`Middleware ran from src.`);
+
+   
     
-    // try {
-        
-    //     if (req.nextUrl.pathname === '/backlogin') {
-           
-    //         return NextResponse.redirect(new URL('/dashboard', req.url));
-    //     }
-
-    //      else if (req.nextUrl.pathname === '/') {
-    //         return NextResponse.redirect(new URL('/portal', req.url));
-    //     }
-
-    //     return NextResponse.next();
-    // } 
-    // catch {
-    //     console.log("Invalid token");
-       
-    //     // return NextResponse.redirect(new URL('/backlogin', req.url));
-    //     // Invalid token, redirect to login
-    
-    // }
 }
 
-// export const config = {
-//     matcher: ['/dashboard/:path*','/portal/:path*'], 
-//     // Apply to all dashboard routes
-// };

@@ -55,8 +55,6 @@ const Login: React.FC<LoginProps> = ({
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState<string | null>(null);
 
-    
-
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
@@ -66,7 +64,6 @@ const Login: React.FC<LoginProps> = ({
     setError(null);
     setSuccess(null);
 
-    //console.log(data);
     
     try {
         const response = await axios.post('/student/studsignin', data);
