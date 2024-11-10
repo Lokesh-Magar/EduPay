@@ -208,7 +208,7 @@ const FeesInvoiceList = () => {
                 <td style={{ padding: '8px' }}>{item.email}</td>
                 <td style={{ padding: '8px' }}>{item.amount}</td>
                 <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
-                <td style={{ padding: '8px' }}>{item.dueDate}</td>
+                <td style={{ padding: '8px' }}>{new Date(item.dueDate).toLocaleDateString()}</td>
                 <td style={{ padding: '8px' }}>{item.status ? 'Yes' : 'No'}</td>
                 <td style={{ padding: '8px' }}>{item.balance}</td>
                 <td style={{ padding: '5px' }}>

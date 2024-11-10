@@ -3,6 +3,7 @@ import { baselightTheme } from "@/utils/theme/DefaultColors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import "../app/global.css";
+import { UserProvider } from "@/UserContext";
 
 export default function RootLayout({
   children,
@@ -10,6 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    <UserProvider>
     <html lang="en">
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,6 +24,6 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
       </body>
-    </html>
+    </html></UserProvider>
   );
 }

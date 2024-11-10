@@ -9,14 +9,18 @@ import MonthlyEarnings from "@/app/(PortalLayout)/components/portal/MonthlyEarni
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useUser } from "@/UserContext";
+import Cookies from "js-cookie";
 
 const Portal = () => {
 const router=useRouter();
 const [loading, setLoading] = useState(true);
 
-//useEffect for getting username related data
+//useEffect for getting username related data from database but fetches all of the invoice data though not on this case
+// const {user}=useUser();
+const user = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
  
- const [user, setUser] = useState([]);
+ const [User, setUser] = useState([]);
  useEffect(() => {
    const fetchData = async()=>{
      try{
@@ -54,18 +58,17 @@ const checkAuthentication= async()=>{
 checkAuthentication();
 },[router]);
 
-
 if(loading) {return <div>Loading...</div>}
 
-
   return (
-    <PageContainer title="Student Portal" description="This is student portal.">
+    <PageContainer title="Student Portal" description="This is Student Portal.">
      {/* <h1>Test  {user.username}</h1> */}
      {/* <div>
   {data.map((item, index) => (
     <h1 key={index}>Welcome, {item.email}</h1>
   ))}
 </div> */}
+<h1>Hello, {user?.username || "Guest"}</h1>
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>

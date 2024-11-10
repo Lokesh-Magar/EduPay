@@ -56,9 +56,9 @@ const onSubmit = async (data:any,event:any) => {
     
       toast.success(response.data.message);
 
-      router.push('/dashboard');
+      router.push('/dashboard/fees/feestype');
+     
   } catch (err:any) {
-    
           // setError(err.response.data.message('An error occurred'));
           toast.error("An error occurred");
       

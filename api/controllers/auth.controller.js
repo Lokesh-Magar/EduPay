@@ -66,12 +66,16 @@ export const signin = async (req, res, next) => {
 
     const { password: pass, ...rest } = validUser._doc;
 
-  
-
     res
       .status(200)
-      .cookie('access_token', token, )
-      .json(rest);
+      .cookie('access_token', token,{
+        httpOnly:true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000 //
+
+      } )
+      .json({ message: 'Login successful', user: { id: validUser._id, email: validUser.email, isAdmin: validUser.isAdmin } });
   } catch (error) {
     next(error);
   }

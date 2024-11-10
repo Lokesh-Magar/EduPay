@@ -363,7 +363,8 @@ console.log(signature);
                   </Button>
                 </td>
               </tr>
-            ))}
+           
+           ))}
           </tbody>
         </table>
       )}
@@ -378,7 +379,7 @@ console.log(signature);
             }}
           >
             <Typography variant="body2" style={{ marginLeft: "16px" }}>
-              Showing 1 to 10 of 55 entries
+              Showing 1 to 10 of 10 entries
             </Typography>
             <div
               style={{

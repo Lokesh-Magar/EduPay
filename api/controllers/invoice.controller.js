@@ -29,6 +29,6 @@ export const getStudInvData = async (req, res) => {
       console.log('Data from database:', data);
     } catch (error) {
       console.error(error);
-      res.status(500).send('Error retrieving data');
+      res.status(500).send('Error retrieving datas');
     } 
 };

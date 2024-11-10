@@ -49,7 +49,7 @@ const IndexView = () => {
       <div className={styles.content}></div>
 
       {/* Student Login Dialog */}
-      <Login
+      <Login 
         open={openLogin}
         handleClose={handleCloseLogin}
         openRegisterDialog={() => {

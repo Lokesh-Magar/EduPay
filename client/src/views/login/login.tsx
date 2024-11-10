@@ -30,6 +30,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 interface LoginProps {
   title?: string;
@@ -54,6 +55,7 @@ const Login: React.FC<LoginProps> = ({
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState<string | null>(null);
+    const [user, setUser] = useState(null); 
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
@@ -66,11 +68,18 @@ const Login: React.FC<LoginProps> = ({
 
     
     try {
-        const response = await axios.post('/student/studsignin', data);
-        // console.log(response);
-        setSuccess(response.data.message);
+        const response = await axios.post('/student/studsignin', data,{withCredentials:true});
+        
+        const user=response.data.email;
 
-        router.push('/portal')
+        //Store user info in cookie
+       Cookies.set('user',JSON.stringify(user),{expires:7});
+      setUser(user);
+        setSuccess(response.data.message);
+        
+
+        router.push('/portal');
+        return response.data;
  
     } catch (err:any) {
         if (err.response) {
