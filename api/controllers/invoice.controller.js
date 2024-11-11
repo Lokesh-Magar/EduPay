@@ -1,5 +1,6 @@
 
 import Invoice from '../models/invoice.model.js';
+import Student from '../models/student.model.js';
 export const createInvoice = async (req, res) => {
     const { studentId,email, amount,pendingAmount, dueDate, status } = req.body;
     const invoice = new Invoice({ studentId,email, amount,pendingAmount, dueDate, status });
@@ -32,3 +33,20 @@ export const getStudInvData = async (req, res) => {
       res.status(500).send('Error retrieving datas');
     } 
 };
+
+export const getStudent= async (req, res) => {
+  try
+  {
+    const email = await Student.findOne({email}).populate('Student',[username,email]);
+    if(!email){
+      return res.status(404).send('User not found');}
+
+      res.json(email);
+  }
+  catch (error){
+    console.log("Error",error);
+    res.status(500).send('Server Error');
+  }
+};
+
+

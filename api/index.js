@@ -8,6 +8,7 @@ import studentRoutes from './routes/student.route.js';
 import commentRoutes from './routes/comment.route.js';
 import notificationRoutes from './routes/notification.route.js';
 import invoiceRoutes from './routes/invoice.route.js';
+import jwt from 'jsonwebtoken';
 
 import cookieParser from 'cookie-parser';
 import path from 'path';
@@ -37,7 +38,7 @@ const corsOptions={
   // method:"GET,HEAD,PUT,PATCH,POST,DELETE",
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials:true,
-  allowedHeaders:['Content-Type','Authorization'],
+  allowedHeaders:['Content-Type','Authorization','Accept','x-csrf-token'],
 }
 
 app.use(cors(corsOptions));
@@ -69,7 +70,7 @@ app.use('/api/invoice',invoiceRoutes);
 app.use('/api/invoice/invoicecreate',invoiceRoutes);
 app.use('/api/invoice/fetchInvData',invoiceRoutes);
 app.use('/api/invoice/fetchStudInvData',invoiceRoutes);
-
+app.use('/api/invoice/getStudent',invoiceRoutes);
 
 
 //Student Api routes
@@ -78,6 +79,30 @@ app.use('/api/student/studsignup',studentRoutes);
 app.use('/api/student/studsignin',studentRoutes);
 app.use('/api/student/studsignout',studentRoutes);
 app.use('/api/student/getStudent',studentRoutes);
+
+
+//Get student or user info
+
+app.get('/api/userinfo',(req,res)=>{
+
+  const token= req.cookies.access_token;
+  if(!token){
+    console.log("No token provided");
+    return res.status(401).json({message: "No token provided"});
+  }
+
+   // Verify and decode the JWT token
+   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token' });
+    }
+
+    // Extract the necessary user information from the decoded token
+    const { username, email } = decoded;
+    res.status(200).json({ username, email });
+  });
+
+});
 
 
 // Payment API Routes 

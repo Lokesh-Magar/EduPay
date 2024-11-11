@@ -67,17 +67,24 @@ export const studsignin = async (req, res, next) => {
       if (!validPassword) {
         return next(errorHandler(400, 'Invalid password'));
       }
-      const token = jwt.sign(
-        { id: validUser._id, isAdmin: validUser.isAdmin },
-        process.env.JWT_SECRET
-      );
+
+        const token = jwt.sign(
+      { id: validUser._id, isAdmin: validUser.isAdmin, username: validUser.username, email: validUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }  // Set token expiry for 1 hour
+    );
   
       const { password: pass, ...rest } = validUser._doc;
-  
       res
-        .status(200)
-        .cookie('access_token', token, )
-        .json(rest);
+      .status(200)
+      .cookie('access_token', token, {
+        httpOnly: true,  // Prevents JS from accessing the cookie
+        secure: process.env.NODE_ENV === 'production',  // Use Secure flag in production
+        sameSite: 'strict',  // Prevent cross-site cookie leakage
+        maxAge: 3600000  // Set cookie expiry (1 hour)
+      })
+
+      .json(rest);
     } catch (error) {
       next(error);
     }

@@ -10,5 +10,7 @@ const router = express.Router();
 router.post('/invoicecreate',verifyToken,createInvoice);
 router.get('/fetchInvData',verifyToken,getInvData);
 router.get('/fetchStudInvData',verifyToken,getStudInvData);
+router.get('/getStudent',verifyToken,getStudInvData);
+
 
 export default router;

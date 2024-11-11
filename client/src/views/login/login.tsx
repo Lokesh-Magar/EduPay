@@ -31,6 +31,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "js-cookie";
+import jwt_decode, { jwtDecode } from "jwt-decode";
+import { UserProvider, useUser } from "@/UserContext";
 
 interface LoginProps {
   title?: string;
@@ -49,17 +51,21 @@ const Login: React.FC<LoginProps> = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState<string | null>(null);
-    const [user, setUser] = useState(null); 
+   
+ 
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
+
+  
+  const {setUser}=useUser();
 
   const onSubmit = async (data:any) => {
     setLoading(true);
@@ -68,18 +74,19 @@ const Login: React.FC<LoginProps> = ({
 
     
     try {
-        const response = await axios.post('/student/studsignin', data,{withCredentials:true});
+        const response = await axios.post('/student/studsignin',data,{withCredentials:true});
         
-        const user=response.data.email;
+        // const userResponse = await axios.get('/api/userinfo', { withCredentials: true });
 
-        //Store user info in cookie
-       Cookies.set('user',JSON.stringify(user),{expires:7});
-      setUser(user);
+
+        setUser(response.data);//Update the set user context
+       
+        // Set the success message
         setSuccess(response.data.message);
-        
 
+     
         router.push('/portal');
-        return response.data;
+   
  
     } catch (err:any) {
         if (err.response) {
@@ -92,7 +99,7 @@ const Login: React.FC<LoginProps> = ({
     }
 };
   return (
-    
+   
     <Dialog
       open={open}
       onClose={handleClose}

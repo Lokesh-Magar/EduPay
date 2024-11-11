@@ -1,5 +1,5 @@
 "use client";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import PageContainer from "@/app/(PortalLayout)/components/container/PageContainer";
 import SalesOverview from "@/app/(PortalLayout)/components/portal/SalesOverview";
 import YearlyBreakup from "@/app/(PortalLayout)/components/portal/YearlyBreakup";
@@ -10,33 +10,20 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@/UserContext";
-import Cookies from "js-cookie";
+
+
 
 const Portal = () => {
+
 const router=useRouter();
 const [loading, setLoading] = useState(true);
 
-//useEffect for getting username related data from database but fetches all of the invoice data though not on this case
-// const {user}=useUser();
-const user = Cookies.get('user') ? JSON.parse(Cookies.get('user')!) : null;
- 
- const [User, setUser] = useState([]);
- useEffect(() => {
-   const fetchData = async()=>{
-     try{
-       const response =await axios.get('/student/getStudent');
-      
-       // const result= await response.json();
-       setUser(response.data);
-       // console.log('Fetched data:', response.data); 
-    
-     }
-     catch (error){
-       console.log("Error fetching the invoice data",error);}
-   }
-   
-   fetchData();
- },[]);
+ const { username, email } = useUser();   
+console.log("Username is",username);
+
+const {setUser} = useUser();
+
+
 
 //Check authentication useEffect
 useEffect(()=>{
@@ -44,6 +31,7 @@ const checkAuthentication= async()=>{
 
   try{
     const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+ 
     if (response.status !== 200) {
       router.push('/'); 
     }
@@ -62,13 +50,14 @@ if(loading) {return <div>Loading...</div>}
 
   return (
     <PageContainer title="Student Portal" description="This is Student Portal.">
-     {/* <h1>Test  {user.username}</h1> */}
+     <Typography variant='h5'>Welcome, {username}</Typography>
      {/* <div>
   {data.map((item, index) => (
     <h1 key={index}>Welcome, {item.email}</h1>
   ))}
 </div> */}
-<h1>Hello, {user?.username || "Guest"}</h1>
+
+{/* <h1>Hello,Guest</h1> */}
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>

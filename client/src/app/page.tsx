@@ -5,9 +5,11 @@ import styles from "./image.module.css";
 import "./global.css";
 import Login from "../views/login/login";
 import Register from "../views/register/register";
+import { UserProvider } from "@/UserContext";
 
 const IndexView = () => {
   const [openLogin, setOpenLogin] = useState(false);
+
   const [openRegister, setOpenRegister] = useState(false);
 
   const handleOpenLogin = () => setOpenLogin(true);
@@ -49,7 +51,8 @@ const IndexView = () => {
       <div className={styles.content}></div>
 
       {/* Student Login Dialog */}
-      <Login 
+       
+        <Login 
         open={openLogin}
         handleClose={handleCloseLogin}
         openRegisterDialog={() => {
@@ -57,6 +60,7 @@ const IndexView = () => {
           handleOpenRegister();
         }}
       />
+     
       {/* Register Dialog */}
       <Register
         open={openRegister}
@@ -66,5 +70,4 @@ const IndexView = () => {
     </>
   );
 };
-
 export default IndexView;
