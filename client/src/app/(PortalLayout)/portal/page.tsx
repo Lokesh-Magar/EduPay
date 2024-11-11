@@ -11,17 +11,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@/UserContext";
 
-
-
 const Portal = () => {
 
 const router=useRouter();
 const [loading, setLoading] = useState(true);
 
  const { username, email } = useUser();   
-console.log("Username is",username);
-
-const {setUser} = useUser();
+ 
+ const {setUser} = useUser();
+ console.log("Username is",username);
 
 
 
@@ -57,7 +55,7 @@ if(loading) {return <div>Loading...</div>}
   ))}
 </div> */}
 
-{/* <h1>Hello,Guest</h1> */}
+<h1>Your fee/invoice details here.</h1>
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>

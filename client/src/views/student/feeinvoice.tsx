@@ -31,6 +31,8 @@ import cookies from 'next-cookies';
 //Toast imports
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useUser } from "@/UserContext";
+import { set } from "lodash";
 
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -73,14 +75,26 @@ const FeesInvoiceList = () => {
   });
 //-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
 const [data, setData] = useState([]);
+const { username, email } = useUser();
+const [page, setPage] = useState(1);
+const [limit, setLimit] = useState(10); // Limit the data per page  
+
+
+const [totalEntries, setTotalEntries] = useState(0);
+const [totalPages, setTotalPages] = useState(1); 
+ 
+ const {setUser} = useUser();
+
+
 useEffect(() => {
 const fetchData = async()=>{
   try{
-    const response =await axios.get('/invoice/fetchStudInvData');
+    const response =await axios.get('/invoice/fetchStudInvData',{params:{email:email,page:page,limit:limit}});
 
     // const result= await response.json();
     setData(response.data);
-    // console.log('Fetched data:', response.data); 
+    setTotalEntries(response.data.total);
+    setTotalPages(response.data.totalPages);
  
   }
   catch (error){
@@ -88,7 +102,19 @@ const fetchData = async()=>{
 }
 
 fetchData();
-},[]);
+},[email,page,limit]);
+
+// Handle page change (for example, in a pagination component)
+//PageNumber
+// const pageNumber=1;
+const [pageNumber,setpageNumber]=useState(1);
+const handlePageChange = (newPage: number,pageNumber:number) => {
+  setPage(newPage);
+  setpageNumber(pageNumber);
+};
+const startEntry = (page - 1) * limit + 1;
+const endEntry = Math.min(page * limit, totalEntries);
+
 
  // ---- Check Authentication ----
  const router=useRouter();
@@ -111,8 +137,6 @@ fetchData();
    }
    checkAuthentication();
    },[router]);
-
-
 
 
 //   const onSubmit = async (payment_method: string) => {
@@ -164,7 +188,7 @@ const generateHash = () => {
 
 //Form Submit under Add button setting
  const signature = generateHash();
-console.log(signature);
+// console.log(signature);
 
 // ---- Loading State ----
 // const router=useRouter();
@@ -379,7 +403,7 @@ console.log(signature);
             }}
           >
             <Typography variant="body2" style={{ marginLeft: "16px" }}>
-              Showing 1 to 10 of 10 entries
+              Showing {startEntry} to {endEntry} of {totalEntries} entries
             </Typography>
             <div
               style={{
@@ -392,6 +416,7 @@ console.log(signature);
             >
               <Button
                 size="small"
+                onClick={() => handlePageChange(page - 1,pageNumber-1)} disabled={page === 1}
                 style={{
                   color: "black",
                   marginRight: "10px",
@@ -418,9 +443,9 @@ console.log(signature);
                   },
                 }}
               >
-                1
+                {pageNumber}
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="body2"
                 sx={{
                   color: "black",
@@ -494,10 +519,12 @@ console.log(signature);
                 }}
               >
                 5
-              </Typography>
+              </Typography> */}
 
               <Button
                 size="small"
+                onClick={() => handlePageChange(page + 1,pageNumber+1)} 
+                disabled={page === totalPages}
                 style={{
                   color: "black",
                   marginLeft: "10px",

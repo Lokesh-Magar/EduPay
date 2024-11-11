@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import {useRouter} from 'next/navigation';
 import axios from "axios";
+import { useUser } from "@/UserContext";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
 
 const Profile = () => {
@@ -18,6 +19,11 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState<string | null >(null);
+
+  //Context variables
+  const { username, email } = useUser();   
+ 
+ const {setUser} = useUser();
 
   const router = useRouter();
 
@@ -90,7 +96,7 @@ const Profile = () => {
           }),
         }}
         onClick={handleClick2}
-      >
+      > {username}
         <Avatar
           src="/images/profile/user-1.jpg"
           alt="image"
@@ -121,7 +127,8 @@ const Profile = () => {
           <ListItemIcon>
             <IconUser width={20} />
           </ListItemIcon>
-          <ListItemText>My Profile</ListItemText>
+          {/* <ListItemText>My Email</ListItemText> */}
+          <ListItemText>{email}</ListItemText>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
