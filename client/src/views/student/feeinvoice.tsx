@@ -76,44 +76,44 @@ const FeesInvoiceList = () => {
 //-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
 const [data, setData] = useState([]);
 const { username, email } = useUser();
+const {setUser} = useUser();
+
 const [page, setPage] = useState(1);
 const [limit, setLimit] = useState(10); // Limit the data per page  
 
 
 const [totalEntries, setTotalEntries] = useState(0);
 const [totalPages, setTotalPages] = useState(1); 
- 
- const {setUser} = useUser();
-
-
-useEffect(() => {
-const fetchData = async()=>{
-  try{
-    const response =await axios.get('/invoice/fetchStudInvData',{params:{email:email,page:page,limit:limit}});
-
-    // const result= await response.json();
-    setData(response.data);
-    setTotalEntries(response.data.total);
-    setTotalPages(response.data.totalPages);
- 
-  }
-  catch (error){
-    console.log("Error fetching the invoice data",error);}
-}
-
-fetchData();
-},[email,page,limit]);
-
 // Handle page change (for example, in a pagination component)
 //PageNumber
-// const pageNumber=1;
+
 const [pageNumber,setpageNumber]=useState(1);
 const handlePageChange = (newPage: number,pageNumber:number) => {
   setPage(newPage);
   setpageNumber(pageNumber);
 };
+
 const startEntry = (page - 1) * limit + 1;
 const endEntry = Math.min(page * limit, totalEntries);
+ 
+
+useEffect(() => {
+const fetchData = async()=>{
+  try{
+    const response =await axios.get('/invoice/fetchStudInvData',{params:{email:email,page:page,limit:limit}});
+    // const result= await response.json();
+    setData(response.data);
+    setTotalEntries(response.data.total);
+    setTotalPages(response.data.totalPages);
+    toast.success(response.data.message);
+  }
+  catch (error){
+    console.log("Error fetching the invoice data",error);}
+}
+fetchData();
+},[email,page,limit]);
+
+
 
 
  // ---- Check Authentication ----
@@ -367,7 +367,7 @@ const generateHash = () => {
                 <td style={{ padding: '8px', display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginLeft: 8 }}>{index + 1}</span>
                 </td>
-                <td style={{ padding: '8px' }}>{item.studentID}</td>
+                <td style={{ padding: '8px' }}>{item.username}</td>
                 <td style={{ padding: '8px' }}>{item.email}</td>
                 <td style={{ padding: '8px' }}>{item.amount}</td>
                 <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
@@ -445,82 +445,7 @@ const generateHash = () => {
               >
                 {pageNumber}
               </Typography>
-              {/* <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  marginRight: "8px",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                2
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  marginRight: "8px",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                3
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  marginRight: "8px",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                4
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                5
-              </Typography> */}
-
+             
               <Button
                 size="small"
                 onClick={() => handlePageChange(page + 1,pageNumber+1)} 

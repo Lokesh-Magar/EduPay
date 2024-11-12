@@ -14,7 +14,7 @@ import ContactPhoneSharpIcon from "@mui/icons-material/ContactPhoneSharp";
 import { TextField, InputAdornment,Box, CircularProgress, Grid, IconButton, Stack, Menu, MenuItem } from "@mui/material";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { useRef } from "react";
+import { useRef ,useEffect} from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { createTheme } from "@mui/material/styles";
@@ -36,22 +36,27 @@ const FeesGroupList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [loading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(null);
-  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-
- 
+  //Summit Invoice function
 const onSubmit = async (data:any,event:any) => {
   setLoading(true);
   setError(null);
   setSuccess(null);
   event.preventDefault();
+
+  const {amount,pendingAmount}=data;
   // console.log(data);
-  
-  try {
-      const response = await axios.post('/invoice/invoicecreate', data);
-      console.log(response.data);
+  if (pendingAmount>amount) {
+    toast.error("Pending amount cannot be greater than the Total Amount.");   
+    return ;
+  }
+  else {
+    try {
+      const response = await axios.post('/invoice/invoicecreate',data);
+      console.log("response",response.data);
       // setSuccess(response.data.message);
     
       toast.success(response.data.message);
@@ -60,13 +65,17 @@ const onSubmit = async (data:any,event:any) => {
      
   } catch (err:any) {
           // setError(err.response.data.message('An error occurred'));
-          toast.error("An error occurred");
+          toast.error('Invoice creation failed. Please try again.');
       
   } finally {
       setLoading(false);
+      setError("");
+   
   }
+   
+  }
+  
 };
-
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -90,7 +99,7 @@ const onSubmit = async (data:any,event:any) => {
 
    // ---- Check Authentication ----
    const router=useRouter();
-   React.useEffect(()=>{
+   useEffect(()=>{
      const checkAuthentication= async()=>{
      
        try{
@@ -142,19 +151,19 @@ const onSubmit = async (data:any,event:any) => {
                 Add Invoice
               </Typography>
               <Box
-      sx={{
-        position: "relative",
-        "&:before": {
-          content: '""',
-          backgroundSize: "400% 400%",
-          animation: "gradient 15s ease infinite",
-          position: "absolute",
-          height: "100%",
-          width: "100%",
-          opacity: "0.3",
-        },
-      }}
-    >
+                    sx={{
+                      position: "relative",
+                      "&:before": {
+                        content: '""',
+                        backgroundSize: "400% 400%",
+                        animation: "gradient 15s ease infinite",
+                        position: "absolute",
+                        height: "100%",
+                        width: "100%",
+                        opacity: "0.3",
+                      },
+                    }}
+                  >
             <Box>
               <Stack mb={3}>
               <Box>
@@ -170,14 +179,14 @@ const onSubmit = async (data:any,event:any) => {
               <TextField
              margin="normal"
              fullWidth
-             id="studentID"
+             id="username"
              label="StudentID"
-             className="studentID"
+             className="username"
              
-             autoComplete="studentID"
+             autoComplete="username"
              autoFocus
-             {...register('studentID', { required: 'Student ID is required' })}
-             error={!!errors.studentID}
+             {...register('username', { required: 'Student ID is required' })}
+             error={!!errors.username}
             //  helperText={errors.username?.message}
             
                 variant="outlined"
@@ -538,5 +547,4 @@ const onSubmit = async (data:any,event:any) => {
     </>
   );
 };
-
 export default FeesGroupList;

@@ -4,7 +4,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { TextField, InputAdornment, CircularProgress } from "@mui/material";
+import SentimentSatisfiedAltSharpIcon from "@mui/icons-material/SentimentSatisfiedAltSharp";
+import { TextField, InputAdornment, CircularProgress, Box, DialogContent, DialogActions, Dialog, DialogContentText, DialogTitle, MenuItem } from "@mui/material";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useEffect, useRef, useState } from "react";
@@ -13,10 +14,31 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { createTheme } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import MailSharpIcon from "@mui/icons-material/MailSharp";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useForm,Controller } from "react-hook-form";
+
+
+
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
+  
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+
+  //Dialog Box States
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -37,15 +59,77 @@ const FeesInvoiceList = () => {
     },
   });
 
+  //Submit Invoice function
+  const onSubmit = async (data:any,event:any) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    event.preventDefault();
+  
+    const {amount,pendingAmount}=data;
+    // console.log(data);
+    if (pendingAmount>amount) {
+      toast.error("Pending amount cannot be greater than the Total Amount.");   
+      return ;
+    }
+    else {
+      try {
+        const response = await axios.post('/invoice/invoicecreate', data);
+        // console.log(response.data);
+        setSuccess(response.data.message);
+      
+        
+        // toast.success(response.data.message);
+        
+        
+  
+        router.push('/dashboard/fees/feesinvoice');
+       
+    } catch (err:any) {
+            setError(err.response.data.message('An error occurred'));
+            // toast.error('Invoice creation failed. Please try again.');
+        
+    } finally {
+        setLoading(false);
+        setError("");
+        //Closes the dialog after submission
+        setOpen(false);
+      } 
+    }
+  };
+
   //-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10); // Limit the data per page  
+
+
+const [totalEntries, setTotalEntries] = useState(0);
+const [totalPages, setTotalPages] = useState(1); 
+// Handle page change (for example, in a pagination component)
+//PageNumber
+
+const [pageNumber,setpageNumber]=useState(1);
+const handlePageChange = (newPage: number,pageNumber:number) => {
+  setPage(newPage);
+  setpageNumber(pageNumber);
+};
+
+const startEntry = (page - 1) * limit + 1;
+const endEntry = Math.min(page * limit, totalEntries);
+
+
   useEffect(() => {
   const fetchData = async()=>{
     try{
-      const response =await axios.get('/invoice/fetchInvData');
+      const response =await axios.get('/invoice/fetchInvData',{params:{page:page,limit:limit}});
 
       // const result= await response.json();
       setData(response.data);
+      
+      setTotalEntries(response.data.total);
+      setTotalPages(response.data.totalPages);
+      toast.success(response.data.message);
       // console.log('Fetched data:', response.data); 
    
     }
@@ -54,29 +138,30 @@ const FeesInvoiceList = () => {
   }
   
   fetchData();
-},[]);
+},[page,limit]);
 
+const [loading, setLoading] = useState(false);
    // ---- Check Authentication ----
    const router=useRouter();
-   const [loading, setLoading] = React.useState(true);
-   React.useEffect(()=>{
-     const checkAuthentication= async()=>{
+  
+  //  useEffect(()=>{
+  //    const checkAuthentication= async()=>{
      
-       try{
-         const response = await axios.get('/auth/checkAuth',{withCredentials:true})
-         if (response.status !== 200) {
-           router.push('/backlogin'); // Redirect if not authenticated
-         }
-       }
-       catch(error){
-         router.push('/backlogin'); 
-       }
-       finally{
-         setLoading(false);
-       }
-     }
-     checkAuthentication();
-     },[router]);
+  //      try{
+  //        const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+  //        if (response.status !== 200) {
+  //          router.push('/backlogin'); // Redirect if not authenticated
+  //        }
+  //      }
+  //      catch(error){
+  //        router.push('/backlogin'); 
+  //      }
+  //      finally{
+  //        setLoading(false);
+  //      }
+  //    }
+  //    checkAuthentication();
+  //    },[router]);
 
   return (
     <>
@@ -113,7 +198,7 @@ const FeesInvoiceList = () => {
                 component="h3"
                 style={{ flex: 1, marginRight: "16%" }}
               >
-                <Button variant="contained">+ ADD</Button>
+                <Button variant="contained" onClick={handleClickOpen}>+ ADD</Button>
               </Typography>
               <div style={{ flexGrow: 1 }}>
                 <TextField
@@ -132,6 +217,132 @@ const FeesInvoiceList = () => {
                   }}
                 />
               </div>
+              <div>
+
+              {/* <Button variant="outlined" >
+                Open Dialog
+              </Button> */}
+
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>{"Add Fees Invoice"}</DialogTitle>
+                <DialogContent>
+        <Typography variant="body2" color="textSecondary">
+          Enter valid student details.
+        </Typography>
+        
+        <Box component="form">
+          <TextField
+            margin="normal"
+            fullWidth
+            id="studentId"
+            label="StudentID"
+            {...register('username', { required: 'Student ID is required' })}
+            error={!!errors.username}
+            
+            variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SentimentSatisfiedAltSharpIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          
+          <TextField
+            margin="normal"
+            fullWidth
+            id="email"
+            label="Email"
+            {...register('email', { required: 'Email is required' })}
+            error={!!errors.email}
+           
+            variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MailSharpIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          
+          <TextField
+            margin="normal"
+            fullWidth
+            id="amount"
+            label="Amount"
+            {...register('amount', { required: 'Amount is required' })}
+            error={!!errors.amount}
+          
+            variant="outlined"
+            type="number"
+          />
+          
+          <TextField
+            margin="normal"
+            fullWidth
+            id="pendingAmount"
+            label="Pending Amount"
+            {...register('pendingAmount', { required: 'Pending Amount is required' })}
+            error={!!errors.pendingAmount}
+            
+            variant="outlined"
+            type="number"
+          />
+          
+          <TextField
+            margin="normal"
+            fullWidth
+            id="dueDate"
+            label="Due Date"
+            type="date"
+            {...register('dueDate', { required: 'Due Date is required' })}
+            error={!!errors.dueDate}
+           
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+          />
+          
+          <TextField
+            margin="normal"
+            fullWidth
+            id="status"
+            label="Status"
+            defaultValue="unpaid"
+            select
+            {...register('status', { required: 'Status is required' })}
+            error={!!errors.status}
+            
+            variant="outlined"
+          >
+            <MenuItem value="unpaid">Unpaid</MenuItem>
+            <MenuItem value="paid">Paid</MenuItem>
+          </TextField>
+          
+          {error && <Typography color="error">{error}</Typography>}
+          {success && <Typography color="success">{success}</Typography>}
+          
+          <ToastContainer position="top-right" autoClose={5000} hideProgressBar />
+          
+          <Button
+          onClick={handleSubmit(onSubmit)}
+            color="primary"
+            variant="contained"
+            size="large"
+            type="submit"
+            fullWidth
+            disabled={loading}
+          >
+            Add Fee Invoice {loading ? <CircularProgress size={24} /> : ''}
+          </Button>
+        </Box>
+      </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <ButtonGroup
                   variant="outlined"
@@ -186,7 +397,7 @@ const FeesInvoiceList = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #ddd' }}>
-              <th style={{ padding: '8px' }}>#</th>
+              <th style={{ padding: '8px' }}>SN</th>
               <th style={{ padding: '8px' }}>STUDENT ID</th>
               <th style={{ padding: '8px' }}>EMAIL</th>
               <th style={{ padding: '8px' }}>AMOUNT</th>
@@ -204,13 +415,13 @@ const FeesInvoiceList = () => {
                 <td style={{ padding: '8px', display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginLeft: 8 }}>{index + 1}</span>
                 </td>
-                <td style={{ padding: '8px' }}>{item.studentId}</td>
+                <td style={{ padding: '8px' }}>{item.username}</td>
                 <td style={{ padding: '8px' }}>{item.email}</td>
                 <td style={{ padding: '8px' }}>{item.amount}</td>
                 <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
                 <td style={{ padding: '8px' }}>{new Date(item.dueDate).toLocaleDateString()}</td>
                 <td style={{ padding: '8px' }}>{item.status ? 'Yes' : 'No'}</td>
-                <td style={{ padding: '8px' }}>{item.balance}</td>
+                {/* <td style={{ padding: '8px' }}>{item.balance}</td> */}
                 <td style={{ padding: '5px' }}>
                   <Button variant="outlined" size="small" style={{ borderRadius: '5px' }}>
                     {item.status}
@@ -239,7 +450,7 @@ const FeesInvoiceList = () => {
             }}
           >
             <Typography variant="body2" style={{ marginLeft: "16px" }}>
-              Showing 1 to 10 of 55 entries
+            Showing {startEntry} to {endEntry} of {totalEntries} entries
             </Typography>
             <div
               style={{
@@ -252,6 +463,8 @@ const FeesInvoiceList = () => {
             >
               <Button
                 size="small"
+                onClick={() => handlePageChange(page - 1,pageNumber-1)} 
+                disabled={page === 1}
                 style={{
                   color: "black",
                   marginRight: "10px",
@@ -278,86 +491,13 @@ const FeesInvoiceList = () => {
                   },
                 }}
               >
-                1
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  marginRight: "8px",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                2
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  marginRight: "8px",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                3
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  marginRight: "8px",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                4
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "black",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  background: "transparent",
-                  cursor: "pointer",
-                  fontSize: "0.75rem",
-                  transition: "background 0.3s ease",
-                  "&:hover": {
-                    color: "white",
-                    background: theme.palette.primary.main,
-                  },
-                }}
-              >
-                5
+                {pageNumber}
               </Typography>
 
               <Button
                 size="small"
+                onClick={() => handlePageChange(page + 1,pageNumber+1)} 
+                disabled={page === totalPages}
                 style={{
                   color: "black",
                   marginLeft: "10px",

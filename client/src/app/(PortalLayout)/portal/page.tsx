@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@/UserContext";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Portal = () => {
 
@@ -28,11 +30,17 @@ useEffect(()=>{
 const checkAuthentication= async()=>{
 
   try{
-    const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+    const response = await axios.get('/auth/checkAuth',{withCredentials:true});
+
  
+    
     if (response.status !== 200) {
+      
+      
       router.push('/'); 
+      
     }
+   
   }
   catch(error){
     router.push('/'); 
@@ -43,6 +51,8 @@ const checkAuthentication= async()=>{
 }
 checkAuthentication();
 },[router]);
+
+
 
 if(loading) {return <div>Loading...</div>}
 

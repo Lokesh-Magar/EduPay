@@ -33,6 +33,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import jwt_decode, { jwtDecode } from "jwt-decode";
 import { UserProvider, useUser } from "@/UserContext";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface LoginProps {
   title?: string;
@@ -80,19 +82,19 @@ const Login: React.FC<LoginProps> = ({
 
 
         setUser(response.data);//Update the set user context
-       
+        toast.success("Login successful");
         // Set the success message
-        setSuccess(response.data.message);
-
-     
+        // setSuccess(response.data.message);
         router.push('/portal');
    
  
     } catch (err:any) {
         if (err.response) {
             setError(err.response.data.message || 'An error occurred');
+            toast.error("Check your credentials,=.");
         } else {
             setError("An error occurred");
+            toast.error("Check your credentials,=.");
         }
     } finally {
         setLoading(false);
