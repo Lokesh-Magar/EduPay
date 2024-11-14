@@ -35,7 +35,6 @@ const __dirname = path.resolve();
 const app = express();
 const corsOptions={
   origin:"http://localhost:3000",
-  // method:"GET,HEAD,PUT,PATCH,POST,DELETE",
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials:true,
   allowedHeaders:['Content-Type','Authorization','Accept','x-csrf-token'],
@@ -103,7 +102,6 @@ app.get('/api/userinfo',(req,res)=>{
   });
 
 });
-
 
 // Payment API Routes 
 app.post("/initialize-esewa", async (req, res) => {

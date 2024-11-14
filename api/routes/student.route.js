@@ -1,6 +1,6 @@
 import express from 'express';
 import {studsignin,studsignup,studsignout} from '../controllers/student.controller.js';
-import { verifyToken } from '../utils/verifyUser.js';
+import { verifyToken } from '../middlewares/verifyUser.js';
 const router = express.Router();
 
 //Check if student is authenticated

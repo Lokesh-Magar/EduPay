@@ -1,8 +1,8 @@
 import Student from '../models/student.model.js';
 import bcryptjs from 'bcryptjs';
-import { errorHandler } from '../utils/error.js';
+import { errorHandler } from '../middlewares/error.js';
 import jwt from 'jsonwebtoken';
-// const Notification = require('../models/notification.model');
+
 import Notification from '../models/notification.model.js';
 
 export const studsignup=async (req, res, next)=>{
@@ -94,12 +94,10 @@ export const studsignin = async (req, res, next) => {
     try {
       
       res.clearCookie('access_token', {
-        httpOnly: true, // Ensure that cookie cannot be accessed via client-side scripts
+        httpOnly: true, 
         secure: process.env.NODE_ENV === 'production', 
         sameSite: 'strict', // (lax, strict, or none)
       });
-  
-      // You can add additional logic here, like invalidating the token if stored in a database
   
       res.status(200).json({ message: 'Signed out successfully' });
     } catch (error) {

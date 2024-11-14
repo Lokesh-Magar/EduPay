@@ -1,5 +1,5 @@
 import Post from '../models/post.model.js';
-import { errorHandler } from '../utils/error.js';
+import { errorHandler } from '../middlewares/error.js';
 
 // es6 modules
 export const create = async (req, res, next) => {

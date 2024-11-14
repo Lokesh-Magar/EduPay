@@ -1,6 +1,6 @@
 import express from 'express';
 import { google, signin, signup, signout } from '../controllers/auth.controller.js';
-import { verifyToken } from '../utils/verifyUser.js';
+import { verifyToken } from '../middlewares/verifyUser.js';
 const router = express.Router();
 
 //

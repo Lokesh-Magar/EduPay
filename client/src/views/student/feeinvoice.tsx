@@ -38,9 +38,15 @@ const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
 
   const [open, setOpen] = useState(false);
+  const[itemId, setItemId] = useState("");
+  const[transAmt, setTransAmt] = useState("");
 
-  const handleClickOpen = () => {
+  //Redirect set state
+  const handleClickOpen = (id,tAmt) => {
     setOpen(true);
+    setItemId(id);
+    setTransAmt(tAmt);
+
   };
 
   const handleClose = () => {
@@ -178,7 +184,7 @@ const generateHash = () => {
  
 
   const hash = CryptoJS.HmacSHA256(
-    'total_amount=110,transaction_uuid=555,product_code=EPAYTEST',
+    `total_amount=${transAmt},transaction_uuid=${itemId},product_code=EPAYTEST`,
     '8gBm/:&EnhH.1/q'
   );
   const hashBase64 = CryptoJS.enc.Base64.stringify(hash);
@@ -224,34 +230,23 @@ const generateHash = () => {
         <Card sx={{ width: "100%", height: "105%" }}>
           <CardContent>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="h6"
-                component="h3"
-                style={{ flex: 1, marginRight: "16%" }}
-              >
-                <Button variant="contained"
-                  // onClick={()=> onSubmit("esewa")
-                  onClick={handleClickOpen}
-                >+ ADD</Button>
-              </Typography>
-
+           
               <div>
-
               {/* <Button variant="outlined" >
                 Open Dialog
               </Button> */}
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{"Add Fees/Payment"}</DialogTitle>
+        <DialogTitle>{"Esewa Payment Redirect"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ESEWA Payment Redirect.
+            You are about to leave this page. Press PAY NOW button to continue.
           </DialogContentText>
           <Box component="form" action={"https://rc-epay.esewa.com.np/api/epay/main/v2/form"} method="POST" target="_blank" >
-          <TextField hidden label="Amount" name="amount" defaultValue="100"  required fullWidth />
+          <TextField hidden label="Amount" name="amount" defaultValue={transAmt}  required fullWidth />
           <TextField hidden label="Tax Amount" name="tax_amount" defaultValue="10" required fullWidth />
-          <TextField hidden label="Total Amount" name="total_amount" defaultValue="110" required fullWidth />
-          <TextField hidden label="Transaction UUID" name="transaction_uuid" defaultValue="555" required fullWidth />
+          <TextField hidden label="Total Amount" name="total_amount" defaultValue={transAmt+10} required fullWidth />
+          <TextField hidden label="Transaction UUID" name="transaction_uuid" defaultValue={itemId} required fullWidth />
           <TextField hidden label="Product Code" name="product_code" defaultValue="EPAYTEST" required fullWidth />
           <TextField hidden label="Product Service Charge" name="product_service_charge" defaultValue="0" required fullWidth />
           <TextField hidden label="Product Delivery Charge" name="product_delivery_charge" defaultValue="0" required fullWidth />
@@ -261,7 +256,7 @@ const generateHash = () => {
           <TextField hidden label="Signature" name="signature" value= {signature} required fullWidth />
 
           <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
-            Submit
+            Pay Now
           </Button>
           </Box>
           {/* <Button variant="contained" onClick={generateHash}>Generate Hash</Button> */}
@@ -349,15 +344,13 @@ const generateHash = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #ddd' }}>
-              <th style={{ padding: '8px' }}>#</th>
-              <th style={{ padding: '8px' }}>STUDENT ID</th>
+              <th style={{ padding: '8px' }}>SN</th>
+              <th style={{ padding: '8px' }}>Transcation ID</th>
               <th style={{ padding: '8px' }}>EMAIL</th>
               <th style={{ padding: '8px' }}>AMOUNT</th>
               <th style={{ padding: '8px' }}>PENDING AMOUNT</th>
               <th style={{ padding: '8px' }}>DUE DATE</th>
-              
               <th style={{ padding: '5px' }}>STATUS</th>
-              
               <th style={{ padding: '8px' }}>ACTIONS</th>
             </tr>
           </thead>
@@ -367,25 +360,26 @@ const generateHash = () => {
                 <td style={{ padding: '8px', display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginLeft: 8 }}>{index + 1}</span>
                 </td>
-                <td style={{ padding: '8px' }}>{item.username}</td>
-                <td style={{ padding: '8px' }}>{item.email}</td>
+                <td style={{ padding: '8px' }}>{item._id}</td>
+                <td style={{ padding: '8px' }}>{email}</td>
                 <td style={{ padding: '8px' }}>{item.amount}</td>
-                <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
+                <td style={{ padding: '16px' }}>{item.pendingAmount}</td>
                 <td style={{ padding: '8px' }}>{new Date(item.dueDate).toLocaleDateString()}</td>
-                <td style={{ padding: '8px' }}>{item.status ? 'Yes' : 'No'}</td>
-                <td style={{ padding: '8px' }}>{item.balance}</td>
+                <td style={{ padding: '8px' }}> <Button variant="outlined" size="small" style={{ borderRadius: '5px' }}>
+                                                  {item.status}
+                                                  </Button>
+                                                            </td>
+               
                 <td style={{ padding: '5px' }}>
-                  <Button variant="outlined" size="small" style={{ borderRadius: '5px' }}>
-                    {item.status}
-                  </Button>
+                  {item.status==='unpaid' ? (<Button variant="contained" size="small" onClick={()=>handleClickOpen(item._id,item.amount)}>Pay</Button>):
+                  ( <Typography variant="h6" style={{ borderRadius: '5px' }}>
+                    Not Available
+                    </Typography>)}
+             
+                
                 </td>
                
-                <td style={{ padding: '8px' }}>
-                  <Button variant="contained" size="small">Edit</Button>
-                  <Button variant="outlined" size="small" style={{ marginLeft: '5px' }}>
-                    Delete
-                  </Button>
-                </td>
+                
               </tr>
            
            ))}

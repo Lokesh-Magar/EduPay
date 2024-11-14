@@ -30,8 +30,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Cookies from "js-cookie";
-import jwt_decode, { jwtDecode } from "jwt-decode";
+
 import { UserProvider, useUser } from "@/UserContext";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -60,13 +59,10 @@ const Login: React.FC<LoginProps> = ({
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState<string | null>(null);
    
- 
-
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
-  
   const {setUser}=useUser();
 
   const onSubmit = async (data:any) => {
@@ -74,16 +70,12 @@ const Login: React.FC<LoginProps> = ({
     setError(null);
     setSuccess(null);
 
-    
     try {
         const response = await axios.post('/student/studsignin',data,{withCredentials:true});
-        
-        // const userResponse = await axios.get('/api/userinfo', { withCredentials: true });
-
-
+  
         setUser(response.data);//Update the set user context
         toast.success("Login successful");
-        // Set the success message
+       
         // setSuccess(response.data.message);
         router.push('/portal');
    
