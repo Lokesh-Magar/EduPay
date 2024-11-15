@@ -266,6 +266,24 @@ const [loading, setLoading] = useState(false);
               ),
             }}
           />
+
+        <TextField
+            margin="normal"
+            fullWidth
+            id="phone"
+            label="Phone"
+            {...register('phone', { required: 'Email is required' })}
+            error={!!errors.phone}
+           
+            variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MailSharpIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
           
           <TextField
             margin="normal"

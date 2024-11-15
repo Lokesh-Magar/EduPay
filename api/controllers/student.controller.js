@@ -39,7 +39,7 @@ try {
     //Creating Notification for the new user
     const notification = new Notification({
         title: 'New Student Registered',
-        message: `A new student has been registered with email ${newStudent.email} under the name ${newStudent.username}`,
+        message: `A Student Account has been registered with this email ${newStudent.email} under the name ${newStudent.username}`,
         userId: newStudent._id,
 }   
     );

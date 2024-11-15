@@ -13,6 +13,7 @@ import {useRouter} from 'next/navigation';
 import axios from "axios";
 import { useUser } from "@/UserContext";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -65,20 +66,21 @@ const Profile = () => {
         { withCredentials: true } 
       );
 
-      if (response.status === 200) {
+      // if (response.status === 200) {
    
-        localStorage.removeItem('access_token');
+        // localStorage.removeItem('access_token');
 
         router.push('/');
-      } else {
-        setError(response.data.message || 'An error occurred during signout');
+        toast.success("Logged Out Successfully");
+      // } else {
+        // setError(response.data.message || 'An error occurred during signout');
       }
-    }
+    // }
     catch (err: any) {
       setError('An error occurred during signout');
     } 
     finally {
-      setLoading(false);  // Stop loading
+      setLoading(false); 
     }
   };
 

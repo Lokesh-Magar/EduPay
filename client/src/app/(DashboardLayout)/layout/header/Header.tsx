@@ -8,6 +8,7 @@ import {
   IconButton,
   Badge,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import Link from "next/link";
@@ -62,7 +63,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           aria-haspopup="true"
         >
           <Badge variant="dot" color="primary">
-            <IconBellRinging size="21" stroke="1.5" />
+            <IconBellRinging  size="21" stroke="1.5" />
           </Badge>
         </IconButton>
         <Box flexGrow={1} />

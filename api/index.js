@@ -62,7 +62,13 @@ app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/auth/signup',authRoutes);
 app.use('/api/auth/signout',authRoutes);
+
+
+
+//Notification Api routes
 app.use('/api/notifications',notificationRoutes);
+app.use('/api/notifications/fetchStudNotifyData',notificationRoutes);
+app.use('/api',notificationRoutes);
 
 //Invoice Api routes
 app.use('/api/invoice',invoiceRoutes);
@@ -167,7 +173,7 @@ app.get("/complete-payment", async (req, res) => {
       apiQueryFromUser: req.query,
       paymentGateway: "esewa",
       status: "success",
-    });
+    }); 
 
     //updating purchased record
     await PurchasedItem.findByIdAndUpdate(

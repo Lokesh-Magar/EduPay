@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import QRCode from "qrcode";
-import { useState, ChangeEvent } from "react";
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
 import { Button } from "@mui/material";
 
 const QRCODE = () => {
-  const [url, setUrl] = useState("");
+  const [invoiceData, setInvoiceData] = useState({
+    eSewa_id: "9803431247",
+    name: "Nirmala Kaduwal"
+    
+  });
   const [qrCode, setQrCode] = useState("");
+
   const GenerateQRCode = () => {
+    const dataToEncode = JSON.stringify(invoiceData);
     QRCode.toDataURL(
-      url,
+      dataToEncode,
       {
         width: 800,
         margin: 2,
@@ -20,32 +24,28 @@ const QRCODE = () => {
       },
       (err, url) => {
         if (err) return console.error(err);
-
-        console.log(url);
         setQrCode(url);
       }
     );
   };
+
   return (
     <div className="qrCode">
       <div
         className="div"
         style={{ display: "flex", marginTop: "40px", gap: "5px" }}
       >
-        <CustomTextField
-          placeholder="Enter your email...."
-          style={{ width: "30%" }}
-          value={url}
-          onChange={(evt: ChangeEvent<HTMLInputElement>) =>
-            setUrl(evt.target.value)
-          }
-        />
         <Button
           onClick={GenerateQRCode}
           style={{ background: "blue", color: "white" }}
         >
           Generate QR Code
         </Button>
+      </div>
+      <div className="invoice-details" style={{ marginTop: "20px" }}>
+        <p><strong>Invoice ID:</strong> {invoiceData.id}</p>
+        <p><strong>Amount:</strong> Rs. {invoiceData.amount}</p>
+        <p><strong>Due Date:</strong> {invoiceData.dueDate}</p>
       </div>
       {qrCode && (
         <img

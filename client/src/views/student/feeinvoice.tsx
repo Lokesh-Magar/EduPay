@@ -12,7 +12,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { createTheme } from "@mui/material/styles";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/navigation";
@@ -26,27 +26,63 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import CryptoJS from 'crypto-js';
-import cookies from 'next-cookies';
-
+// import QRCODE from "../qrCode/qrCode";
+import QRCode from "qrcode";
 //Toast imports
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "@/UserContext";
-import { set } from "lodash";
+
+
 
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
-
   const [open, setOpen] = useState(false);
-  const[itemId, setItemId] = useState("");
-  const[transAmt, setTransAmt] = useState("");
+
+
+
 
   //Redirect set state
+  const[itemId, setItemId] = useState("");
+  const[transId, setTransId] = useState("");
+  const[transAmt, setTransAmt] = useState(0);
+
+  //QR state
+  const [invoiceData, setInvoiceData] = useState({});
+  
+  const [qrCode, setQrCode] = useState("");
+
+  const GenerateQRCode = () => {
+    const dataToEncode = JSON.stringify(invoiceData);
+    QRCode.toDataURL(
+      dataToEncode,
+      {
+        width: 800,
+        margin: 2,
+        color: {
+          dark: "#000000ff",
+          light: "#ffffffff",
+        },
+      },
+      (err, url) => {
+        if (err) return console.error(err);
+        setQrCode(url);
+      }
+    );
+  };
+
+
+
+
   const handleClickOpen = (id,tAmt) => {
     setOpen(true);
+  
+    setTransId(crypto.randomUUID());
     setItemId(id);
     setTransAmt(tAmt);
-
+    console.log(id);
+    console.log(tAmt);
+ 
   };
 
   const handleClose = () => {
@@ -79,6 +115,7 @@ const FeesInvoiceList = () => {
       },
     },
   });
+
 //-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
 const [data, setData] = useState([]);
 const { username, email } = useUser();
@@ -102,25 +139,29 @@ const handlePageChange = (newPage: number,pageNumber:number) => {
 const startEntry = (page - 1) * limit + 1;
 const endEntry = Math.min(page * limit, totalEntries);
  
-
+//Use Effect for fetching the invoice data in Student portal
 useEffect(() => {
 const fetchData = async()=>{
   try{
     const response =await axios.get('/invoice/fetchStudInvData',{params:{email:email,page:page,limit:limit}});
-    // const result= await response.json();
     setData(response.data);
     setTotalEntries(response.data.total);
     setTotalPages(response.data.totalPages);
-    toast.success(response.data.message);
+    setInvoiceData(response.data);
+   
+    toast.success("Data Fetched Successfully");
   }
   catch (error){
-    console.log("Error fetching the invoice data",error);}
+    toast.error("Error fetching the invoice data");}
 }
 fetchData();
 },[email,page,limit]);
 
 
+ 
 
+
+ 
 
  // ---- Check Authentication ----
  const router=useRouter();
@@ -184,7 +225,7 @@ const generateHash = () => {
  
 
   const hash = CryptoJS.HmacSHA256(
-    `total_amount=${transAmt},transaction_uuid=${itemId},product_code=EPAYTEST`,
+    `total_amount=${transAmt+10},transaction_uuid=${transId},product_code=EPAYTEST`,
     '8gBm/:&EnhH.1/q'
   );
   const hashBase64 = CryptoJS.enc.Base64.stringify(hash);
@@ -238,6 +279,45 @@ const generateHash = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Esewa Payment Redirect"}</DialogTitle>
+        <div className="qrCode">
+      <div
+        className="div"
+        style={{ display: "flex", marginTop: "40px", gap: "5px" }}
+      >
+        <Button
+          onClick={GenerateQRCode}
+          style={{ background: "blue", color: "white" }}
+        >
+          Generate QR Code
+        </Button>
+      </div>
+      <div className="invoice-details" style={{ marginTop: "20px" }}>
+      {/* {data.map((item, index) => (
+        <tr key={index}>
+
+        <td><strong>Invoice ID:</strong> {item._id}</td>
+        <td><strong>Amount:</strong> Rs. {item.amount}</td>
+        <td><strong>Due Date:</strong> {item.dueDate}</td>
+        </tr>
+      ))} */}
+        
+      </div>
+      {qrCode && (
+        <img
+          src={qrCode}
+          style={{
+            display: "block",
+            width: "50%",
+            maxWidth: "200px",
+            margin: "2rem auto",
+            marginLeft: "50%",
+            marginTop: "-6%",
+            border: "2px solid black",
+          }}
+          alt="Generated QR Code"
+        />
+      )}
+    </div>
         <DialogContent>
           <DialogContentText>
             You are about to leave this page. Press PAY NOW button to continue.
@@ -246,12 +326,12 @@ const generateHash = () => {
           <TextField hidden label="Amount" name="amount" defaultValue={transAmt}  required fullWidth />
           <TextField hidden label="Tax Amount" name="tax_amount" defaultValue="10" required fullWidth />
           <TextField hidden label="Total Amount" name="total_amount" defaultValue={transAmt+10} required fullWidth />
-          <TextField hidden label="Transaction UUID" name="transaction_uuid" defaultValue={itemId} required fullWidth />
+          <TextField hidden label="Transaction UUID" name="transaction_uuid" defaultValue={transId} required fullWidth />
           <TextField hidden label="Product Code" name="product_code" defaultValue="EPAYTEST" required fullWidth />
           <TextField hidden label="Product Service Charge" name="product_service_charge" defaultValue="0" required fullWidth />
           <TextField hidden label="Product Delivery Charge" name="product_delivery_charge" defaultValue="0" required fullWidth />
-          <TextField hidden label="Success URL" name="success_url" defaultValue="https://esewa.com.np" required fullWidth />
-          <TextField hidden label="Failure URL" name="failure_url" defaultValue="https://google.com" required fullWidth />
+          <TextField hidden label="Success URL" name="success_url" defaultValue={`https://localhost:3000/success/${itemId}`} required fullWidth />
+          <TextField hidden label="Failure URL" name="failure_url" defaultValue={`https://localhost:3000/faliure/${itemId}`} required fullWidth />
           <TextField hidden label="Signed Field Names" name="signed_field_names" defaultValue="total_amount,transaction_uuid,product_code" required fullWidth />
           <TextField hidden label="Signature" name="signature" value= {signature} required fullWidth />
 
@@ -371,7 +451,7 @@ const generateHash = () => {
                                                             </td>
                
                 <td style={{ padding: '5px' }}>
-                  {item.status==='unpaid' ? (<Button variant="contained" size="small" onClick={()=>handleClickOpen(item._id,item.amount)}>Pay</Button>):
+      {item.status==='unpaid' ? (<Button variant="contained" size="small" onClick={()=>handleClickOpen(item._id,item.amount)}>Pay</Button>):
                   ( <Typography variant="h6" style={{ borderRadius: '5px' }}>
                     Not Available
                     </Typography>)}
