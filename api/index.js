@@ -81,7 +81,7 @@ app.use('/api',notificationRoutes);
 //Invoice Api routes
 app.use('/api/invoice',invoiceRoutes);
 app.use('/api/invoice/invoicecreate',invoiceRoutes);
-app.use('/api/invoice/fetchInvData',invoiceRoutes);
+// app.use('/api/invoice/fetchInvData',invoiceRoutes);
 app.use('/api/invoice/fetchStudInvData',invoiceRoutes);
 app.use('/api/invoice/getStudent',invoiceRoutes);
 // app.use('/api/invoice/update/:id',invoiceRoutes);

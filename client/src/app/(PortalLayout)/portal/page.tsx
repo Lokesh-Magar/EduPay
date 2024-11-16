@@ -1,22 +1,43 @@
 "use client";
 import { Grid, Box, Typography } from "@mui/material";
 import PageContainer from "@/app/(PortalLayout)/components/container/PageContainer";
-import SalesOverview from "@/app/(PortalLayout)/components/portal/SalesOverview";
-import YearlyBreakup from "@/app/(PortalLayout)/components/portal/YearlyBreakup";
+
+import FeesBreakup from "@/app/(PortalLayout)/components/portal/FeesBreakup";
 import RecentTransactions from "@/app/(PortalLayout)/components/portal/RecentTransactions";
 import ProductPerformance from "@/app/(PortalLayout)/components/portal/ProductPerformance";
-import MonthlyEarnings from "@/app/(PortalLayout)/components/portal/MonthlyEarnings";
+import InvoiceClearings from "@/app/(PortalLayout)/components/portal/InvoiceClearings";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@/UserContext";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import FeesOverview from "@/app/(DashboardLayout)/components/dashboard/FeesOverview";
 
 const Portal = () => {
 
 const router=useRouter();
 const [loading, setLoading] = useState(true);
+
+
+const [invoices, setInvoices] = useState([]);
+  // const [loading, setLoading] = useState(true);
+
+  //fetch the data for analysis
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/invoice/fetchStudInvData"); // this endpoint returns all invoices
+        setInvoices(response.data);
+      } catch (error) {
+        console.error("Error fetching invoices:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
 
  const { username, email } = useUser();   
  
@@ -32,13 +53,8 @@ const checkAuthentication= async()=>{
   try{
     const response = await axios.get('/auth/checkAuth',{withCredentials:true});
 
- 
-    
     if (response.status !== 200) {
-      
-      
       router.push('/'); 
-      
     }
    
   }
@@ -66,18 +82,18 @@ if(loading) {return <div>Loading...</div>}
 </div> */}
 
 <h1>Your fee/invoice details here.</h1>
-      <Box>
+<Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <SalesOverview />
+            <FeesOverview />
           </Grid>
           <Grid item xs={12} lg={4}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <YearlyBreakup />
+                <FeesBreakup invoices={invoices}/>
               </Grid>
               <Grid item xs={12}>
-                <MonthlyEarnings />
+                <InvoiceClearings invoices={invoices} />
               </Grid>
             </Grid>
           </Grid>

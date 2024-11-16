@@ -2,17 +2,39 @@
 import { Grid, Box } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import FeesOverview from "@/app/(DashboardLayout)/components/dashboard/FeesOverview";
-import YearlyBreakup from "@/app/(DashboardLayout)/components/dashboard/YearlyBreakup";
+import YearlyBreakup from "@/app/(DashboardLayout)/components/dashboard/FeesBreakup";
 import RecentTransactions from "@/app/(DashboardLayout)/components/dashboard/RecentTransactions";
 import ProductPerformance from "@/app/(DashboardLayout)/components/dashboard/ProductPerformance";
-import MonthlyEarnings from "@/app/(DashboardLayout)/components/dashboard/MonthlyEarnings";
+import MonthlyEarnings from "@/app/(DashboardLayout)/components/dashboard/InvoiceClearings";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import FeesBreakup from "@/app/(DashboardLayout)/components/dashboard/FeesBreakup";
+import InvoiceClearings from "@/app/(DashboardLayout)/components/dashboard/InvoiceClearings";
 
 const Dashboard = () => {
 const router=useRouter();
 const [loading, setLoading] = useState(true);
+
+const [invoices, setInvoices] = useState([]);
+  // const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/invoice/fetchInvData"); // Assuming this endpoint returns all invoices
+        setInvoices(response.data);
+      } catch (error) {
+        console.error("Error fetching invoices:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+
 
 useEffect(()=>{
 const checkAuthentication= async()=>{
@@ -44,10 +66,10 @@ if(loading) {return <div>Loading...</div>}
           <Grid item xs={12} lg={4}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <YearlyBreakup />
+                <FeesBreakup invoices={invoices}/>
               </Grid>
               <Grid item xs={12}>
-                <MonthlyEarnings />
+                <InvoiceClearings invoices={invoices} />
               </Grid>
             </Grid>
           </Grid>
