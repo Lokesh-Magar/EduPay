@@ -17,6 +17,7 @@ const SuccessPage: React.FC = () => {
         .then((data) => setMessage(data.message))
         .catch(() => setMessage('Error updating invoice status.'));
     }
+   
   }, [itemId, status]);
 
   return (

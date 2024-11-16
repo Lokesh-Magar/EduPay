@@ -34,14 +34,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "@/UserContext";
 import QRCODE from "../qrCode/qrCode";
 
-
-
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-
-
-
 
   //Redirect set state
   const[itemId, setItemId] = useState("");
@@ -51,7 +46,6 @@ const FeesInvoiceList = () => {
   //QR state
   const invoiceData= useState({"eSewa_id":"9803431247","name":"Nirmala Adhikari Kaduwal"});
  
-
   const [qrCode, setQrCode] = useState("");
 
   const GenerateQRCode = () => {
@@ -73,8 +67,6 @@ const FeesInvoiceList = () => {
     );
   };
 
-
-
   const handleClickOpen = (id,tAmt) => {
     setOpen(true);
     GenerateQRCode();
@@ -83,6 +75,7 @@ const FeesInvoiceList = () => {
     setTransAmt(tAmt);
     console.log(id);
     console.log(tAmt);
+    GenerateQRCode();
   };
 
   const handleClose = () => {
@@ -181,8 +174,6 @@ fetchData();
 //     setError(null);
 //     setSuccess(null);
 
-
-    
 //     try {
 //       const response = await axios.post('/initialize-esewa');
 //       console.log(response);
@@ -275,7 +266,6 @@ const generateHash = () => {
         <p><strong>Amount:</strong> Rs. {invoiceData.amount} {tAmt}</p>
       </div>
 
-
       {qrCode && (
         <img
           src={qrCode}
@@ -291,10 +281,11 @@ const generateHash = () => {
           alt="Generated QR Code"
         />
       )} 
-    </div> */} <QRCODE />
+    </div> */} 
         <DialogContent>
           <DialogContentText>
-            You are about to leave this page. Press PAY NOW button to continue.
+          <div><QRCODE/></div>
+           <i>You are about to leave this page. Scan the <b>QR code </b> or Press <b>PAY NOW</b> button to continue.</i>
           </DialogContentText>
           <Box component="form" action={"https://rc-epay.esewa.com.np/api/epay/main/v2/form"} method="POST" target="_blank" >
           <TextField hidden label="Amount" name="amount" defaultValue={transAmt}  required fullWidth />
@@ -425,7 +416,7 @@ const generateHash = () => {
                                                             </td>
                
                 <td style={{ padding: '5px' }}>
-      {item.status==='unpaid' ? (<Button variant="contained" size="small" onClick={()=>handleClickOpen(item._id,item.amount)}>Pay</Button>):
+      {item.status==='unpaid' || item.status==='failure' ? (<Button variant="contained" size="small" onClick={()=>handleClickOpen(item._id,item.amount)}>Pay</Button>):
                   ( <Typography variant="h6" style={{ borderRadius: '5px' }}>
                     Not Available
                     </Typography>)}

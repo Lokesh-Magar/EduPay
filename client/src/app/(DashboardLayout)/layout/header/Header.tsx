@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 
+
 // components
 import Profile from "./Profile";
 import { IconBellRinging, IconMenu } from "@tabler/icons-react";
@@ -63,29 +64,10 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
   const notifOpen = Boolean(anchorEl);
   const notId = notifOpen ? "notification-popover" : undefined;
 
-  const notifications = [
-    { id: 1, message: "New Invoice issued on your account." },
-    { id: 2, message: "You have a new message." },
-    { id: 3, message: "Your order has been shipped." },
-  ];
-
   //UseEffect for Notification Fetch
   const [data, setData] = useState([]);
 const { username, email } = useUser();
 const {setUser} = useUser();
-
-  useEffect(()=>{
-
-    const fetchNotifications = async () => {
-
-      
-
-
-    }
-
-    fetchNotifications();
-  },[email,username]);
-
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { Button } from "@mui/material";
 
@@ -29,23 +29,28 @@ const QRCODE = () => {
     );
   };
 
+  // Automatically generate QR code when the component loads
+  useEffect(() => {
+    GenerateQRCode();
+  }, []);
+
   return (
     <div className="qrCode">
       <div
         className="div"
         style={{ display: "flex", marginTop: "40px", gap: "5px" }}
       >
-        <Button
+        {/* <Button
           onClick={GenerateQRCode}
           style={{ background: "blue", color: "white" }}
         >
           Generate QR Code
-        </Button>
+        </Button> */}
       </div>
       <div className="invoice-details" style={{ marginTop: "20px" }}>
-        <p><strong>Invoice ID:</strong> {invoiceData.id}</p>
+        {/* <p><strong>Invoice ID:</strong> {invoiceData.esewid}</p>
         <p><strong>Amount:</strong> Rs. {invoiceData.amount}</p>
-        <p><strong>Due Date:</strong> {invoiceData.dueDate}</p>
+        <p><strong>Due Date:</strong> {invoiceData.dueDate}</p> */}
       </div>
       {qrCode && (
         <img

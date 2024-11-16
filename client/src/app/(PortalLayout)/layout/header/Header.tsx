@@ -27,6 +27,7 @@ interface ItemType {
 }
 
 const Header = ({ toggleMobileSidebar }: ItemType) => {
+  
   // Notification state
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -36,7 +37,6 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
       const response = await axios.get('/notifications/fetchAdminNotifyData', 
     
     );
-
       setData(response.data);
       toast.success("Notifications Fetched Successfully");
       console.log("Notification fetched");
@@ -45,8 +45,6 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
     catch (error){
       toast.error("Error fetching Notifications.")
     }
-
-
   };
 
   const handleNotificationClose = () => {
@@ -67,17 +65,17 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
 const { username, email } = useUser();
 const {setUser} = useUser();
 
-  useEffect(()=>{
+  // useEffect(()=>{
 
-    const fetchNotifications = async () => {
+  //   const fetchNotifications = async () => {
 
       
 
 
-    }
+  //   }
 
-    fetchNotifications();
-  },[email,username]);
+  //   fetchNotifications();
+  // },[email,username]);
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",

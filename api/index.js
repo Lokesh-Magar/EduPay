@@ -65,7 +65,6 @@ app.use('/api/auth/signup',authRoutes);
 app.use('/api/auth/signout',authRoutes);
 
 
-
 //Notification Api routes
 app.use('/api/notifications',notificationRoutes);
 app.use('/api/notifications/fetchStudNotifyData',notificationRoutes);
@@ -96,7 +95,8 @@ app.get('/api/portal/success/:id', async (req, res) => {
     }
     invoice.status = 'Success';
     await invoice.save();
-    res.status(200).json({ success: true, message: `Invoice ${id} marked as Success.` });
+    res.status(200).json({ success: true, message: `Invoice ${id} marked as Success.You can close this window now.` });
+    
   } catch (error) {
     console.error('Error updating invoice:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
@@ -106,13 +106,13 @@ app.get('/api/portal/success/:id', async (req, res) => {
 // Failure route
 app.get('/api/portal/failure/:id', async (req, res) => {
   try {
-    const { id } = req.params; // Extract the invoice ID from the route parameter
+    const { id } = req.params; // This extracts the invoice ID from the route parameter
 
-    // Find the invoice by its ID
+    
     const invoice = await Invoice.findById(id);
 
     if (!invoice) {
-      // If no invoice is found, respond with a 404 error
+     
       return res.status(404).json({
         success: false,
         message: `Invoice with ID ${id} not found.`,
@@ -121,7 +121,7 @@ app.get('/api/portal/failure/:id', async (req, res) => {
 
     // Update the status of the invoice to 'Failure'
     invoice.status = 'Failure';
-    await invoice.save(); // Save the changes to the database
+    await invoice.save(); 
 
     // Respond with a success message
     return res.status(200).json({
@@ -141,6 +141,8 @@ app.get('/api/portal/failure/:id', async (req, res) => {
   }
 });
 
+
+// This update route is used to update the status of an invoice not for the admin.
 app.post('/update-invoice', async (req, res) => {
   try {
     const { _id, status } = req.query; // Extract query parameters
