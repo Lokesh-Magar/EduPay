@@ -4,8 +4,8 @@ import { Button } from "@mui/material";
 
 const QRCODE = () => {
   const [invoiceData, setInvoiceData] = useState({
-    eSewa_id: "9803431247",
-    name: "Nirmala Kaduwal"
+    eSewa_id: "9813559689",
+    name: "Rabin Kaduwal"
     
   });
   const [qrCode, setQrCode] = useState("");

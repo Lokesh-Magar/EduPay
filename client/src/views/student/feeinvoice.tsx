@@ -32,6 +32,7 @@ import QRCode from "qrcode";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "@/UserContext";
+import QRCODE from "../qrCode/qrCode";
 
 
 
@@ -48,8 +49,9 @@ const FeesInvoiceList = () => {
   const[transAmt, setTransAmt] = useState(0);
 
   //QR state
-  const [invoiceData, setInvoiceData] = useState({});
-  
+  const invoiceData= useState({"eSewa_id":"9803431247","name":"Nirmala Adhikari Kaduwal"});
+ 
+
   const [qrCode, setQrCode] = useState("");
 
   const GenerateQRCode = () => {
@@ -73,28 +75,21 @@ const FeesInvoiceList = () => {
 
 
 
-
   const handleClickOpen = (id,tAmt) => {
     setOpen(true);
-  
+    GenerateQRCode();
     setTransId(crypto.randomUUID());
     setItemId(id);
     setTransAmt(tAmt);
     console.log(id);
     console.log(tAmt);
- 
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  // const router = useRouter();
-  // const { register, handleSubmit, formState: { errors } } = useForm();
-  // const [loading, setLoading] = useState(false);
-  // const [success, setSuccess] = useState(null);
-  // const [error, setError] = useState<string | null>(null);
-  // const [orders, setOrders] = useState([]);
+
 
   const handleFocus = () => {
     if (textFieldRef.current) {
@@ -118,7 +113,7 @@ const FeesInvoiceList = () => {
 
 //-------------------------useEffect For loading Fee Invoice Data//-------------------------------------
 const [data, setData] = useState([]);
-const { username, email } = useUser();
+const { username, email ,invAmt} = useUser();
 const {setUser} = useUser();
 
 const [page, setPage] = useState(1);
@@ -147,7 +142,8 @@ const fetchData = async()=>{
     setData(response.data);
     setTotalEntries(response.data.total);
     setTotalPages(response.data.totalPages);
-    setInvoiceData(response.data);
+   
+   
    
     toast.success("Data Fetched Successfully");
   }
@@ -158,21 +154,16 @@ fetchData();
 },[email,page,limit]);
 
 
- 
-
-
- 
-
  // ---- Check Authentication ----
  const router=useRouter();
- const [loading, setLoading] = React.useState(true);
+ const [loading, setLoading] = useState(true);
  useEffect(()=>{
    const checkAuthentication= async()=>{
    
      try{
        const response = await axios.get('/auth/checkAuth',{withCredentials:true})
        if (response.status !== 200) {
-         router.push('/backlogin'); // Redirect if not authenticated
+         router.push('/backlogin'); 
        }
      }
      catch(error){
@@ -185,13 +176,12 @@ fetchData();
    checkAuthentication();
    },[router]);
 
-
 //   const onSubmit = async (payment_method: string) => {
 //     setLoading(true);
 //     setError(null);
 //     setSuccess(null);
 
-//     // console.log(data);
+
     
 //     try {
 //       const response = await axios.post('/initialize-esewa');
@@ -240,7 +230,6 @@ const generateHash = () => {
 // ---- Loading State ----
 // const router=useRouter();
 
-
   return (
     <>
       <div className="flex ">
@@ -253,19 +242,18 @@ const generateHash = () => {
             component="h3"
             style={{ display: "flex", alignItems: "center" }}
           >
-            <Link href="#" style={{ marginRight: "35px" }}>
-              Dashboard
+            <Link href="/portal" style={{ marginRight: "35px" }}>
+              Portal
             </Link>
             <span style={{ marginRight: "10px" }}>|</span>
             <Link href="#" style={{ marginRight: "35px" }}>
               Fees
             </Link>
             <span style={{ marginRight: "35px" }}>|</span>
-            <Link href="#">Fees Invoice</Link>
+            <Link href="/portal/student/feeinvoice">Fees Invoice</Link>
           </Typography>
         </nav>
       </div>
-
       {/* Fees Group list 1st card */}
       <div className="feesList mt-7 " style={{ flex: 1 }}>
         <Card sx={{ width: "100%", height: "105%" }}>
@@ -279,29 +267,15 @@ const generateHash = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Esewa Payment Redirect"}</DialogTitle>
-        <div className="qrCode">
-      <div
-        className="div"
-        style={{ display: "flex", marginTop: "40px", gap: "5px" }}
-      >
-        <Button
-          onClick={GenerateQRCode}
-          style={{ background: "blue", color: "white" }}
-        >
-          Generate QR Code
-        </Button>
-      </div>
+        {/* <div className="qrCode">
+     
       <div className="invoice-details" style={{ marginTop: "20px" }}>
-      {/* {data.map((item, index) => (
-        <tr key={index}>
-
-        <td><strong>Invoice ID:</strong> {item._id}</td>
-        <td><strong>Amount:</strong> Rs. {item.amount}</td>
-        <td><strong>Due Date:</strong> {item.dueDate}</td>
-        </tr>
-      ))} */}
-        
+      <p><strong>Invoice ID:</strong> {invoiceData.esewa_id}</p>
+        <p><strong>Name:</strong> Rs. {invoiceData.name}</p>
+        <p><strong>Amount:</strong> Rs. {invoiceData.amount} {tAmt}</p>
       </div>
+
+
       {qrCode && (
         <img
           src={qrCode}
@@ -316,8 +290,8 @@ const generateHash = () => {
           }}
           alt="Generated QR Code"
         />
-      )}
-    </div>
+      )} 
+    </div> */} <QRCODE />
         <DialogContent>
           <DialogContentText>
             You are about to leave this page. Press PAY NOW button to continue.

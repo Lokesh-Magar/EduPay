@@ -9,7 +9,8 @@ interface User {
 interface UserContextType {
   username: string | null;
   email: string | null;
-  setUser: (user: { username: string; email: string }) => void;
+  invAmt: Number | null;
+  setUser: (user: { username: string; email: string,invAmt:Number }) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -47,14 +48,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
   const [username, setUsername] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [invAmt, setinvAmt] = useState<Number | null>(null);
 
-  const setUser = ({ username, email }: { username: string; email: string }) => {
+  const setUser = ({ username, email,invAmt }: { username: string; email: string ,invAmt:Number}) => {
     setUsername(username);
     setEmail(email);
+    setinvAmt(invAmt);
   };
 
   return (
-    <UserContext.Provider value={{ username, email, setUser }}>
+    <UserContext.Provider value={{ username, email, invAmt,setUser }}>
       {children}
     </UserContext.Provider>
   );
