@@ -30,12 +30,16 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
   
   // Notification state
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { username, email } = useUser();
+  const {setUser} = useUser();  
+  
 
   const handleNotificationClick = async (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     try {
-      const response = await axios.get('/notifications/fetchAdminNotifyData', 
-    
+      const response = await axios.get('/notifications/fetchStudNotifyData', 
+        {
+          params: { email :email}}
     );
       setData(response.data);
       toast.success("Notifications Fetched Successfully");
@@ -54,16 +58,11 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
   const notifOpen = Boolean(anchorEl);
   const notId = notifOpen ? "notification-popover" : undefined;
 
-  const notifications = [
-    { id: 1, message: "New Invoice issued on your account." },
-    { id: 2, message: "You have a new message." },
-    { id: 3, message: "Your order has been shipped." },
-  ];
+
 
   //UseEffect for Notification Fetch
   const [data, setData] = useState([]);
-const { username, email } = useUser();
-const {setUser} = useUser();
+
 
   // useEffect(()=>{
 
@@ -143,7 +142,7 @@ const {setUser} = useUser();
           <List>
             {data.map((notification) => (
               
-              <ListItem key={notification.id} button>
+              <ListItem key={notification._id} button>
                 <ListItemText primary={notification.message} />
                 <Badge sx={{ ml: "8px" }} variant="dot" color="primary"/>
               </ListItem>

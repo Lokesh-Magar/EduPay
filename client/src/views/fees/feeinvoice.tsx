@@ -564,7 +564,7 @@ const [loading, setLoading] = useState(false);
                 <td style={{ padding: '8px' }}>{item.amount}</td>
                 <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
                 <td style={{ padding: '8px' }}>{new Date(item.dueDate).toLocaleDateString()}</td>
-                <td style={{ padding: '8px' }}>{item.status ? 'Yes' : 'No'}</td>
+            
                 {/* <td style={{ padding: '8px' }}>{item.balance}</td> */}
                 <td style={{ padding: '5px' }}>
                   <Button variant="outlined" size="small" style={{ borderRadius: '5px' }}>

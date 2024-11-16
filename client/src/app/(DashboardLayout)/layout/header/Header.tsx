@@ -38,7 +38,7 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
   // Notification state
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleNotificationClick = async (event: React.MouseEvent<HTMLElement>) => {
+  const handleNotificationClick = async (event) => {
     setAnchorEl(event.currentTarget);
     try {
       const response = await axios.get('/notifications/fetchAdminNotifyData', 
@@ -134,7 +134,7 @@ const {setUser} = useUser();
           <List>
             {data.map((notification) => (
               
-              <ListItem key={notification.id} button>
+              <ListItem key={notification._id} button>
                 <ListItemText primary={notification.message} />
                 <Badge sx={{ ml: "8px" }} variant="dot" color="primary"/>
               </ListItem>

@@ -19,6 +19,8 @@ import Payment from './models/payment.model.js';
 import Item from './models/item.model.js';
 import PurchasedItem from './models/purchased.ItemModel.js';
 import Invoice from './models/invoice.model.js';
+import cron from 'node-cron';
+import { processOverdueInvoices } from './controllers/invoice.controller.js';
 
 dotenv.config();
 
@@ -44,6 +46,12 @@ const corsOptions={
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+// Cron job to run every Sunday at midnight for fine addition to overdue
+cron.schedule('0 0 * * 0', async () => {
+  console.log("Running weekly fine system...");
+  await processOverdueInvoices();
+});
+
 //Routes used
 app.use(express.json())
 app.use('/api/auth',authRoutes);
@@ -66,8 +74,8 @@ app.use('/api/auth/signout',authRoutes);
 
 
 //Notification Api routes
-app.use('/api/notifications',notificationRoutes);
-app.use('/api/notifications/fetchStudNotifyData',notificationRoutes);
+// app.use('/api/notifications',notificationRoutes);
+// app.use('/api/notifications/fetchStudNotifyData',notificationRoutes);
 app.use('/api',notificationRoutes);
 
 //Invoice Api routes

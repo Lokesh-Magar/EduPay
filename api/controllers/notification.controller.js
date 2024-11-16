@@ -6,12 +6,17 @@ export const getStudNotifyData = async (req, res) => {
     try {
       // Getting the data from the database
       const {email}=req.query;
-        const data = await Notification.find({email:email});
+        // const data = await Notification.find({email:email});
+        const data = await Notification.find({
+          email: email 
+        });
+        
                                     
-        const totalNotifications = await Notification.countDocuments({email:email});//Count the total number of invoices
+        // const totalNotifications = await Notification.countDocuments({email:email});
         // console.log('The Data from database:', data);
         
-        res.json(data,{total:totalNotifications});
+        res.status(200).json(data);
+      
      
       } catch (error) {
         console.error(error);
@@ -26,11 +31,7 @@ export const getStudNotifyData = async (req, res) => {
       // Getting the data from the database
       const {email,username}=req.query;
       const data = await Notification.find();
-                                    
-  
        
-       
-        
         res.status(200).json(data);
      
       } catch (error) {
