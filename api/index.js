@@ -76,7 +76,8 @@ app.use('/api/invoice/invoicecreate',invoiceRoutes);
 app.use('/api/invoice/fetchInvData',invoiceRoutes);
 app.use('/api/invoice/fetchStudInvData',invoiceRoutes);
 app.use('/api/invoice/getStudent',invoiceRoutes);
-
+// app.use('/api/invoice/update/:id',invoiceRoutes);
+app.use('/api',invoiceRoutes);
 
 //Student Api routes
 app.use('/api/student',studentRoutes);
@@ -145,7 +146,7 @@ app.get('/api/portal/failure/:id', async (req, res) => {
 // This update route is used to update the status of an invoice not for the admin.
 app.post('/update-invoice', async (req, res) => {
   try {
-    const { _id, status } = req.query; // Extract query parameters
+    const { _id, status } = req.query; // Extracts the query parameters
 
     // Validate input
     if (!_id || !status) {

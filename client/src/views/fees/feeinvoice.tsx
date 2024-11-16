@@ -59,6 +59,65 @@ const FeesInvoiceList = () => {
     },
   });
 
+
+    //Edit Invoice 
+    const [editOpen, setEditOpen] = useState(false); // State for edit dialog
+    const [currentInvoice, setCurrentInvoice] = useState({});
+
+    //Edit Invoice Dialog
+    const handleEditOpen = (invoice:any) => {
+      
+
+      if (!invoice) {
+        console.error("No invoice provided:", invoice);
+        return; 
+      }
+
+      // console.log("Invoice passed:", invoice);
+      // setCurrentInvoice(invoice || {}); 
+      setCurrentInvoice({...invoice});
+      setEditOpen(true);
+    };
+
+    const handleEditClose = () => {
+      setEditOpen(false);
+    };
+    //Submit edit invoice function
+    const handleEditSubmit = async (updatedInvoice:any) => {
+
+      setError(null);
+      setSuccess(null);
+      if (!updatedInvoice.amount || !updatedInvoice.email || !updatedInvoice._id  ) {
+        toast.error("Check your all of the fields are required.");
+        
+        return;
+      }
+      else if (updatedInvoice.pendingAmount!=updatedInvoice.amount) {
+        toast.error("Pending should match to the Total Amount.");   
+        return ;
+      }
+
+      try {
+
+        const response = await axios.put(`/invoice/update/${updatedInvoice._id}`, updatedInvoice);
+        setSuccess(response.data.message);
+        toast.success("Invoice updated successfully!");
+        
+        // Update the local state to reflect changes
+        setData((prevData:any) =>
+          prevData.map((invoice:any) =>
+            invoice._id === updatedInvoice._id ? updatedInvoice : invoice
+          )
+        );
+    
+        setEditOpen(false); // Close the dialog
+      } catch (error:any) {
+        setError(error.response.data.message);
+        toast.error("Failed to update invoice. Please try again.");
+      }
+    };
+
+
   //Submit Invoice function
   const onSubmit = async (data:any,event:any) => {
     setLoading(true);
@@ -122,6 +181,7 @@ const endEntry = Math.min(page * limit, totalEntries);
   useEffect(() => {
   const fetchData = async()=>{
     try{
+      const source = axios.CancelToken.source();
       const response =await axios.get('/invoice/fetchInvData',{params:{page:page,limit:limit}});
 
       // const result= await response.json();
@@ -360,6 +420,72 @@ const [loading, setLoading] = useState(false);
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      {/* Dialog for editing invoice */}
+
+      <Dialog open={editOpen} onClose={handleEditClose}>
+  <DialogTitle>Edit Invoice</DialogTitle>
+  {/* Use reference for variables in d */}
+  <DialogContent>
+    <TextField
+      label="Transaction ID"
+      value={currentInvoice?._id || ''}
+      onChange={(e) =>
+        setCurrentInvoice((prev) => ({ ...prev, transId: e.target.value }))
+      }
+      fullWidth
+      margin="normal"
+      error={!!errors._id}
+      helperText={errors._id?.message}
+    />
+    <TextField
+      label="Amount"
+      type="number"
+      value={currentInvoice?.amount || ''}
+      onChange={(e) =>
+        setCurrentInvoice((prev) => ({ ...prev, amount: e.target.value }))
+      }
+      fullWidth
+      margin="normal"
+      error={!!errors.amount}
+      helperText={errors.amount?.message}
+    />
+    <TextField
+      label="Pending Amount"
+      type="number"
+      value={currentInvoice?.pendingAmount || ''}
+      onChange={(e) =>
+        setCurrentInvoice((prev) => ({ ...prev, pendingAmount: e.target.value }))
+      }
+      fullWidth
+      margin="normal"
+      error={!!errors.pendingAmount}
+      helperText={errors.pendingAmount?.message || 'Pending amount should match to the total amount.'}
+    />
+    <TextField
+      label="Email"
+      value={currentInvoice?.email || ''}
+      onChange={(e) =>
+        setCurrentInvoice((prev) => ({ ...prev, email: e.target.value }))
+      }
+      fullWidth
+      margin="normal"
+      error={!!errors.email}
+      helperText={errors.email?.message || 'Email is required'}
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleEditClose}>Cancel</Button>
+    <Button
+      onClick={() => handleEditSubmit(currentInvoice)}
+      color="primary"
+      variant="contained"
+    >
+      Save Changes
+    </Button>
+  </DialogActions>
+</Dialog>
+
     </div>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <ButtonGroup
@@ -416,7 +542,7 @@ const [loading, setLoading] = useState(false);
           <thead>
             <tr style={{ borderBottom: '1px solid #ddd' }}>
               <th style={{ padding: '8px' }}>SN</th>
-              <th style={{ padding: '8px' }}>STUDENT ID</th>
+              <th style={{ padding: '8px' }}>STUDENT INVOICE ID</th>
               <th style={{ padding: '8px' }}>EMAIL</th>
               <th style={{ padding: '8px' }}>AMOUNT</th>
               <th style={{ padding: '8px' }}>PENDING AMOUNT</th>
@@ -433,7 +559,7 @@ const [loading, setLoading] = useState(false);
                 <td style={{ padding: '8px', display: 'flex', alignItems: 'center' }}>
                   <span style={{ marginLeft: 8 }}>{index + 1}</span>
                 </td>
-                <td style={{ padding: '8px' }}>{item.username}</td>
+                <td style={{ padding: '8px' }}>{item._id}</td>
                 <td style={{ padding: '8px' }}>{item.email}</td>
                 <td style={{ padding: '8px' }}>{item.amount}</td>
                 <td style={{ padding: '8px' }}>{item.pendingAmount}</td>
@@ -447,10 +573,25 @@ const [loading, setLoading] = useState(false);
                 </td>
                
                 <td style={{ padding: '8px' }}>
-                  <Button variant="contained" size="small">Edit</Button>
+                {item.status==='unpaid' || item.status==='failure' ? 
+                (
+
+                <div>
+                 {/* {data.map((invoice) => ( */}
+                        {/* <div key={invoice._id}> */}
+                          <Button onClick={() => handleEditOpen(item)}>Edit</Button>
+                        {/* </div>
+                      ))} */}
                   <Button variant="outlined" size="small" style={{ marginLeft: '5px' }}>
                     Delete
-                  </Button>
+                  </Button></div>
+                  
+                
+                ):
+                    ( <Typography variant="h6" style={{ borderRadius: '5px' }}>
+                    Not Available
+                    </Typography>)}
+                  
                 </td>
               </tr>
             ))}

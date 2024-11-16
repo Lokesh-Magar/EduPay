@@ -82,3 +82,20 @@ export const getStudent= async (req, res) => {
 };
 
 
+
+  export const updateInvoice =async(req,res)=>{
+  
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  try {
+    const updatedInvoice = await Invoice.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+    res.status(200).json(updatedInvoice);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update invoice" });
+  }
+}
+
+
