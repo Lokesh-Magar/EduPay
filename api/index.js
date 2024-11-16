@@ -18,6 +18,7 @@ import { getEsewaPaymentHash,verifyEsewaPayment } from './controllers/esewa.cont
 import Payment from './models/payment.model.js';
 import Item from './models/item.model.js';
 import PurchasedItem from './models/purchased.ItemModel.js';
+import Invoice from './models/invoice.model.js';
 
 dotenv.config();
 
@@ -85,7 +86,107 @@ app.use('/api/student/studsignin',studentRoutes);
 app.use('/api/student/studsignout',studentRoutes);
 app.use('/api/student/getStudent',studentRoutes);
 
+//Success Route
+app.get('/api/portal/success/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const invoice = await Invoice.findById(id);
+    if (!invoice) {
+      return res.status(404).json({ success: false, message: 'Invoice not found.' });
+    }
+    invoice.status = 'Success';
+    await invoice.save();
+    res.status(200).json({ success: true, message: `Invoice ${id} marked as Success.` });
+  } catch (error) {
+    console.error('Error updating invoice:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
 
+// Failure route
+app.get('/api/portal/failure/:id', async (req, res) => {
+  try {
+    const { id } = req.params; // Extract the invoice ID from the route parameter
+
+    // Find the invoice by its ID
+    const invoice = await Invoice.findById(id);
+
+    if (!invoice) {
+      // If no invoice is found, respond with a 404 error
+      return res.status(404).json({
+        success: false,
+        message: `Invoice with ID ${id} not found.`,
+      });
+    }
+
+    // Update the status of the invoice to 'Failure'
+    invoice.status = 'Failure';
+    await invoice.save(); // Save the changes to the database
+
+    // Respond with a success message
+    return res.status(200).json({
+      success: true,
+      message: `Invoice ${id} marked as Failure.`,
+      invoice,
+    });
+  } catch (error) {
+    console.error('Error processing failure route:', error);
+
+    // Respond with a 500 error in case of any server-side issues
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error.',
+      error: error.message,
+    });
+  }
+});
+
+app.post('/update-invoice', async (req, res) => {
+  try {
+    const { _id, status } = req.query; // Extract query parameters
+
+    // Validate input
+    if (!_id || !status) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required parameters: _id or status.',
+      });
+    }
+
+    // Find the invoice by ID
+    const invoice = await Invoice.findById(_id);
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: `Invoice with ID ${_id} not found.`,
+      });
+    }
+
+    // Update the invoice status
+    invoice.status = status;
+    await invoice.save();
+
+    // Send a success response
+    return res.status(200).json({
+      success: true,
+      message: `Invoice with ID ${_id} successfully updated to status: ${status}.`,
+      invoice,
+    });
+  } catch (error) {
+    console.error('Error updating invoice:', error);
+
+    // Handle any server-side errors
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error while updating invoice.',
+      error: error.message,
+    });
+  }
+});
+
+
+//------------------------------------------------------------
 //Get student or user info
 
 app.get('/api/userinfo',(req,res)=>{

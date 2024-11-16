@@ -304,8 +304,8 @@ const generateHash = () => {
           <TextField hidden label="Product Code" name="product_code" defaultValue="EPAYTEST" required fullWidth />
           <TextField hidden label="Product Service Charge" name="product_service_charge" defaultValue="0" required fullWidth />
           <TextField hidden label="Product Delivery Charge" name="product_delivery_charge" defaultValue="0" required fullWidth />
-          <TextField hidden label="Success URL" name="success_url" defaultValue={`https://localhost:3000/success/${itemId}`} required fullWidth />
-          <TextField hidden label="Failure URL" name="failure_url" defaultValue={`https://localhost:3000/faliure/${itemId}`} required fullWidth />
+          <TextField hidden label="Success URL" name="success_url" defaultValue={`http://localhost:3000/portal/success/${itemId}`} required fullWidth />
+          <TextField hidden label="Failure URL" name="failure_url" defaultValue={`http://localhost:3000/portal/failure/${itemId}`} required fullWidth />
           <TextField hidden label="Signed Field Names" name="signed_field_names" defaultValue="total_amount,transaction_uuid,product_code" required fullWidth />
           <TextField hidden label="Signature" name="signature" value= {signature} required fullWidth />
 
