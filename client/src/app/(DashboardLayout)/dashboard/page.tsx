@@ -33,9 +33,6 @@ const [invoices, setInvoices] = useState([]);
     fetchData();
   }, []);
 
-
-
-
 useEffect(()=>{
 const checkAuthentication= async()=>{
 

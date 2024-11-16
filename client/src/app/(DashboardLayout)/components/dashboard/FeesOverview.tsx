@@ -160,25 +160,42 @@ const FeesOverview = ({ invoices }: { invoices: any[] }) => {
 
   // CSV Generation for all invoices
   const generateAllInvoicesCSV = () => {
+    if (!invoices.length) {
+      alert("No invoices found!");
+      return;
+    }
+  
+    // Prepare the data for CSV export
     const allInvoicesData = invoices.map((invoice: any) => ({
-      invoiceNumber: invoice.invoiceNumber,
+      studentId: invoice.studentId,
+      username: invoice.username,
+      email: invoice.email,
+      amount: invoice.amount,
+      pendingAmount: invoice.pendingAmount,
       dueDate: new Date(invoice.dueDate).toLocaleDateString('en-GB', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
       }),
       status: invoice.status,
-      amount: invoice.amount,
-      // Add any additional fields here
     }));
-
+  
+    // Extract headers from the first invoice object (keys)
     const headers = Object.keys(allInvoicesData[0] || {});
+    
+    // Map the data to match the headers
     const data = allInvoicesData.map((invoice: any) => headers.map((key) => invoice[key]));
-
+  
+    // Convert the data into CSV format
     const csvContent = [headers, ...data].map(row => row.join(",")).join("\n");
+    
+    // Create a Blob object with the CSV content
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    saveAs(blob, `all_invoices_${year}.csv`);
+    
+    // Trigger file download
+    saveAs(blob, `all_invoices_${new Date().getFullYear()}.csv`);
   };
+  
 
   return (
     <DashboardCard
