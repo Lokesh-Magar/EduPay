@@ -1,0 +1,11 @@
+studentId,username,email,amount,pendingAmount,dueDate,status
+3,student,student@gmail.com,46000,46000,29/11/2024,unpaid
+4,student,student@gmail.com,900,0,14/11/2024,paid
+5,meow,meow@gmail.com,50,50,26/11/2024,unpaid
+6,meow,meow@gmail.com,40000,40000,20/11/2024,unpaid
+7,meow,meow@gmail.com,1200,1200,13/11/2024,unpaid
+8,student,student@gmail.com,30000,30000,13/11/2024,unpaid
+9,student,student@gmail.com,50000,0,27/11/2024,paid
+10,student,student@gmail.com,40000,40000,27/11/2024,unpaid
+11,student,student@gmail.com,2500,2500,12/11/2024,Success
+12,test,test@gmail.com,20000,20000,12/11/2024,unpaid

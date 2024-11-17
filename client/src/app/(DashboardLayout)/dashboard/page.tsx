@@ -2,10 +2,10 @@
 import { Grid, Box } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import FeesOverview from "@/app/(DashboardLayout)/components/dashboard/FeesOverview";
-import YearlyBreakup from "@/app/(DashboardLayout)/components/dashboard/FeesBreakup";
+import UploadCSV from "@/app/(DashboardLayout)/components/dashboard/CSVUploader";
 import RecentTransactions from "@/app/(DashboardLayout)/components/dashboard/RecentTransactions";
 import FeesPerformance from "@/app/(DashboardLayout)/components/dashboard/FeesPerformance";
-import MonthlyEarnings from "@/app/(DashboardLayout)/components/dashboard/InvoiceClearings";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -73,6 +73,9 @@ if(loading) {return <div>Loading...</div>}
           <Grid item xs={12} lg={4}>
             <RecentTransactions />
           </Grid>
+          <Grid item xs={12} lg={8}>
+            <UploadCSV />
+        </Grid>
           <Grid item xs={12} lg={8}>
             <FeesPerformance invoices={invoices}/>
           </Grid>

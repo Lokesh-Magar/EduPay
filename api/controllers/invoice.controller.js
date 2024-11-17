@@ -1,8 +1,11 @@
-//Coded By Robin KC and Lokesh Magar
+//Coded By Robin KC and Lokesh Magar 
+import csv from 'csv-parser';
+import fs from 'fs';
 import Invoice from '../models/invoice.model.js';
 import Student from '../models/student.model.js';
 import Notification from '../models/notification.model.js';
-
+import multer from 'multer';
+import path from 'path';
 export const createInvoice = async (req, res) => {
     const { studentId,username,email, amount,pendingAmount, dueDate, status } = req.body;
 
@@ -75,6 +78,7 @@ export const getStudInvData = async (req, res) => {
 
 
 
+
 export const getStudent= async (req, res) => {
   try
   {
@@ -138,30 +142,81 @@ export const processOverdueInvoices = async () => {
       const expectedFine = 500 * weeksOverdue;
 
       if (invoice.amount < expectedFine) {
-        // Update fine amount
+        // Updates fine amount
         invoice.amount = expectedFine;
 
-        // Add notification
-
-        // const notification = `A fine of $500 has been added. Total due is now $${invoice.amount}.`;
         const newNotification = new Notification({
           message:`Fine of Rs 500 has been added for the invoice ${invoice._id} of ${newUser.email} under the name ${newUser.username}`,
         }).find({email:email});
 
-        // invoice.notifications.push(newNotification);
         newNotification.save();
 
         // Save invoice
         await invoice.save();
 
-        // Simulate sending notification (e.g., email, SMS)
-        console.log(`Notification sent to user for Invoice ID: ${invoice._id}`);
+       
+        // console.log(`Notification sent to user for Invoice ID: ${invoice._id}`);
       }
     }
 
     console.log("Overdue invoice processing complete.");
   } catch (error) {
     console.error("Error processing overdue invoices:", error);
+  }
+};
+
+//FOR CSV UPLOAD
+
+// Upload CSV logic
+export const uploadCSV = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const invoices = [];
+    fs.createReadStream(req.file.path)
+      .pipe(csv())
+      .on('data', (row) => {
+        // Log each row to see what data is being parsed
+        console.log('Parsed row:', row);
+
+        const { username, email, amount, pendingAmount, dueDate, status } = row;
+
+        // Validate and push if required fields are present
+        if (username && email && amount && pendingAmount && dueDate) {
+          const invoice = {
+            username,
+            email,
+            amount: parseFloat(amount),
+            pendingAmount: parseFloat(pendingAmount),
+            dueDate: new Date(dueDate),
+            status: status || 'unpaid', 
+          };
+
+          console.log('Valid invoice:', invoice); // Log the valid invoice being pushed
+
+          invoices.push(invoice);
+        } else {
+          console.log('Skipping invalid row:', row); // Log if a row is skipped due to missing data
+        }
+      })
+      .on('end', async () => {
+        try {
+          console.log('Invoices array before insert:', invoices); // Log before inserting
+          await Invoice.insertMany(invoices); // Insert to the database
+          console.log('Invoices inserted:', invoices);
+
+          fs.unlinkSync(req.file.path); // Removes the uploaded file
+          res.status(200).json({ message: 'CSV data uploaded successfully' });
+        } catch (err) {
+          console.error('Error inserting invoices:', err);
+          res.status(500).json({ error: 'Error saving invoices to the database' });
+        }
+      });
+  } catch (error) {
+    console.error('Server error during CSV upload:', error);
+    res.status(500).json({ error: 'Server error during CSV upload' });
   }
 };
 
