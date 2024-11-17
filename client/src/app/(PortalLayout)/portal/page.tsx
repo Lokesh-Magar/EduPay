@@ -85,7 +85,7 @@ if(loading) {return <div>Loading...</div>}
 <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
-            <FeesOverview />
+            <FeesOverview invoices={invoices}/>
           </Grid>
           <Grid item xs={12} lg={4}>
             <Grid container spacing={3}>

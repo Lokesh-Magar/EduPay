@@ -4,7 +4,7 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import FeesOverview from "@/app/(DashboardLayout)/components/dashboard/FeesOverview";
 import YearlyBreakup from "@/app/(DashboardLayout)/components/dashboard/FeesBreakup";
 import RecentTransactions from "@/app/(DashboardLayout)/components/dashboard/RecentTransactions";
-import ProductPerformance from "@/app/(DashboardLayout)/components/dashboard/ProductPerformance";
+import FeesPerformance from "@/app/(DashboardLayout)/components/dashboard/FeesPerformance";
 import MonthlyEarnings from "@/app/(DashboardLayout)/components/dashboard/InvoiceClearings";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -74,7 +74,7 @@ if(loading) {return <div>Loading...</div>}
             <RecentTransactions />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <ProductPerformance />
+            <FeesPerformance invoices={invoices}/>
           </Grid>
         </Grid>
       </Box>
