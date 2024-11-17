@@ -5,9 +5,6 @@ import PageContainer from "@/app/(PortalLayout)/components/container/PageContain
 
 
 
-
-
-
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -26,12 +23,12 @@ const Portal = () => {
   const [loading, setLoading] = useState(true);
   
   const [invoices, setInvoices] = useState([]);
-    // const [loading, setLoading] = useState(true);
+  const { email} = useUser();
   
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get("/invoice/fetchInvData"); // Assuming this endpoint returns all invoices
+          const response = await axios.get("/invoice/fetchInvData",{params:{email:email}}); // Assuming this endpoint returns all invoices
           setInvoices(response.data);
         } catch (error) {
           console.error("Error fetching invoices:", error);
@@ -40,7 +37,7 @@ const Portal = () => {
         }
       };
       fetchData();
-    }, []);
+    }, [email]);
   
   useEffect(()=>{
   const checkAuthentication= async()=>{

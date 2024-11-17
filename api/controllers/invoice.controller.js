@@ -39,8 +39,8 @@ export const createInvoice = async (req, res) => {
 export const getInvData = async (req, res) => {
     try {
       // Getting the data from the database
-        const {page=1,limit=10}=req.query;
-        const data = await Invoice.find().skip((page - 1) * limit).limit(Number(limit));  // Skip the invoices and limit based on the page
+        const {email,page=1,limit=10}=req.query;
+        const data = await Invoice.find({email:email}).skip((page - 1) * limit).limit(Number(limit));  // Skip the invoices and limit based on the page
       
         const totalInvoices = await Invoice.countDocuments();//Count the total number of invoices
         // console.log('The Data from database:', data);
