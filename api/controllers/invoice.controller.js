@@ -43,13 +43,26 @@ export const createInvoice = async (req, res) => {
 export const getInvData = async (req, res) => {
     try {
       // Getting the data from the database
-        const {page=1,limit=10}=req.query;
-        const data = await Invoice.find().skip((page - 1) * limit).limit(Number(limit));  // Skip the invoices and limit based on the page
-      
-        const totalInvoices = await Invoice.countDocuments();
-        // console.log('The Data from database:', data);
-        res.json(data,{total:totalInvoices},{page:Number(page)},{totalPages:Math.ceil(totalInvoices / limit)});
+        
+        const {page=1,limit=10,type="paginated"}=req.query;
 
+        if(type==="paginated"){
+          const data = await Invoice.find().skip((page - 1) * limit).limit(Number(limit));  // Skip the invoices and limit based on the page
+      
+          const totalInvoices = await Invoice.countDocuments();
+     
+          res.json(data,{total:totalInvoices},{page:Number(page)},{totalPages:Math.ceil(totalInvoices / limit)});
+
+        }
+        else if (type==="analysis"){
+
+          const data = await Invoice.find();
+          res.json(data);
+        }
+        else {
+          return res.status(400).json({ message: "Invalid type parameter" });
+        }
+        
       } 
       catch (error) 
       {
@@ -61,27 +74,37 @@ export const getInvData = async (req, res) => {
 //Code for Fetching invoice data of related email or username
 export const getStudInvData = async (req, res) => {
   try {
-    // Getting the data from the database
-    const {email,page=1,limit=10}=req.query;
+   
+    const {email,page=1,limit=10,type="paginated"}=req.query;
+    if (type==="paginated"){
       const data = await Invoice.find({email:email})
-                                .populate('studentId','username')
-                                .skip((page - 1) * limit)  // Skip the invoices based on the page
-                                .limit(Number(limit));     // Limit the number of invoices per page;
+      .populate('studentId','username')
+      .skip((page - 1) * limit)  // Skip the invoices based on the page
+      .limit(Number(limit));     // Limit the number of invoices per page;
 
-      const totalInvoices = await Invoice.countDocuments({email:email});//Count the total number of invoices
-      // console.log('The Data from database:', data);
+        const totalInvoices = await Invoice.countDocuments({email:email});
+
+
+        res.json(data,{total:totalInvoices},{page:Number(page)},{totalPages:Math.ceil(totalInvoices / limit)});
       
-      res.json(data,{total:totalInvoices},{page:Number(page)},{totalPages:Math.ceil(totalInvoices / limit)});
+    }
+
+    else if (type==="analysis"){
+      const data = await Invoice.find({email:email})
+      .populate('studentId','username');
+      res.json(data);
+    }
+    
+    else {
+      return res.status(400).json({ message: "Invalid type parameter" });
+    }
+      
    
     } catch (error) {
       console.error(error);
       res.status(500).send('Error retrieving datas');
     } 
 };
-
-
-
-
 
 export const getStudent= async (req, res) => {
   try

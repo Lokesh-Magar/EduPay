@@ -28,7 +28,7 @@ const Portal = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get("/invoice/fetchStudInvData",{params:{email:email}}); // Assuming this endpoint returns all invoices
+          const response = await axios.get("/invoice/fetchStudInvData",{params:{email:email,type:"analysis"}});
           setInvoices(response.data);
         } catch (error) {
           console.error("Error fetching invoices:", error);
@@ -45,11 +45,11 @@ const Portal = () => {
     try{
       const response = await axios.get('/auth/checkAuth',{withCredentials:true})
       if (response.status !== 200) {
-        router.push('/backlogin'); // Redirect if not authenticated
+        router.push('/'); 
       }
     }
     catch(error){
-      router.push('/backlogin'); // Redirect if not authenticated
+      router.push('/'); 
     }
     finally{
       setLoading(false);

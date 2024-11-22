@@ -182,7 +182,7 @@ const endEntry = Math.min(page * limit, totalEntries);
   const fetchData = async()=>{
     try{
       // const source = axios.CancelToken.source();
-      const response =await axios.get('/invoice/fetchInvData',{params:{page:page,limit:limit}});
+      const response =await axios.get('/invoice/fetchInvData',{params:{page:page,limit:limit,type:"paginated"}});
 
       // const result= await response.json();
       setData(response.data);

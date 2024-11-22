@@ -23,7 +23,7 @@ const FeesBreakup = ({ invoices }) => {
 
       if (invoice.status === "paid" || invoice.status === "Success") {
         paidAmount += invoice.amount;
-      } else if (invoice.status === "unpaid") {
+      } else if (invoice.status === "unpaid" || invoice.status === "Failure") {
         unpaidAmount += invoice.amount;
         pendingAmount += invoice.pendingAmount; // Here the pendingAmount is only relevant for unpaid invoices
       }

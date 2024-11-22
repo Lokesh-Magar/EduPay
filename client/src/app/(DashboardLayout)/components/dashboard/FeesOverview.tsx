@@ -214,11 +214,12 @@ const FeesOverview = ({ invoices }: { invoices: any[] }) => {
             ))}
           </Select>
           <Button onClick={generateCSV} color="primary" variant="contained" size="small">
-            Download CSV (Filtered)
+           <b> Download CSV (Filtered) </b>
           </Button>
           <Button onClick={generateAllInvoicesCSV} color="secondary" variant="contained" size="small" style={{ marginLeft: '8px' }}>
-            Download All Invoices CSV
+           <b> Download All Invoices CSV</b>
           </Button>
+          <Button color="secondary" variant="contained" size="small" style={{ marginLeft: '9px' }}><b>Download PDF</b></Button>
         </>
       }
     >

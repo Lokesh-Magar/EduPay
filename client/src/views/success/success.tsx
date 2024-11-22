@@ -2,7 +2,6 @@
 import { Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-// import { useParams } from 'next/navigation';
 
 const SuccessPage: React.FC = () => {
   const router = useRouter();
@@ -11,13 +10,12 @@ const SuccessPage: React.FC = () => {
 
   useEffect(() => {
     if (itemId && status) {
-      // Optionally, update invoice status via an API call
+      // Optionally update the invoice status via an API call
       fetch(`/update-invoice?_id=${itemId}&status=${status}`)
         .then((res) => res.json())
         .then((data) => setMessage(data.message))
         .catch(() => setMessage('Error updating invoice status.'));
     }
-   
   }, [itemId, status]);
 
   return (

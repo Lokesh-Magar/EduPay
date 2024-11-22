@@ -180,6 +180,7 @@ app.post('/update-invoice', async (req, res) => {
 
     // Update the invoice status
     invoice.status = status;
+    invoice.pendingAmount = 0;
     await invoice.save();
 
     // Send a success response

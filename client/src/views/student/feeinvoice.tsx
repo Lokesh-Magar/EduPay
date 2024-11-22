@@ -131,12 +131,10 @@ const endEntry = Math.min(page * limit, totalEntries);
 useEffect(() => {
 const fetchData = async()=>{
   try{
-    const response =await axios.get('/invoice/fetchStudInvData',{params:{email:email,page:page,limit:limit}});
+    const response =await axios.get('/invoice/fetchStudInvData',{params:{email:email,page:page,limit:limit,type:"paginated"}});
     setData(response.data);
     setTotalEntries(response.data.total);
     setTotalPages(response.data.totalPages);
-   
-   
    
     toast.success("Data Fetched Successfully");
   }
@@ -258,30 +256,7 @@ const generateHash = () => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Esewa Payment Redirect"}</DialogTitle>
-        {/* <div className="qrCode">
-     
-      <div className="invoice-details" style={{ marginTop: "20px" }}>
-      <p><strong>Invoice ID:</strong> {invoiceData.esewa_id}</p>
-        <p><strong>Name:</strong> Rs. {invoiceData.name}</p>
-        <p><strong>Amount:</strong> Rs. {invoiceData.amount} {tAmt}</p>
-      </div>
-
-      {qrCode && (
-        <img
-          src={qrCode}
-          style={{
-            display: "block",
-            width: "50%",
-            maxWidth: "200px",
-            margin: "2rem auto",
-            marginLeft: "50%",
-            marginTop: "-6%",
-            border: "2px solid black",
-          }}
-          alt="Generated QR Code"
-        />
-      )} 
-    </div> */} 
+        
         <DialogContent>
           <DialogContentText>
           <div><QRCODE/></div>

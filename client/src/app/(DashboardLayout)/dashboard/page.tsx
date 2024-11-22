@@ -22,7 +22,7 @@ const [invoices, setInvoices] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/invoice/fetchInvData"); // Assuming this endpoint returns all invoices
+        const response = await axios.get("/invoice/fetchInvData",{params:{type:"analysis"}}); 
         setInvoices(response.data);
       } catch (error) {
         console.error("Error fetching invoice:", error);
@@ -39,11 +39,11 @@ const checkAuthentication= async()=>{
   try{
     const response = await axios.get('/auth/checkAuth',{withCredentials:true})
     if (response.status !== 200) {
-      router.push('/backlogin'); // Redirect if not authenticated
+      router.push('/backlogin'); 
     }
   }
   catch(error){
-    router.push('/backlogin'); // Redirect if not authenticated
+    router.push('/backlogin');
   }
   finally{
     setLoading(false);
