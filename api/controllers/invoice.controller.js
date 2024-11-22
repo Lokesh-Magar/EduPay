@@ -9,10 +9,14 @@ import path from 'path';
 export const createInvoice = async (req, res) => {
     const { studentId,username,email, amount,pendingAmount, dueDate, status } = req.body;
 
-    //Check if the student exists
+    //Checks if the student exists
+
     try {
+
       const student = await Student.find({username});
+
       if (!student) {
+        
         console.log("Student not found");
         return res.status(404).send({ message: 'Student not found' });
       }
@@ -21,7 +25,7 @@ export const createInvoice = async (req, res) => {
       await invoice.save();
       res.status(201).send({ message: 'Invoice created successfully' });
 
-    // Create a Notification
+      // Create a Notification
      const newNotification = new Notification({
       
       message: `New invoice added by the system with amount ${amount}. Invoice ID: ${invoice._id}.`,

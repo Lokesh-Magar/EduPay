@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Select, MenuItem, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
@@ -27,7 +27,7 @@ const FeesOverview = ({ invoices }: { invoices: any[] }) => {
   };
 
   // Processing data based on selected month and year
-  React.useEffect(() => {
+  useEffect(() => {
     const paidAmounts: number[] = [];
     const pendingAmounts: number[] = [];
     const categories: string[] = [];
@@ -44,13 +44,13 @@ const FeesOverview = ({ invoices }: { invoices: any[] }) => {
           month: '2-digit',
         });
 
-        categories.push(formattedDate); // Push formatted date (day/month)
+        categories.push(formattedDate); // Push formatted date in (day/month)
 
         // Sum up amounts based on invoice status
         if (invoice.status === 'paid') {
-          paidAmounts.push(invoice.amount); // Paid invoices add to paid amounts
+          paidAmounts.push(invoice.amount); // Paid invoices adds to paid amounts
         } else if (invoice.status === 'unpaid') {
-          pendingAmounts.push(invoice.amount); // Unpaid invoices add to pending amounts
+          pendingAmounts.push(invoice.amount); // Unpaid invoices adds to pending amounts
         }
       }
     });
@@ -68,13 +68,13 @@ const FeesOverview = ({ invoices }: { invoices: any[] }) => {
   const secondary = theme.palette.secondary.main;
 
   // Ensure that categories and data arrays are not empty
-  if (!chartData.categories.length || !chartData.paidAmounts.length || !chartData.pendingAmounts.length) {
-    return (
-      <DashboardCard title="Fees Overview">
-        <p>No data available for the selected period.</p>
-      </DashboardCard>
-    );
-  }
+  // if (!chartData.categories.length || !chartData.paidAmounts.length || !chartData.pendingAmounts.length) {
+  //   return (
+  //     <DashboardCard title="Fees Overview">
+  //       <p>No data available for the selected period.</p>
+  //     </DashboardCard>
+  //   );
+  // }
 
   // Chart options
   const optionscolumnchart: any = {
