@@ -1,5 +1,5 @@
 import express from 'express';
-import {studsignin,studsignup,studsignout} from '../controllers/student.controller.js';
+import {studsignin,studsignup,studsignout,getStudents} from '../controllers/student.controller.js';
 import { verifyToken } from '../middlewares/verifyUser.js';
 const router = express.Router();
 
@@ -14,5 +14,6 @@ router.get('/portal',verifyToken,(req, res) => {
 router.post('/studsignup', studsignup); 
 router.post('/studsignin', studsignin);
 router.post('/studsignout',studsignout);
+router.get('/fetchStudents',getStudents);
 
 export default router;

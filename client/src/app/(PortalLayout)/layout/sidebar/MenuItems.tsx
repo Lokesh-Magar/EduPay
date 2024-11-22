@@ -37,30 +37,25 @@ const Menuitems = [
     icon: IconFileTypography,
     href: "/portal/student/feestype",
   },
-  {
-    id: uniqueId(),
-    title: "Fees Group",
-    icon: IconBoxMultiple0,
-    href: "/portal/student/feesgroup",
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: "Fees Group",
+  //   icon: IconBoxMultiple0,
+  //   href: "/portal/student/feesgroup",
+  // },
   {
     id: uniqueId(),
     title: "Fees Invoice",
     icon: IconFileInvoice,
     href: "/portal/student/feesinvoice",
   },
-  {
-    id: uniqueId(),
-    title: "Fees Carry",
-    icon: IconBabyCarriage,
-    href: "/portal/student/feescarryforward",
-  },
-  {
-    id: uniqueId(),
-    title: "Bank Payment",
-    icon: IconBuildingBank,
-    href: "/portal/student/bankpayment",
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: "Fees Carry",
+  //   icon: IconBabyCarriage,
+  //   href: "/portal/student/feescarryforward",
+  // },
+ 
  
   
   // Uncomment these if needed

@@ -74,8 +74,8 @@ app.use('/api/auth/signout',authRoutes);
 
 
 //Notification Api routes
-// app.use('/api/notifications',notificationRoutes);
-// app.use('/api/notifications/fetchStudNotifyData',notificationRoutes);
+app.use('/api/notifications',notificationRoutes);
+app.use('/api/notifications/fetchStudNotifyData',notificationRoutes);
 app.use('/api',notificationRoutes);
 
 //Invoice Api routes
@@ -89,6 +89,10 @@ app.use('/api',invoiceRoutes);
 
 //Student Api routes
 app.use('/api/student',studentRoutes);
+
+app.use('/api/student/fetchStudents',studentRoutes);
+
+app.use('/api',studentRoutes);
 app.use('/api/student/studsignup',studentRoutes);
 app.use('/api/student/studsignin',studentRoutes);
 app.use('/api/student/studsignout',studentRoutes);

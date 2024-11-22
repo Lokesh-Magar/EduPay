@@ -17,7 +17,7 @@ const router=useRouter();
 const [loading, setLoading] = useState(true);
 
 const [invoices, setInvoices] = useState([]);
-  // const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +25,7 @@ const [invoices, setInvoices] = useState([]);
         const response = await axios.get("/invoice/fetchInvData"); // Assuming this endpoint returns all invoices
         setInvoices(response.data);
       } catch (error) {
-        console.error("Error fetching invoices:", error);
+        console.error("Error fetching invoice:", error);
       } finally {
         setLoading(false);
       }

@@ -19,14 +19,16 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useForm,Controller } from "react-hook-form";
-
+import { useForm, Controller } from "react-hook-form";
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
   
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {  control,register, handleSubmit, formState: { errors } } = useForm();
+  const [students, setStudents] = useState([]);
   
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,6 @@ const FeesInvoiceList = () => {
     },
   });
 
-
     //Edit Invoice 
     const [editOpen, setEditOpen] = useState(false); // State for edit dialog
     const [currentInvoice, setCurrentInvoice] = useState({});
@@ -67,7 +68,6 @@ const FeesInvoiceList = () => {
     //Edit Invoice Dialog
     const handleEditOpen = (invoice:any) => {
       
-
       if (!invoice) {
         console.error("No invoice provided:", invoice);
         return; 
@@ -181,7 +181,7 @@ const endEntry = Math.min(page * limit, totalEntries);
   useEffect(() => {
   const fetchData = async()=>{
     try{
-      const source = axios.CancelToken.source();
+      // const source = axios.CancelToken.source();
       const response =await axios.get('/invoice/fetchInvData',{params:{page:page,limit:limit}});
 
       // const result= await response.json();
@@ -222,6 +222,21 @@ const [loading, setLoading] = useState(false);
   //    }
   //    checkAuthentication();
   //    },[router]);
+
+  // Fetch students from API
+  useEffect(() => {
+    const fetchAllStudents = async () => {
+      try {
+        const response = await axios.get('/student/fetchStudents'); 
+        console.log('Fetched students:', response.data); 
+        setStudents(response.data.map((students: any) => students.username));
+      } catch (error) {
+        console.error('Error fetching students:', error);
+        toast.error('Error fetching students. Please try again.');
+      }
+    };
+    fetchAllStudents();
+  }, []);
 
   return (
     <>
@@ -291,23 +306,36 @@ const [loading, setLoading] = useState(false);
         </Typography>
         
         <Box component="form">
-          <TextField
-            margin="normal"
-            fullWidth
-            id="studentId"
-            label="StudentID"
-            {...register('username', { required: 'Student ID is required' })}
-            error={!!errors.username}
-            
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SentimentSatisfiedAltSharpIcon />
-                </InputAdornment>
-              ),
-            }}
+        <Controller
+        name="studentId"
+        control={control}
+        rules={{ required: 'Student ID is required' }}
+        render={({ field }) => (
+          <Autocomplete
+            {...field}
+            options={students}
+            disablePortal
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Student ID"
+                error={!!errors.studentId}
+                // helperText={errors.studentId?.message}
+                InputProps={{
+                  ...params.InputProps,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SentimentSatisfiedAltSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
+            onChange={(_, value) => field.onChange(value)} 
           />
+        )}
+      />
           
           <TextField
             margin="normal"
@@ -332,16 +360,19 @@ const [loading, setLoading] = useState(false);
             fullWidth
             id="phone"
             label="Phone"
-            {...register('phone', { required: 'Email is required' })}
+            {...register('phone', { required: 'Phone is required' })}
             error={!!errors.phone}
            
             variant="outlined"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <MailSharpIcon />
+                  <LocalPhoneIcon />
                 </InputAdornment>
               ),
+            }}
+            inputProps={{
+              maxLength: 10, // Enforce a maximum length of 10 characters
             }}
           />
           
@@ -350,7 +381,8 @@ const [loading, setLoading] = useState(false);
             fullWidth
             id="amount"
             label="Amount"
-            {...register('amount', { required: 'Amount is required' })}
+            {...register('amount', { required: 'Amount is required'
+             })}
             error={!!errors.amount}
           
             variant="outlined"

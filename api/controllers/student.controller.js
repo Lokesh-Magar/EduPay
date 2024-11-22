@@ -119,3 +119,13 @@ export const studsignin = async (req, res, next) => {
     }
   };
   
+  //Function sending list of students
+  export const getStudents = async (req, res) => {
+    try {
+      const students = await Student.find();
+      res.json(students);
+    } catch (error) {
+      console.error('Error retrieving students:', error);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  };
