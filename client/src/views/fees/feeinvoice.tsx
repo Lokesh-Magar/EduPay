@@ -605,7 +605,7 @@ const [loading, setLoading] = useState(false);
                 </td>
                
                 <td style={{ padding: '8px' }}>
-                {item.status==='unpaid' || item.status==='failure' ? 
+                {item.status==='unpaid' || item.status==='Failure' ? 
                 (
 
                 <div>

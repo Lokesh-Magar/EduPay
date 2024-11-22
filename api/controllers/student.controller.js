@@ -119,7 +119,7 @@ export const studsignin = async (req, res, next) => {
     }
   };
   
-  //Function sending list of students
+  //Function for the sending list of students
   export const getStudents = async (req, res) => {
     try {
       const students = await Student.find();
