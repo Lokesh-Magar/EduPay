@@ -44,38 +44,38 @@ const FeesInvoiceList = () => {
   const[transAmt, setTransAmt] = useState(0);
 
   //QR state
-  const invoiceData= useState({"eSewa_id":"9803431247","name":"Nirmala Adhikari Kaduwal"});
+  // const invoiceData= useState({"eSewa_id":"9803431247","name":"Nirmala Adhikari Kaduwal"});
  
-  const [qrCode, setQrCode] = useState("");
+  // const [qrCode, setQrCode] = useState("");
 
-  const GenerateQRCode = () => {
-    const dataToEncode = JSON.stringify(invoiceData);
-    QRCode.toDataURL(
-      dataToEncode,
-      {
-        width: 800,
-        margin: 2,
-        color: {
-          dark: "#000000ff",
-          light: "#ffffffff",
-        },
-      },
-      (err, url) => {
-        if (err) return console.error(err);
-        setQrCode(url);
-      }
-    );
-  };
+  // const GenerateQRCode = () => {
+  //   const dataToEncode = JSON.stringify(invoiceData);
+  //   QRCode.toDataURL(
+  //     dataToEncode,
+  //     {
+  //       width: 800,
+  //       margin: 2,
+  //       color: {
+  //         dark: "#000000ff",
+  //         light: "#ffffffff",
+  //       },
+  //     },
+  //     (err, url) => {
+  //       if (err) return console.error(err);
+  //       setQrCode(url);
+  //     }
+  //   );
+  // };
 
   const handleClickOpen = (id,tAmt) => {
     setOpen(true);
-    GenerateQRCode();
+    // GenerateQRCode();
     setTransId(crypto.randomUUID());
     setItemId(id);
     setTransAmt(tAmt);
     console.log(id);
     console.log(tAmt);
-    GenerateQRCode();
+   
   };
 
   const handleClose = () => {
@@ -259,8 +259,8 @@ const generateHash = () => {
         
         <DialogContent>
           <DialogContentText>
-          <div><QRCODE/></div>
-           <i>You are about to leave this page. Scan the <b>QR code </b> or Press <b>PAY NOW</b> button to continue.</i>
+          <QRCODE/>
+           You are about to leave this page. Scan the <b>QR code </b> or Press <b>PAY NOW</b> button to continue.
           </DialogContentText>
           <Box component="form" action={"https://rc-epay.esewa.com.np/api/epay/main/v2/form"} method="POST" target="_blank" >
           <TextField hidden label="Amount" name="amount" defaultValue={transAmt}  required fullWidth />

@@ -25,6 +25,7 @@ const Portal = () => {
   const [invoices, setInvoices] = useState([]);
   const { email} = useUser();
   
+  //For fetching data all of it
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -39,6 +40,7 @@ const Portal = () => {
       fetchData();
     }, [email]);
   
+    //Authentication Protected Page
   useEffect(()=>{
   const checkAuthentication= async()=>{
   

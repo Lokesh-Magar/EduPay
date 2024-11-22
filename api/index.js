@@ -107,6 +107,7 @@ app.get('/api/portal/success/:id', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Invoice not found.' });
     }
     invoice.status = 'Success';
+    invoice.pendingAmount = 0;
     await invoice.save();
     res.status(200).json({ success: true, message: `Invoice ${id} marked as Success.You can close this window now.` });
     
@@ -136,7 +137,7 @@ app.get('/api/portal/failure/:id', async (req, res) => {
     invoice.status = 'Failure';
     await invoice.save(); 
 
-    // Respond with a success message
+    // Respond with a success message of Failure page.
     return res.status(200).json({
       success: true,
       message: `Invoice ${id} marked as Failure.`,
@@ -180,7 +181,7 @@ app.post('/update-invoice', async (req, res) => {
 
     // Update the invoice status
     invoice.status = status;
-    invoice.pendingAmount = 0;
+   
     await invoice.save();
 
     // Send a success response

@@ -106,6 +106,7 @@ export const getStudInvData = async (req, res) => {
     } 
 };
 
+//Code for Fetching student data unused MAYBE
 export const getStudent= async (req, res) => {
   try
   {
