@@ -41,7 +41,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Fees Type",
+    title: "Fees Prediction",
     icon: IconFileTypography,
     href: "/dashboard/fees/feestype",
   },

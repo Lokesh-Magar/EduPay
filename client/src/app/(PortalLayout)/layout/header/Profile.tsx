@@ -132,18 +132,7 @@ const Profile = () => {
           {/* <ListItemText>My Email</ListItemText> */}
           <ListItemText>{email}</ListItemText>
         </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconMail width={20} />
-          </ListItemIcon>
-          <ListItemText>My Account</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <IconListCheck width={20} />
-          </ListItemIcon>
-          <ListItemText>My Tasks</ListItemText>
-        </MenuItem>
+     
         <Box mt={1} py={1} px={2}>
           <Button
             onClick={signout}

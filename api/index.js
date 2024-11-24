@@ -8,11 +8,13 @@ import studentRoutes from './routes/student.route.js';
 import commentRoutes from './routes/comment.route.js';
 import notificationRoutes from './routes/notification.route.js';
 import invoiceRoutes from './routes/invoice.route.js';
-import jwt from 'jsonwebtoken';
 
+import jwt from 'jsonwebtoken';
+import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
+
 
 import { getEsewaPaymentHash,verifyEsewaPayment } from './controllers/esewa.controller.js';
 import Payment from './models/payment.model.js';
@@ -71,7 +73,7 @@ app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/auth/signup',authRoutes);
 app.use('/api/auth/signout',authRoutes);
-
+app.use(bodyParser.json());
 
 //Notification Api routes
 app.use('/api/notifications',notificationRoutes);
@@ -97,6 +99,22 @@ app.use('/api/student/studsignup',studentRoutes);
 app.use('/api/student/studsignin',studentRoutes);
 app.use('/api/student/studsignout',studentRoutes);
 app.use('/api/student/getStudent',studentRoutes);
+// app.use('/api/students', studentRoutes);
+
+// Proxy endpoint to forward requests from frontend to Flask
+app.post('/predict', async (req, res) => {
+  try {
+    
+    const inputData = req.body;
+    // Forward the data to the Flask server
+    const flaskResponse = await axios.post('http://127.0.0.1:8080/predict', inputData);
+
+    res.status(200).json(flaskResponse.data);
+  } catch (error) {
+    console.error('Error communicating with Flask server:', error.message);
+    res.status(500).json({ error: 'Failed to communicate with the Flask server.' });
+  }
+});
 
 //Success Route
 app.get('/api/portal/success/:id', async (req, res) => {

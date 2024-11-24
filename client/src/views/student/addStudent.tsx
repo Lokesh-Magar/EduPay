@@ -22,7 +22,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 // Components Imports
 import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
-import QRCODE from "../qrCode/qrCode";
+
 
 // Define the FormDataType
 type FormDataType = {
@@ -163,7 +163,7 @@ const AddStudent = () => {
           className="border-be"
         >
           <Tab label="Personal Info" value="personal_info" />
-          <Tab label="Account Details" value="account_details" />
+        
         </TabList>
         <form onSubmit={handleSubmit}>
           <CardContent>
@@ -176,6 +176,7 @@ const AddStudent = () => {
                     placeholder="Mister"
                     value={formData.firstName}
                     onChange={handleTextFieldChange("firstName")}
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -185,36 +186,10 @@ const AddStudent = () => {
                     placeholder="Cat"
                     value={formData.lastName}
                     onChange={handleTextFieldChange("lastName")}
+                    required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    label="Country"
-                    value={formData.country}
-                    onChange={handleSelectChange("country")}
-                  >
-                    <MenuItem value="">Select Country</MenuItem>
-                    <MenuItem value="Nepal">Nepal</MenuItem>
-                  </CustomTextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    label="Language"
-                    value={formData.language}
-                    SelectProps={{
-                      multiple: true,
-                      onChange: handleMultipleSelectChange("language"),
-                    }}
-                  >
-                    <MenuItem value="">Select Language</MenuItem>
-                    <MenuItem value="English">English</MenuItem>
-                    <MenuItem value="Nepali">Nepali</MenuItem>
-                  </CustomTextField>
-                </Grid>
+              
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
                     fullWidth
@@ -223,6 +198,7 @@ const AddStudent = () => {
                     placeholder="123-456-7890"
                     value={formData.phoneNumber}
                     onChange={handleTextFieldChange("phoneNumber")}
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -232,20 +208,18 @@ const AddStudent = () => {
                     placeholder="Enter address"
                     value={formData.address1}
                     onChange={handleTextFieldChange("address1")}
+                    required
                   />
                 </Grid>
-              </Grid>
-              {/* QRCODE GENERATOR SECTION */}
-              <QRCODE />
-            </TabPanel>
-            <TabPanel value="account_details">
-              <Grid container spacing={6}>
+
+                {/* <Grid container spacing={6}> */}
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
                     fullWidth
                     label="Username"
                     placeholder="Enter username"
                     value={formData.username}
+                    required
                     onChange={handleTextFieldChange("username")}
                   />
                 </Grid>
@@ -256,6 +230,7 @@ const AddStudent = () => {
                     label="Email"
                     placeholder="user@domain.com"
                     value={formData.email}
+                    required
                     onChange={handleTextFieldChange("email")}
                   />
                 </Grid>
@@ -266,6 +241,7 @@ const AddStudent = () => {
                     label="Study level"
                     value={formData.studylevel}
                     onChange={handleSelectChange("studylevel")}
+                    required
                   >
                     <MenuItem value="">Select Study</MenuItem>
                     <MenuItem value="PrePrimary">Pre Primary</MenuItem>
@@ -280,6 +256,7 @@ const AddStudent = () => {
                     fullWidth
                     label="Gender"
                     value={formData.gender}
+                    required
                     onChange={handleSelectChange("gender")}
                   >
                     <MenuItem value="">Select Gender</MenuItem>
@@ -287,70 +264,16 @@ const AddStudent = () => {
                     <MenuItem value="Female">Female</MenuItem>
                   </CustomTextField>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    fullWidth
-                    label="Password"
-                    placeholder=""
-                    id="form-layout-tabs-password"
-                    type={formData.isPasswordShown ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleTextFieldChange("password")}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={(e: MouseEvent<HTMLButtonElement>) =>
-                              e.preventDefault()
-                            }
-                            aria-label="toggle password visibility"
-                          >
-                            {formData.isPasswordShown ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomTextField
-                    fullWidth
-                    label="Confirm Password"
-                    placeholder=""
-                    id="form-layout-tabs-confirm-password"
-                    type={formData.isConfirmPasswordShown ? "text" : "password"}
-                    value={formData.confirmPassword}
-                    onChange={handleTextFieldChange("confirmPassword")}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onClick={handleClickShowConfirmPassword}
-                            onMouseDown={(e: MouseEvent<HTMLButtonElement>) =>
-                              e.preventDefault()
-                            }
-                            aria-label="toggle password visibility"
-                          >
-                            {formData.isConfirmPasswordShown ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
+                
+                
               </Grid>
+
+
+              {/* </Grid> */}
+              {/* QRCODE GENERATOR SECTION */}
+            
             </TabPanel>
+           
           </CardContent>
           <CardActions>
             <Button

@@ -18,7 +18,7 @@ const [loading, setLoading] = useState(true);
 
 const [invoices, setInvoices] = useState([]);
 
-
+//Use Effect for fetching data as analysis
   useEffect(() => {
     const fetchData = async () => {
       try {

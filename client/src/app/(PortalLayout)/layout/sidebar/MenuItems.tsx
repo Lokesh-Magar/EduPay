@@ -31,12 +31,12 @@ const Menuitems = [
     navlabel: true,
     subheader: "Fees",
   },
-  {
-    id: uniqueId(),
-    title: "Fees Type",
-    icon: IconFileTypography,
-    href: "/portal/student/feestype",
-  },
+  // {
+  //   id: uniqueId(),
+  //   title: "Fees Type",
+  //   icon: IconFileTypography,
+  //   href: "/portal/student/feestype",
+  // },
   // {
   //   id: uniqueId(),
   //   title: "Fees Group",

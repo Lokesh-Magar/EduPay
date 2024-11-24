@@ -129,3 +129,54 @@ export const studsignin = async (req, res, next) => {
       res.status(500).json({ message: 'Server Error' });
     }
   };
+
+
+  export const updateStudent = async (req, res) => {
+    const studentId = req.params.id;
+    const { username, email } = req.body;
+  
+    // Validate the studentId before using it
+    if (!mongoose.Types.ObjectId.isValid(studentId)) {
+      return res.status(400).json({ message: 'Invalid student ID' });
+    }
+  
+    try {
+      const student = await Student.findByIdAndUpdate(
+        studentId,
+        { username, email }, // Directly update the fields
+        { new: true } // Return the updated student object
+      );
+  
+      if (!student) {
+        return res.status(404).json({ message: 'Student not found' });
+      }
+  
+      res.status(200).json(student); // Send the updated student as the response
+    } catch (error) {
+      console.error('Error updating student:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
+  // Delete a student
+  export const deleteStudent = async (req, res) => {
+    const studentId = req.params.id;
+  
+    // Validate the studentId before using it
+    if (!mongoose.Types.ObjectId.isValid(studentId)) {
+      return res.status(400).json({ message: 'Invalid student ID' });
+    }
+  
+    try {
+      const student = await Student.findByIdAndDelete(studentId);
+  
+      if (!student) {
+        return res.status(404).json({ message: 'Student not found' });
+      }
+  
+      res.status(200).json({ message: 'Student deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting student:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };

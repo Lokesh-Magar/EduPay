@@ -225,7 +225,7 @@ const generateHash = () => {
         <Typography variant="h6" component="h3">
           Fees Invoice
         </Typography>
-        <nav style={{ marginLeft: "65%" }}>
+        <nav style={{ marginLeft: "auto" }}>
           <Typography
             variant="h6"
             component="h3"
@@ -234,12 +234,10 @@ const generateHash = () => {
             <Link href="/portal" style={{ marginRight: "35px" }}>
               Portal
             </Link>
-            <span style={{ marginRight: "10px" }}>|</span>
-            <Link href="#" style={{ marginRight: "35px" }}>
-              Fees
-            </Link>
+           
+            
             <span style={{ marginRight: "35px" }}>|</span>
-            <Link href="/portal/student/feeinvoice">Fees Invoice</Link>
+            <Link href="/portal/student/feesinvoice">Fees Invoice</Link>
           </Typography>
         </nav>
       </div>
@@ -291,67 +289,8 @@ const generateHash = () => {
         </DialogActions>
       </Dialog>
     </div>
-              <div style={{ flexGrow: 1 }}>
-                <TextField
-                  id="standard-search"
-                  variant="standard"
-                  placeholder="QUICK SEARCH"
-                  inputRef={textFieldRef}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchSharpIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <ButtonGroup
-                  variant="outlined"
-                  aria-label="Basic button group"
-                  sx={{
-                    "& .MuiButton-root": {
-                      fontSize: "1.2rem",
-                      padding: "4px 8px",
-                      backgroundColor: "transparent",
-                      borderColor: "currentColor",
-                      color: "currentColor",
-                      "&:hover": {
-                        backgroundColor: "rgba(0, 0, 0, 0.08)",
-                        borderColor: "currentColor",
-                      },
-                      boxShadow: "none",
-                    },
-                  }}
-                >
-                  <Button title="Copy Table">
-                    <Icon icon="material-symbols:file-copy-outline-sharp" />
-                  </Button>
-                  <Button title="Export to Excel">
-                    <Icon icon="mdi:file-excel-outline" />
-                  </Button>
-                  <Button title="Export to CSV">
-                    <Icon icon="mdi:file-document-outline" />
-                  </Button>
-                  <Button title="Export to PDF">
-                    <Icon icon="mdi:file-pdf-outline" />
-                  </Button>
-                  <Button title="Print">
-                    <Icon icon="fa:print" style={{ fontSize: "1rem" }} />
-                  </Button>
-                  <Button title="Action">
-                    <Icon
-                      icon="mdi:table"
-                      style={{
-                        fontSize: "1.3rem",
-                      }}
-                    />
-                  </Button>
-                </ButtonGroup>
-              </div>
+              
+             
             </div>
 
             {/* Table */}

@@ -6,11 +6,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import SentimentSatisfiedAltSharpIcon from "@mui/icons-material/SentimentSatisfiedAltSharp";
 import { TextField, InputAdornment, CircularProgress, Box, DialogContent, DialogActions, Dialog, DialogContentText, DialogTitle, MenuItem } from "@mui/material";
-import SearchSharpIcon from "@mui/icons-material/SearchSharp";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { createTheme } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -27,8 +24,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 const FeesInvoiceList = () => {
   const textFieldRef = useRef<HTMLInputElement>(null);
   
-  const {  control,register, handleSubmit, formState: { errors } } = useForm();
+  const {  control,register, handleSubmit,setValue, formState: { errors } } = useForm();
   const [students, setStudents] = useState([]);
+  const [emails,setEmails] = useState([]);
   
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +58,35 @@ const FeesInvoiceList = () => {
       },
     },
   });
+
+  //Prediction Button Event Handling
+
+  const handlePredict = async (invoice) => {
+   
+    const { amount, pendingAmount, dueDate, _id, email } = invoice;
+    const inputData = {
+      amount,
+      pendingAmount,
+      dueDate,
+      email,
+      invoiceId: _id
+    };
+  
+    try {
+      
+      const response = await axios.post('/predict', inputData);
+  
+      const predictionResult = response.data.predictionResult;
+      const predictionScore = response.data.predictionScore;
+  
+      toast.error(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}\nPrediction score: ${predictionScore.toFixed(2)}%`);
+  
+    } catch (error) {
+     
+      console.error('Error predicting invoice:', error.message);
+      alert("Error predicting the invoice status.");
+    }
+  };
 
     //Edit Invoice 
     const [editOpen, setEditOpen] = useState(false); // State for edit dialog
@@ -228,8 +255,9 @@ const [loading, setLoading] = useState(false);
     const fetchAllStudents = async () => {
       try {
         const response = await axios.get('/student/fetchStudents'); 
-        console.log('Fetched students:', response.data); 
+        // console.log('Fetched students:', response.data); 
         setStudents(response.data.map((students: any) => students.username));
+        setEmails(response.data.map((students: any) => students.email));
       } catch (error) {
         console.error('Error fetching students:', error);
         toast.error('Error fetching students. Please try again.');
@@ -238,27 +266,33 @@ const [loading, setLoading] = useState(false);
     fetchAllStudents();
   }, []);
 
+  const handleStudentChange = (studentId: string) => {
+    // Find the corresponding email for the selected Student ID
+    const index = students.indexOf(studentId);
+    if (index !== -1) {
+      // Set the email automatically based on the selected Student ID
+      setValue('email', emails[index]); // Update the email field in the form
+    }
+  };
+
   return (
     <>
       <div className="flex ">
         <Typography variant="h6" component="h3">
           Fees Invoice
         </Typography>
-        <nav style={{ marginLeft: "65%" }}>
+        <nav style={{ marginLeft: "auto" }}>
           <Typography
             variant="h6"
             component="h3"
             style={{ display: "flex", alignItems: "center" }}
           >
-            <Link href="#" style={{ marginRight: "35px" }}>
+            <Link href="/dashboard" style={{ marginRight: "35px" }}>
               Dashboard
             </Link>
-            <span style={{ marginRight: "10px" }}>|</span>
-            <Link href="#" style={{ marginRight: "35px" }}>
-              Fees
-            </Link>
+          
             <span style={{ marginRight: "35px" }}>|</span>
-            <Link href="#">Fees Invoice</Link>
+            <Link href="/dashboard/fees/feesinvoice">Fees Invoice</Link>
           </Typography>
         </nav>
       </div>
@@ -275,23 +309,7 @@ const [loading, setLoading] = useState(false);
               >
                 <Button variant="contained" onClick={handleClickOpen}>+ ADD</Button>
               </Typography>
-              <div style={{ flexGrow: 1 }}>
-                <TextField
-                  id="standard-search"
-                  variant="standard"
-                  placeholder="QUICK SEARCH"
-                  inputRef={textFieldRef}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchSharpIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
+        
               <div>
 
               {/* <Button variant="outlined" >
@@ -301,13 +319,12 @@ const [loading, setLoading] = useState(false);
               <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{"Add Fees Invoice"}</DialogTitle>
                 <DialogContent>
-        <Typography variant="body2" color="textSecondary">
-          Enter valid student details.
-        </Typography>
+        
         
         <Box component="form">
         <Controller
         name="studentId"
+       
         control={control}
         rules={{ required: 'Student ID is required' }}
         render={({ field }) => (
@@ -317,10 +334,13 @@ const [loading, setLoading] = useState(false);
             disablePortal
             sx={{ width: 300 }}
             renderInput={(params) => (
+            
               <TextField
                 {...params}
                 label="Student ID"
+                sx={{ mt: 2,width:'184%' }}
                 error={!!errors.studentId}
+                fullWidth
                 // helperText={errors.studentId?.message}
                 InputProps={{
                   ...params.InputProps,
@@ -332,7 +352,10 @@ const [loading, setLoading] = useState(false);
                 }}
               />
             )}
-            onChange={(_, value) => field.onChange(value)} 
+            onChange={(_, value) => {
+              field.onChange(value); 
+              handleStudentChange(value); 
+            }} 
           />
         )}
       />
@@ -341,9 +364,14 @@ const [loading, setLoading] = useState(false);
             margin="normal"
             fullWidth
             id="email"
+            sx={{ mt: 3}}
             label="Email"
+            disabled
             {...register('email', { required: 'Email is required' })}
             error={!!errors.email}
+            onChange={(e) =>
+              setCurrentInvoice((prev) => ({ ...prev, amount: e.target.value }))
+            }
            
             variant="outlined"
             InputProps={{
@@ -442,6 +470,7 @@ const [loading, setLoading] = useState(false);
             size="large"
             type="submit"
             fullWidth
+            sx={{ mt: 2}}
             disabled={loading}
           >
             Add Fee Invoice {loading ? <CircularProgress size={24} /> : ''}
@@ -519,51 +548,7 @@ const [loading, setLoading] = useState(false);
 </Dialog>
 
     </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <ButtonGroup
-                  variant="outlined"
-                  aria-label="Basic button group"
-                  sx={{
-                    "& .MuiButton-root": {
-                      fontSize: "1.2rem",
-                      padding: "4px 8px",
-                      backgroundColor: "transparent",
-                      borderColor: "currentColor",
-                      color: "currentColor",
-                      "&:hover": {
-                        backgroundColor: "rgba(0, 0, 0, 0.08)",
-                        borderColor: "currentColor",
-                      },
-                      boxShadow: "none",
-                    },
-                  }}
-                >
-                  <Button title="Copy Table">
-                    <Icon icon="material-symbols:file-copy-outline-sharp" />
-                  </Button>
-                  <Button title="Export to Excel">
-                    <Icon icon="mdi:file-excel-outline" />
-                  </Button>
-                  <Button title="Export to CSV">
-                    <Icon icon="mdi:file-document-outline" />
-                  </Button>
-                  <Button title="Export to PDF">
-                    <Icon icon="mdi:file-pdf-outline" />
-                  </Button>
-                  <Button title="Print">
-                    <Icon icon="fa:print" style={{ fontSize: "1rem" }} />
-                  </Button>
-                  <Button title="Action">
-                    <Icon
-                      icon="mdi:table"
-                      style={{
-                        fontSize: "1.3rem",
-                      }}
-                    />
-                  </Button>
-                </ButtonGroup>
-              </div>
-            </div>
+                         </div>
             {/* Table */}
             <div style={{ marginTop: "20px" }}>
               
@@ -614,11 +599,18 @@ const [loading, setLoading] = useState(false);
                           <Button onClick={() => handleEditOpen(item)}>Edit</Button>
                         {/* </div>
                       ))} */}
-                  <Button variant="outlined" size="small" style={{ marginLeft: '5px' }}>
-                    Delete
-                  </Button></div>
-                  
-                
+
+                <Button
+                            variant="contained"
+                                color="primary"
+                                disabled={item.status === "Success" || item.status === "paid"} 
+                                onClick={() => handlePredict(item)} 
+                              >
+                              Predict
+                            </Button>
+                 
+                  </div>
+          
                 ):
                     ( <Typography variant="h6" style={{ borderRadius: '5px' }}>
                     Not Available
@@ -684,7 +676,6 @@ const [loading, setLoading] = useState(false);
               >
                 {pageNumber}
               </Typography>
-
               <Button
                 size="small"
                 onClick={() => handlePageChange(page + 1,pageNumber+1)} 

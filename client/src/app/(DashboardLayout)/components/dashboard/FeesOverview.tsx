@@ -90,7 +90,7 @@ const FeesOverview = ({ invoices }: { invoices: any[] }) => {
       bar: {
         horizontal: false,
         barHeight: '60%',
-        columnWidth: '42%',
+        columnWidth: '69%',
         borderRadius: [6],
         borderRadiusApplication: 'end',
         borderRadiusWhenStacked: 'all',
