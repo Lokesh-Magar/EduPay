@@ -89,36 +89,33 @@ def train():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Step 1: Get data from the request
+        
         data = request.get_json()
-        
-        # Step 2: Convert data to DataFrame (same structure as training data)
+       
         new_data = pd.DataFrame(data)
-        
-        # Step 3: Preprocess the new data - Convert 'dueDate' and 'paidDate' to datetime
+       
         new_data['dueDate'] = pd.to_datetime(new_data['dueDate'])
         new_data['paidDate'] = pd.to_datetime(new_data['paidDate'], errors='coerce')
 
-        # Step 4: Convert 'dueDate' and 'paidDate' to numeric timestamps
+       
         new_data['dueDate'] = (new_data['dueDate'] - pd.Timestamp("1970-01-01")).dt.days
         new_data['paidDate'] = (new_data['paidDate'] - pd.Timestamp("1970-01-01")).dt.days
 
-        # Step 5: Handle missing 'paidDate' by filling NaT with 0 (for unpaid invoices)
         new_data['paidDate'].fillna(0, inplace=True)
 
-        # Step 6: Select relevant columns for prediction (same as used in training)
-        new_data = new_data[['amount', 'pendingAmount', 'dueDate', 'paidDate']]  # Adjust column names if needed
+       
+        new_data = new_data[['amount', 'pendingAmount', 'dueDate', 'paidDate']]  
 
-        # Step 7: Scale the new data using the same scaler used during training
+       
         new_data_scaled = scaler.transform(new_data)
 
-        # Step 8: Predict using the trained model
+       
         new_prediction = model.predict(new_data_scaled)
 
-        # Step 9: Round the prediction to the nearest day (as the model output is continuous)
-        rounded_new_prediction = int(round(new_prediction[0][0]))  # Round to nearest day
+        # Round the prediction to the nearest day (as the model output is continuous)
+        rounded_new_prediction = int(round(new_prediction[0][0]))  # This will Round to nearest day
 
-        # Step 10: Return the prediction
+       
         return jsonify({'prediction': rounded_new_prediction})
 
     except Exception as e:
@@ -126,6 +123,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
-     # Change the host and port here
     app.run(host="127.0.0.1", port=8080, debug=True)
