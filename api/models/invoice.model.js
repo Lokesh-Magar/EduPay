@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 const invoiceSchema = new mongoose.Schema({
     studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
-    username: String,
+    fullname: String,
     email: String,
     amount: Number,
     pendingAmount: Number,

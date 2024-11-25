@@ -173,7 +173,7 @@ const FeesInvoiceList = () => {
         router.push('/dashboard/fees/feesinvoice');
        
     } catch (err:any) {
-            setError(err.response.data.message('An error occurred'));
+            setError('An error occurred');
             // toast.error('Invoice creation failed. Please try again.');
         
     } finally {
@@ -609,14 +609,14 @@ const [loading, setLoading] = useState(false);
                         {/* </div>
                       ))} */}
 
-                <Button
+                {/* <Button
                             variant="contained"
                                 color="primary"
                                 disabled={item.status === "Success" || item.status === "paid"} 
                                 onClick={() => handlePredict(item)} 
                               >
                               Predict
-                            </Button>
+                            </Button> */}
                  
                   </div>
           

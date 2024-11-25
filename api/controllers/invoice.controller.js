@@ -4,16 +4,15 @@ import fs from 'fs';
 import Invoice from '../models/invoice.model.js';
 import Student from '../models/student.model.js';
 import Notification from '../models/notification.model.js';
-import multer from 'multer';
-import path from 'path';
+
 export const createInvoice = async (req, res) => {
-    const { studentId,username,email, amount,pendingAmount, dueDate, status } = req.body;
+    const { fullname,email,phone, amount,pendingAmount, dueDate, status } = req.body;
 
     //Checks if the student exists
 
     try {
 
-      const student = await Student.find({username});
+      const student = await Student.find({email});
 
       if (!student) {
         
@@ -21,7 +20,7 @@ export const createInvoice = async (req, res) => {
         return res.status(404).send({ message: 'Student not found' });
       }
 
-      const invoice = new Invoice({ studentId,username,email, amount,pendingAmount, dueDate, status });
+      const invoice = new Invoice({ fullname,email,phone, amount,pendingAmount, dueDate, status  });
       await invoice.save();
       res.status(201).send({ message: 'Invoice created successfully' });
 
@@ -78,7 +77,7 @@ export const getStudInvData = async (req, res) => {
     const {email,page=1,limit=10,type="paginated"}=req.query;
     if (type==="paginated"){
       const data = await Invoice.find({email:email})
-      .populate('studentId','username')
+      .populate('email')
       .skip((page - 1) * limit)  // Skip the invoices based on the page
       .limit(Number(limit));     // Limit the number of invoices per page;
 
@@ -91,7 +90,7 @@ export const getStudInvData = async (req, res) => {
 
     else if (type==="analysis"){
       const data = await Invoice.find({email:email})
-      .populate('studentId','username');
+      .populate('email');
       res.json(data);
     }
     
@@ -113,7 +112,6 @@ export const getStudent= async (req, res) => {
     const email = await Student.findOne({email}).populate('Student',[fullname,email]);
     if(!email){
       return res.status(404).send('User not found');}
-
       res.json(email);
   }
   catch (error){
@@ -141,16 +139,13 @@ export const getStudent= async (req, res) => {
    });
    await newNotification.save();
    res.status(200).json(updatedInvoice);
-   
     // await updatedInvoice.save();
-
   } catch (error) {
     res.status(500).json({ error: "Failed to update invoice" });
   }
 }
 
 //Calculates the fees overdue by Rs 500 if the amount issued is past the 1 week of due date which is unpaid.
-
 export const processOverdueInvoices = async () => {
   try {
     const now = new Date();
@@ -179,11 +174,8 @@ export const processOverdueInvoices = async () => {
         }).find({email:email});
 
         newNotification.save();
-
-        // Save invoice
+        
         await invoice.save();
-
-       
         // console.log(`Notification sent to user for Invoice ID: ${invoice._id}`);
       }
     }
