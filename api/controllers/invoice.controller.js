@@ -110,7 +110,7 @@ export const getStudInvData = async (req, res) => {
 export const getStudent= async (req, res) => {
   try
   {
-    const email = await Student.findOne({email}).populate('Student',[username,email]);
+    const email = await Student.findOne({email}).populate('Student',[fullname,email]);
     if(!email){
       return res.status(404).send('User not found');}
 
@@ -131,17 +131,18 @@ export const getStudent= async (req, res) => {
     const updatedInvoice = await Invoice.findByIdAndUpdate(id, updatedData, {
       new: true,
     });
-    res.status(200).json(updatedInvoice);
 
+    if (!updatedInvoice) {
+      return res.status(404).json({ error: "Invoice not found" });
+    }
 
-     // Create a Notification
-     const newNotification = new Notification({
-     
-      message: `Your invoice has been updated. Invoice ID: ${updatedInvoice._id}, updated by system.`,
-    });
-
-    await updatedInvoice.save();
-    await newNotification.save();
+    const newNotification = new Notification({
+     message: `Your invoice has been updated. Invoice ID: ${updatedInvoice._id}, updated by system.`,
+   });
+   await newNotification.save();
+   res.status(200).json(updatedInvoice);
+   
+    // await updatedInvoice.save();
 
   } catch (error) {
     res.status(500).json({ error: "Failed to update invoice" });

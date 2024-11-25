@@ -223,19 +223,7 @@ const Login: React.FC<LoginProps> = ({
             >
               Sign In {loading ? <CircularProgress size={24} /> : ''}
             </Button>
-            <Box textAlign="center">
-              <Typography variant="body2">
-                New to EduFee?{" "}
-                <Typography
-                  component="a"
-                  color="primary"
-                  fontWeight="500"
-                  onClick={openRegisterDialog} // Open Register dialog
-                  style={{ cursor: "pointer" }}>
-                  Sign Up
-                </Typography>
-              </Typography>
-            </Box>
+           
           </Stack>
         </Stack>
       </DialogContent>

@@ -12,6 +12,8 @@ import {
   DialogContent,
   DialogTitle,
   CircularProgress,
+  MenuItem,
+  Menu,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -25,15 +27,13 @@ import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-// import Login from "views/login/login";
-import Login from "../login/login";
+
 interface RegisterProps {
   title?: string;
   open?: boolean;
   handleClose?: () => void;
   openLoginDialog?: () => void; // New prop to open Login dialog
 }
-
 const Register: React.FC<RegisterProps> = ({
   title = "Register",
   open = false,
@@ -65,8 +65,6 @@ const onSubmit = async (data:any) => {
   //   router.events.on('routeChangeComplete', handleRouteChange);
   //   return () => router.events.off('routeChangeComplete', handleRouteChange);
   // }, [router, reset]);
-      
-    
     try {
         const response = await axios.post('/student/studsignup', data);
         console.log(response.data);
@@ -141,6 +139,50 @@ const onSubmit = async (data:any) => {
               <TextField
              margin="normal"
              fullWidth
+             id="firstname"
+             label="First Name"
+             className="firstname"
+             required
+            //  autoComplete="username"
+             autoFocus
+             {...register('firstname', { required: 'First Name is required' })}
+            //  error={!!errors.username}
+            //  helperText={errors.username?.message}
+            
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SentimentSatisfiedAltSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+               <TextField
+             margin="normal"
+             fullWidth
+             id="lastname"
+             label="Last Name"
+             className="lastname"
+             required
+            //  autoComplete="username"
+             autoFocus
+             {...register('lastname', { required: 'Last Name is required' })}
+            //  error={!!errors.username}
+            //  helperText={errors.username?.message}
+            
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SentimentSatisfiedAltSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            <TextField
+             margin="normal"
+             fullWidth
              id="username"
              label="Username"
              className="username"
@@ -148,6 +190,28 @@ const onSubmit = async (data:any) => {
             //  autoComplete="username"
              autoFocus
              {...register('username', { required: 'Username is required' })}
+            //  error={!!errors.username}
+            //  helperText={errors.username?.message}
+            
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SentimentSatisfiedAltSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            <TextField
+             margin="normal"
+             fullWidth
+             id="address"
+             label="Address"
+             className="address"
+             required
+            //  autoComplete="username"
+             autoFocus
+             {...register('address', { required: 'Address is required' })}
             //  error={!!errors.username}
             //  helperText={errors.username?.message}
             
@@ -183,6 +247,78 @@ const onSubmit = async (data:any) => {
                   ),
                 }}
               />
+              <TextField
+              margin="normal"
+              fullWidth
+              id="studylevel"
+              label="Study Level"
+              className="studylevel"
+              required
+              autoComplete="studylevel"
+              autoFocus
+              defaultValue="select"
+              select
+              {...register('studylevel', { required: 'Study Level is required' })}
+              // error={!!errors.email}
+              // helperText={errors.email?.message}
+              
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MailSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              >
+                
+                <MenuItem value="select">Select Class</MenuItem>
+                <MenuItem value="pg">PG</MenuItem>
+                <MenuItem value="nursery">Nursery</MenuItem>
+                <MenuItem value="kg">KG</MenuItem>
+                <MenuItem value="one">One</MenuItem>
+                <MenuItem value="two">Two</MenuItem>
+                <MenuItem value="three">Three</MenuItem>
+                <MenuItem value="four">Four</MenuItem>
+                <MenuItem value="five">Five</MenuItem>
+                <MenuItem value="six">Six</MenuItem>
+                <MenuItem value="seven">Seven</MenuItem>
+                <MenuItem value="eight">Eight</MenuItem>
+                <MenuItem value="nine">Nine</MenuItem>
+                <MenuItem value="ten">Ten</MenuItem>
+
+
+              </TextField>
+              <TextField
+              margin="normal"
+              fullWidth
+              id="gender"
+              label="Gender"
+              className="gender"
+              required
+              autoComplete="gender"
+              autoFocus
+              defaultValue="select"
+              select
+              {...register('gender', { required: 'Gender is required' })}
+              // error={!!errors.email}
+              // helperText={errors.email?.message}
+              
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MailSharpIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              >
+                <MenuItem value="select">Select Gender</MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="others">Others</MenuItem>
+
+              </TextField>
               <TextField
                 variant="outlined"
                 id="phone"
@@ -254,10 +390,8 @@ const onSubmit = async (data:any) => {
                 // helperText={errors.password?.message}
              />
             </Box>
-
             {/* Remove Divider /}
             {/ <Divider sx={{ my: 2 }} /> */}
-
             <Stack spacing={2}>
             {error && <Typography color="error">{error}</Typography>}
             {success && <Typography color="success">{success}</Typography>}
@@ -295,45 +429,5 @@ const onSubmit = async (data:any) => {
       </DialogContent>
     </Dialog>)}
 
-
-
-
-
-
-
-
-
-
-// <<<<<<<<<<<<<<  ✨ Codeium Command ⭐  >>>>>>>>>>>>>>>>
-//     const [file, setFile] = useState(null);
-//     const [csvData, setCsvData] = useState(null);
-
-//     const handleFileChange = (event) => {
-//       setFile(event.target.files[0]);
-//     };
-
-//     const handleUpload = () => {
-//       if (file) {
-//         const reader = new FileReader();
-//         reader.onload = (event) => {
-//           const csv = event.target.result;
-//           const data = csv.split("\n");
-//           const headers = data[0].split(",");
-//           const rows = data.slice(1).map((row) => {
-//             const columns = row.split(",");
-//             const obj = {};
-//             headers.forEach((header, i) => {
-//               obj[header] = columns[i];
-//             });
-//             return obj;
-//           });
-//           setCsvData(rows);
-//         };
-//         reader.readAsText(file);
-//       }
-//     };
-// <<<<<<<  4af96d1e-a15f-4c4f-a658-e7ddd0e16e8d  >>>>>>>
-//   );
-// };
 
 export default Register;

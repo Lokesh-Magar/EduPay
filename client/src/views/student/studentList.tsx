@@ -119,11 +119,11 @@ const StudentList = () => {
             component="h3"
             style={{ display: "flex", alignItems: "center" }}
           >
-            <Link href="/dashboard" style={{ marginRight: "25px" }}>
+            <Link href="/dashboard" style={{ marginRight: "10px" ,color:'black',textDecoration:'none'}}>
               Dashboard
             </Link>
             <span style={{ marginRight: "20px" }}>|</span>
-            <Link href="/dashboard/students/studentList">Student List</Link>
+            <Link href="/dashboard/students/studentList" style={{ color:'black',textDecoration:'none'}}>Student List</Link>
           </Typography>
         </nav>
       </div>
@@ -146,16 +146,24 @@ const StudentList = () => {
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
                     <tr>
+                    
                       <th
                         style={{
                           padding: "8px",
                           textAlign: "left",
                           backgroundColor: "lightgray",
-                          borderRadius: "5px 0 0 5px",
-                          position: "relative",
                         }}
                       >
-                        <span>UserName</span>
+                        <span>SN</span>
+                      </th>
+                      <th
+                        style={{
+                          padding: "8px",
+                          textAlign: "left",
+                          backgroundColor: "lightgray",
+                        }}
+                      >
+                        <span>Full Name</span>
                       </th>
                       <th
                         style={{
@@ -165,6 +173,42 @@ const StudentList = () => {
                         }}
                       >
                         <span>Email</span>
+                      </th>
+                      <th
+                        style={{
+                          padding: "8px",
+                          textAlign: "left",
+                          backgroundColor: "lightgray",
+                        }}
+                      >
+                        <span>Phone</span>
+                      </th>
+                      <th
+                        style={{
+                          padding: "8px",
+                          textAlign: "left",
+                          backgroundColor: "lightgray",
+                        }}
+                      >
+                        <span>Address</span>
+                      </th>
+                      <th
+                        style={{
+                          padding: "8px",
+                          textAlign: "left",
+                          backgroundColor: "lightgray",
+                        }}
+                      >
+                        <span>Gender</span>
+                      </th>
+                      <th
+                        style={{
+                          padding: "8px",
+                          textAlign: "left",
+                          backgroundColor: "lightgray",
+                        }}
+                      >
+                        <span>Class</span>
                       </th>
                       <th
                         style={{
@@ -188,10 +232,16 @@ const StudentList = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {students.map((student) => (
+                    {students.map((student,index) => (
                       <tr key={student.id} style={{ borderBottom: "1px solid #ddd" }}>
-                        <td style={{ padding: "8px" }}>{student.username}</td>
+                        <td style={{ padding: "8px" }}>{index+1}</td>
+                        <td style={{ padding: "8px" }}>{student.fullname}</td>
                         <td style={{ padding: "8px" }}>{student.email}</td>
+                        <td style={{ padding: "8px" }}>{student.phone}</td>
+                        <td style={{ padding: "8px" }}>{student.address}</td>
+
+                        <td style={{ padding: "8px" }}>{student.gender}</td>
+                        <td style={{ padding: "8px" }}>{student.studylevel}</td>
                         <td style={{ padding: "8px" }}>{new Date(student.createdAt).toLocaleDateString()}</td>
                         <td style={{ padding: "5px" }}>
                           {/* <Button

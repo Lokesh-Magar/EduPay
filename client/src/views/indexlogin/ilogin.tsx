@@ -217,33 +217,7 @@ const ILogin = () => {
                 color="textSecondary"
                 mb={1}
               ></Typography>
-            
            
-              <Stack
-                direction="row"
-                spacing={1}
-                justifyContent="center"
-                mt={3}
-              >
-                <Typography
-                  color="textSecondary"
-                  variant="h6"
-                  fontWeight="500"
-                >
-                  New to EduPay?
-                </Typography>
-                <Typography
-                  component={Link}
-                  href="/backregister"
-                  fontWeight="500"
-                  sx={{
-                    textDecoration: "none",
-                    color: "primary.main",
-                  }}
-                >
-                  Create an account
-                </Typography>
-              </Stack>
             
           
         </Card>

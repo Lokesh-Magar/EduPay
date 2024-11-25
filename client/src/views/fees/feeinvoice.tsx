@@ -27,6 +27,7 @@ const FeesInvoiceList = () => {
   const {  control,register, handleSubmit,setValue, formState: { errors } } = useForm();
   const [students, setStudents] = useState([]);
   const [emails,setEmails] = useState([]);
+  const [phone,setPhones] = useState([]);
   
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +62,7 @@ const FeesInvoiceList = () => {
 
   //Prediction Button Event Handling
 
-  const handlePredict = async (invoice) => {
+  const handlePredict = async (invoice:any) => {
    
     const { amount, pendingAmount, dueDate, _id, email } = invoice;
     const inputData = {
@@ -77,9 +78,9 @@ const FeesInvoiceList = () => {
       const response = await axios.post('/predict', inputData);
   
       const predictionResult = response.data.predictionResult;
-      const predictionScore = response.data.predictionScore;
+    
   
-      toast.error(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}\nPrediction score: ${predictionScore.toFixed(2)}%`);
+      toast.error(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}`);
   
     } catch (error) {
      
@@ -99,7 +100,6 @@ const FeesInvoiceList = () => {
         console.error("No invoice provided:", invoice);
         return; 
       }
-
       // console.log("Invoice passed:", invoice);
       // setCurrentInvoice(invoice || {}); 
       setCurrentInvoice({...invoice});
@@ -137,11 +137,12 @@ const FeesInvoiceList = () => {
           )
         );
     
-        setEditOpen(false); // Close the dialog
       } catch (error:any) {
         setError(error.response.data.message);
         toast.error("Failed to update invoice. Please try again.");
       }
+
+      setEditOpen(false);
     };
 
 
@@ -256,8 +257,9 @@ const [loading, setLoading] = useState(false);
       try {
         const response = await axios.get('/student/fetchStudents'); 
         // console.log('Fetched students:', response.data); 
-        setStudents(response.data.map((students: any) => students.username));
+        setStudents(response.data.map((students: any) => students.fullname));
         setEmails(response.data.map((students: any) => students.email));
+        setPhones(response.data.map((students: any) => students.phone));
       } catch (error) {
         console.error('Error fetching students:', error);
         toast.error('Error fetching students. Please try again.');
@@ -270,8 +272,10 @@ const [loading, setLoading] = useState(false);
     // Find the corresponding email for the selected Student ID
     const index = students.indexOf(studentId);
     if (index !== -1) {
-      // Set the email automatically based on the selected Student ID
+      // Set the email automatically based on the selected Student ID in ADD INVOICE DIALOG
       setValue('email', emails[index]); // Update the email field in the form
+      // setPhones(phone[index]);  // Update the phone field in the form
+      setValue('phone', phone[index]);
     }
   };
 
@@ -370,7 +374,7 @@ const [loading, setLoading] = useState(false);
             {...register('email', { required: 'Email is required' })}
             error={!!errors.email}
             onChange={(e) =>
-              setCurrentInvoice((prev) => ({ ...prev, amount: e.target.value }))
+              setCurrentInvoice((prev) => ({ ...prev, email: e.target.value }))
             }
            
             variant="outlined"
@@ -388,8 +392,13 @@ const [loading, setLoading] = useState(false);
             fullWidth
             id="phone"
             label="Phone"
+            disabled
             {...register('phone', { required: 'Phone is required' })}
             error={!!errors.phone}
+            // value={phone}
+            onChange={(e) =>
+              setCurrentInvoice((prev) => ({ ...prev, phone: e.target.value }))
+            }
            
             variant="outlined"
             InputProps={{

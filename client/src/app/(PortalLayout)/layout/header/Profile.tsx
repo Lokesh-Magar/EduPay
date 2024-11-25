@@ -22,7 +22,7 @@ const Profile = () => {
   const [error, setError] = useState<string | null >(null);
 
   //Context variables
-  const { username, email } = useUser();   
+  const { fullname, email } = useUser();   
  
  const {setUser} = useUser();
 
@@ -98,7 +98,9 @@ const Profile = () => {
           }),
         }}
         onClick={handleClick2}
-      > {username}
+      > 
+      <div className="name" style={{ marginRight: "10px" }}>{fullname}</div>
+
         <Avatar
           src="/images/profile/user-1.jpg"
           alt="image"

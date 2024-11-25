@@ -7,15 +7,21 @@ import Notification from '../models/notification.model.js';
 
 export const studsignup=async (req, res, next)=>{
 
-const {username,email,phone,password}=req.body;
+const {fullname,email,address,phone,studylevel,gender,password}=req.body;
 if(
-    !username||
+    !fullname||
     !email||
+    !address||
     !phone||
+    !studylevel||
+    !gender||
     !password||
-    username===''||
+    fullname===''||
     email===''||
+    address===''||
     phone===0||
+    studylevel===''||
+    gender===''||
     password===''
 ){
     next(errorHandler(400, 'All fields are required'));
@@ -24,9 +30,12 @@ if(
 const hashedPassword=bcryptjs.hashSync(password,10);
 
 const newStudent = new Student({
-    username,
+    fullname,
     email,
+    address,
     phone,
+    studylevel,
+    gender,
     password: hashedPassword,
 });
 
@@ -36,14 +45,14 @@ try {
     res.json('Student Signup successful');
 
 
-    //Creating Notification for the new user
-    const notification = new Notification({
-        title: 'New Student Registered',
-        message: `A Student Account has been registered with this email ${newStudent.email} under the name ${newStudent.username}`,
-        userId: newStudent._id,
-}   
-    );
-    await notification.save();
+//     //Creating Notification for the new user
+//     const notification = new Notification({
+//         title: 'New Student Registered',
+//         message: `A Student Account has been registered with this email ${newStudent.email} under the name ${newStudent.fullname}`,
+//         userId: newStudent._id,
+// }   
+//     );
+//     await notification.save();
 }
 catch (error) {
     next(error);
@@ -69,7 +78,7 @@ export const studsignin = async (req, res, next) => {
       }
 
         const token = jwt.sign(
-      { id: validUser._id, isAdmin: validUser.isAdmin, username: validUser.username, email: validUser.email },
+      { id: validUser._id, isAdmin: validUser.isAdmin, fullname: validUser.fullname, email: validUser.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }  // Set token expiry for 1 hour
     );
@@ -113,7 +122,7 @@ export const studsignin = async (req, res, next) => {
   
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      res.json({ email: decoded.email, username: decoded.username });
+      res.json({ email: decoded.email, fullname: decoded.fullname });
     } catch (error) {
       res.status(401).json({ message: 'Invalid token' });
     }
@@ -130,6 +139,10 @@ export const studsignin = async (req, res, next) => {
     }
   };
 
+
+
+  
+  //UNUSED......
 
   export const updateStudent = async (req, res) => {
     const studentId = req.params.id;

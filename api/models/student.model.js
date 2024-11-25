@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const studentSchema = new mongoose.Schema(
   {
-    username: {
+    fullname: {
       type: String,
       required: true,
       unique: true,
@@ -12,8 +12,23 @@ const studentSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    address: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     phone:{
       type:Number,
+      required:true,
+      unique:true
+    },
+    studylevel:{
+      type:String,
+      required:true,
+      unique:true
+    },
+    gender:{
+      type:String,
       required:true,
       unique:true
     },

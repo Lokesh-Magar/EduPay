@@ -239,8 +239,8 @@ app.get('/api/userinfo',(req,res)=>{
     }
 
     // Extract the necessary user information from the decoded token
-    const { username, email } = decoded;
-    res.status(200).json({ username, email });
+    const { fullname, email } = decoded;
+    res.status(200).json({ fullname, email });
   });
 
 });

@@ -67,6 +67,7 @@ const IndexView = () => {
         handleClose={handleCloseRegister}
         openLoginDialog={handleOpenLogin}
       />
+      
     </>
   );
 };

@@ -3,14 +3,14 @@ import axios from 'axios';
 // Define types for the context
 // Define the type of user
 interface User {
-  username: string;
+  fullname: string;
   email: string;
 }
 interface UserContextType {
-  username: string | null;
+  fullname: string | null;
   email: string | null;
   invAmt: Number | null;
-  setUser: (user: { username: string; email: string,invAmt:Number }) => void;
+  setUser: (user: { fullname: string; email: string,invAmt:Number }) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -46,18 +46,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     fetchUserInfo();
   }, []);
-  const [username, setUsername] = useState<string | null>(null);
+  const [fullname, setUsername] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [invAmt, setinvAmt] = useState<Number | null>(null);
 
-  const setUser = ({ username, email,invAmt }: { username: string; email: string ,invAmt:Number}) => {
-    setUsername(username);
+  const setUser = ({ fullname, email,invAmt }: { fullname: string; email: string ,invAmt:Number}) => {
+    setUsername(fullname);
     setEmail(email);
     setinvAmt(invAmt);
   };
 
   return (
-    <UserContext.Provider value={{ username, email, invAmt,setUser }}>
+    <UserContext.Provider value={{ fullname, email, invAmt,setUser }}>
       {children}
     </UserContext.Provider>
   );

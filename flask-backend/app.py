@@ -83,9 +83,7 @@ def train_model():
 def train():
     loss = train_model()
     return jsonify({'message': 'Model trained successfully', 'loss': loss})
-    
-
-
+   
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
@@ -97,25 +95,20 @@ def predict():
         new_data['dueDate'] = pd.to_datetime(new_data['dueDate'])
         new_data['paidDate'] = pd.to_datetime(new_data['paidDate'], errors='coerce')
 
-       
         new_data['dueDate'] = (new_data['dueDate'] - pd.Timestamp("1970-01-01")).dt.days
         new_data['paidDate'] = (new_data['paidDate'] - pd.Timestamp("1970-01-01")).dt.days
 
         new_data['paidDate'].fillna(0, inplace=True)
 
-       
         new_data = new_data[['amount', 'pendingAmount', 'dueDate', 'paidDate']]  
 
-       
         new_data_scaled = scaler.transform(new_data)
 
-       
         new_prediction = model.predict(new_data_scaled)
 
         # Round the prediction to the nearest day (as the model output is continuous)
         rounded_new_prediction = int(round(new_prediction[0][0]))  # This will Round to nearest day
 
-       
         return jsonify({'prediction': rounded_new_prediction})
 
     except Exception as e:
