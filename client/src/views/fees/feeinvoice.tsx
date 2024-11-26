@@ -75,14 +75,14 @@ const FeesInvoiceList = () => {
     };
     console.log("The input Data",inputData);
     try {
-      const response = await axios.post(`/predict`, inputData);
-      const predictionResult = response.data.predictionResult;
-      console.log("THe prediction for invoice",predictionResult);
-      // toast.success(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}`);
+      const response = await axios.post(`http://127.0.0.1:8080/predict`, inputData);
+      const predictionResult = response.data.prediction;
+      console.log("The prediction for invoice",predictionResult);
+      alert(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}`);
   
     } catch (error:any) {
       console.error('Error predicting invoice:', error.message);
-      alert("Error predicting the invoice status.");
+      // alert("Error predicting the invoice status.");
     }
   };
 
@@ -557,7 +557,6 @@ const [loading, setLoading] = useState(false);
               <th style={{ padding: '8px' }}>AMOUNT</th>
               <th style={{ padding: '8px' }}>PENDING AMOUNT</th>
               <th style={{ padding: '8px' }}>DUE DATE</th>
-              
               <th style={{ padding: '5px' }}>STATUS</th>
               
               <th style={{ padding: '8px' }}>ACTIONS</th>

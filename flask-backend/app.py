@@ -5,8 +5,10 @@ import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 import joblib  # For saving and loading the scaler
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Initialize model and scaler
 scaler = None
@@ -102,7 +104,7 @@ def predict():
 
         rounded_new_prediction = int(round(new_prediction[0][0]))
 
-        return jsonify({'prediction': rounded_new_prediction})
+        return jsonify({'prediction': rounded_new_prediction}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
