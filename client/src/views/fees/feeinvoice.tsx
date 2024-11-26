@@ -65,25 +65,22 @@ const FeesInvoiceList = () => {
   const handlePredict = async (invoice:any) => {
    
     const { amount, pendingAmount, dueDate, _id, email } = invoice;
+    console.log("The invoice ",invoice);
+    
     const inputData = {
       amount,
       pendingAmount,
       dueDate,
-      email,
-      invoiceId: _id
+      paidDate: '',
     };
-  
+    console.log("The input Data",inputData);
     try {
-      
-      const response = await axios.post('/predict', inputData);
-  
+      const response = await axios.post(`/predict`, inputData);
       const predictionResult = response.data.predictionResult;
-    
+      console.log("THe prediction for invoice",predictionResult);
+      // toast.success(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}`);
   
-      toast.error(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}`);
-  
-    } catch (error) {
-     
+    } catch (error:any) {
       console.error('Error predicting invoice:', error.message);
       alert("Error predicting the invoice status.");
     }
@@ -111,7 +108,6 @@ const FeesInvoiceList = () => {
     };
     //Submit edit invoice function
     const handleEditSubmit = async (updatedInvoice:any) => {
-
       setError(null);
       setSuccess(null);
       if (!updatedInvoice.amount || !updatedInvoice.email || !updatedInvoice._id  ) {
@@ -165,11 +161,7 @@ const FeesInvoiceList = () => {
         // console.log(response.data);
         setSuccess(response.data.message);
       
-        
         // toast.success(response.data.message);
-        
-        
-  
         router.push('/dashboard/fees/feesinvoice');
        
     } catch (err:any) {
@@ -315,7 +307,6 @@ const [loading, setLoading] = useState(false);
               </Typography>
         
               <div>
-
               {/* <Button variant="outlined" >
                 Open Dialog
               </Button> */}
@@ -324,11 +315,9 @@ const [loading, setLoading] = useState(false);
                 <DialogTitle>{"Add Fees Invoice"}</DialogTitle>
                 <DialogContent>
         
-        
         <Box component="form">
         <Controller
         name="studentId"
-       
         control={control}
         rules={{ required: 'Student ID is required' }}
         render={({ field }) => (
@@ -363,7 +352,6 @@ const [loading, setLoading] = useState(false);
           />
         )}
       />
-          
           <TextField
             margin="normal"
             fullWidth
@@ -460,18 +448,14 @@ const [loading, setLoading] = useState(false);
             select
             {...register('status', { required: 'Status is required' })}
             error={!!errors.status}
-            
             variant="outlined"
           >
             <MenuItem value="unpaid">Unpaid</MenuItem>
             <MenuItem value="paid">Paid</MenuItem>
-          </TextField>
-          
+          </TextField> 
           {error && <Typography color="error">{error}</Typography>}
           {success && <Typography color="success">{success}</Typography>}
-          
           <ToastContainer position="top-right" autoClose={5000} hideProgressBar />
-          
           <Button
           onClick={handleSubmit(onSubmit)}
             color="primary"
@@ -609,14 +593,14 @@ const [loading, setLoading] = useState(false);
                         {/* </div>
                       ))} */}
 
-                {/* <Button
+                <Button
                             variant="contained"
                                 color="primary"
                                 disabled={item.status === "Success" || item.status === "paid"} 
                                 onClick={() => handlePredict(item)} 
                               >
                               Predict
-                            </Button> */}
+                            </Button> 
                  
                   </div>
           

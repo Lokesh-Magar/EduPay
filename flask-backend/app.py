@@ -5,16 +5,13 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import os
+from pytz import UTC
 
 app = Flask(__name__)
 
 # Initialize scaler and model
 scaler = None
 model = None
-
-# Global variable to hold the trained model
-model = None
-scaler = None
 
 # Function to load and preprocess the dataset
 def preprocess_data():
@@ -84,35 +81,43 @@ def train():
     loss = train_model()
     return jsonify({'message': 'Model trained successfully', 'loss': loss})
    
+from pytz import UTC  # Import UTC timezone
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        
         data = request.get_json()
-       
-        new_data = pd.DataFrame(data)
-       
-        new_data['dueDate'] = pd.to_datetime(new_data['dueDate'])
-        new_data['paidDate'] = pd.to_datetime(new_data['paidDate'], errors='coerce')
+        print("The request data", data)
+        
+        # Convert JSON data to DataFrame
+        new_data = pd.DataFrame([data])
+        
+        # Parse dueDate and paidDate into datetime and handle timezones
+        new_data['dueDate'] = pd.to_datetime(new_data['dueDate'], utc=True).dt.tz_convert(None)
+        new_data['paidDate'] = pd.to_datetime(new_data['paidDate'], errors='coerce', utc=True).dt.tz_convert(None)
 
+        # Convert dates to days since epoch
         new_data['dueDate'] = (new_data['dueDate'] - pd.Timestamp("1970-01-01")).dt.days
         new_data['paidDate'] = (new_data['paidDate'] - pd.Timestamp("1970-01-01")).dt.days
 
+        # Fill missing paidDate values with 0
         new_data['paidDate'].fillna(0, inplace=True)
 
-        new_data = new_data[['amount', 'pendingAmount', 'dueDate', 'paidDate']]  
+        # Ensure only the necessary columns are used
+        new_data = new_data[['amount', 'pendingAmount', 'dueDate', 'paidDate']]
 
+        # Scale data and make predictions
         new_data_scaled = scaler.transform(new_data)
-
         new_prediction = model.predict(new_data_scaled)
 
-        # Round the prediction to the nearest day (as the model output is continuous)
-        rounded_new_prediction = int(round(new_prediction[0][0]))  # This will Round to nearest day
+        # Round prediction result
+        rounded_new_prediction = int(round(new_prediction[0][0]))
 
         return jsonify({'prediction': rounded_new_prediction})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+
 
 
 if __name__ == "__main__":

@@ -102,17 +102,31 @@ app.use('/api/student/getStudent',studentRoutes);
 // app.use('/api/students', studentRoutes);
 
 // Proxy endpoint to forward requests from frontend to Flask
-app.post('/predict', async (req, res) => {
-  try {
-    
-    const inputData = req.body;
-    // Forward the data to the Flask server
-    const flaskResponse = await axios.post('http://127.0.0.1:8080/predict', inputData);
+// Proxy to train
+app.post('/train', async (req, res) => {
+try {
+  const flaskResponse= await axios.post(`${process.env.FLASK_URI}/train`);
+  res.status(200).json(flaskResponse);
+}  
+catch (error){
+    console.error('Error communicating with Flask server:', error.message);
+    res.status(500).json({ error: 'Failed to communicate with the Flask server.' });
+}
 
+}
+
+)
+//Proxy to predict
+  app.post('/predict', async (req, res) => {
+  try {
+    const inputData = req.body;
+
+    // Forward the data to the Flask server
+    const flaskResponse = await axios.post(`${process.env.FLASK_URI}/predict`, inputData);
     res.status(200).json(flaskResponse.data);
   } catch (error) {
     console.error('Error communicating with Flask server:', error.message);
-    res.status(500).json({ error: 'Failed to communicate with the Flask server.' });
+    res.status(500).json({ error: 'Failed to communicate with the Flask server.'});
   }
 });
 
@@ -139,8 +153,6 @@ app.get('/api/portal/success/:id', async (req, res) => {
 app.get('/api/portal/failure/:id', async (req, res) => {
   try {
     const { id } = req.params; // This extracts the invoice ID from the route parameter
-
-    
     const invoice = await Invoice.findById(id);
 
     if (!invoice) {
