@@ -65,7 +65,7 @@ const onSubmit = async (data:any) => {
         const response = await axios.post('/student/studsignup', data);
         console.log(response.data);
         setSuccess(response.data.message);
-        toast.success(response.data.message);
+        toast.success("Student Added Successfully.");
         reset();
         
     } catch (err:any) {
@@ -358,7 +358,7 @@ const onSubmit = async (data:any) => {
               >
                 Submit {loading ? <CircularProgress size={24} /> : ''}
               </Button>
-              
+              <ToastContainer autoClose={false} /> 
           </Stack>
         </Box>
       

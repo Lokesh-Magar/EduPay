@@ -16,7 +16,7 @@ model = None
 
 # Function to load and preprocess the dataset
 def preprocess_data():
-    dataset = pd.read_csv(r'D:\Users\Brian\Downloads\updated_invoice_data_2000.csv')
+    dataset = pd.read_csv(r'D:\Users\Brian\Downloads\student_fee_data_paid_unpaid.csv')
     dataset['dueDate'] = pd.to_datetime(dataset['dueDate'])
     dataset['paidDate'] = pd.to_datetime(dataset['paidDate'], errors='coerce')
     dataset['days_to_payment'] = (dataset['paidDate'] - dataset['dueDate']).dt.days
@@ -39,7 +39,7 @@ def preprocess_data():
     x_scaled = scaler.fit_transform(x)
 
     # Save the scaler after fitting
-    joblib.dump(scaler, r'D:\Users\scaler.pkl')
+    joblib.dump(scaler, r'D:\Users\scaler2.pkl')
 
     return x_scaled, y
 
@@ -58,7 +58,7 @@ def train_model():
     ])
     model.compile(optimizer='adam', loss='mse')
     model.fit(x_train, y_train, epochs=100, batch_size=32, verbose=1)
-    model.save_weights(r'D:\Users\inv.weights.h5')
+    model.save_weights(r'D:\Users\inv2.weights.h5')
     loss = model.evaluate(x_test, y_test, verbose=0)
     return loss
 
@@ -77,7 +77,7 @@ def load_model_weights():
         tf.keras.layers.BatchNormalization(),
         tf.keras.layers.Dense(1)
     ])
-    model.load_weights(r'D:\Users\inv.weights.h5')  # Provide the correct path to your saved weights file
+    model.load_weights(r'D:\Users\inv2.weights.h5')  # Provide the correct path to your saved weights file
     return model
 
 # API to predict based on new data
@@ -87,7 +87,7 @@ def predict():
         model = load_model_weights()
 
         # Load the saved scaler
-        scaler = joblib.load(r'D:\Users\scaler.pkl')
+        scaler = joblib.load(r'D:\Users\scaler2.pkl')
 
         data = request.get_json()
         new_data = pd.DataFrame([data])
