@@ -14,7 +14,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import cors from 'cors';
-
+import axios from 'axios';
 
 import { getEsewaPaymentHash,verifyEsewaPayment } from './controllers/esewa.controller.js';
 import Payment from './models/payment.model.js';
@@ -117,12 +117,12 @@ catch (error){
 
 )
 //Proxy to predict
-  app.post('/predict', async (req, res) => {
+  app.post('/api/predict', async (req, res) => {
   try {
     const inputData = req.body;
 
     // Forward the data to the Flask server
-    const flaskResponse = await axios.post(`${process.env.FLASK_URI}/predict`, inputData);
+    const flaskResponse = await axios.post(`http://127.0.0.1:8080/predict`, inputData);
     res.status(200).json(flaskResponse.data);
   } catch (error) {
     console.error('Error communicating with Flask server:', error.message);
@@ -185,7 +185,6 @@ app.get('/api/portal/failure/:id', async (req, res) => {
   }
 });
 
-
 // This update route is used to update the status of an invoice not for the admin.
 app.post('/update-invoice', async (req, res) => {
   try {
@@ -231,8 +230,6 @@ app.post('/update-invoice', async (req, res) => {
     });
   }
 });
-
-
 //------------------------------------------------------------
 //Get student or user info
 

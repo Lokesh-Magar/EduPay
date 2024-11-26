@@ -67,6 +67,7 @@ const FeesInvoiceList = () => {
     const { amount, pendingAmount, dueDate, _id, email } = invoice;
     console.log("The invoice ",invoice);
     
+    // Prepare the input data as followed by the columns of the model
     const inputData = {
       amount,
       pendingAmount,
@@ -78,7 +79,7 @@ const FeesInvoiceList = () => {
       const response = await axios.post(`http://127.0.0.1:8080/predict`, inputData);
       const predictionResult = response.data.prediction;
       console.log("The prediction for invoice",predictionResult);
-      alert(`Prediction for invoice ${_id} (Email: ${email}):\n${predictionResult}`);
+      alert(`Prediction for invoice ${_id}of (Email: ${email}):\n${predictionResult}\tdays of estimated Days for the Payment.`);
   
     } catch (error:any) {
       console.error('Error predicting invoice:', error.message);
@@ -310,7 +311,6 @@ const [loading, setLoading] = useState(false);
               {/* <Button variant="outlined" >
                 Open Dialog
               </Button> */}
-
               <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{"Add Fees Invoice"}</DialogTitle>
                 <DialogContent>
@@ -334,6 +334,7 @@ const [loading, setLoading] = useState(false);
                 sx={{ mt: 2,width:'184%' }}
                 error={!!errors.studentId}
                 fullWidth
+                {...register('fullname', { required: 'Name is required' })}
                 // helperText={errors.studentId?.message}
                 InputProps={{
                   ...params.InputProps,
@@ -592,14 +593,14 @@ const [loading, setLoading] = useState(false);
                         {/* </div>
                       ))} */}
 
-                <Button
+                {/* <Button
                             variant="contained"
                                 color="primary"
                                 disabled={item.status === "Success" || item.status === "paid"} 
                                 onClick={() => handlePredict(item)} 
                               >
                               Predict
-                            </Button> 
+                            </Button>  */}
                  
                   </div>
           

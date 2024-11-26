@@ -28,7 +28,7 @@ export const signup = async (req, res, next) => {
   });
 
   try {
-    await newUser.save();
+    newUser.save();
     // It is used to send a JSON response to the client
     res.json('Signup successful');
 
@@ -36,7 +36,7 @@ export const signup = async (req, res, next) => {
     const newNotification = new Notification({
       message:`College Administrator Registered with ${newUser.email} under the name ${newUser.username}`,
     });
-    await newNotification.save();
+    newNotification.save();
   } catch (error) {
     next(error);
   }

@@ -8,9 +8,7 @@ import {
   IconButton,
   TextField,
   InputAdornment,
-  Dialog,
-  DialogContent,
-  DialogTitle,
+
   CircularProgress,
   MenuItem,
   Menu,
@@ -67,6 +65,7 @@ const onSubmit = async (data:any) => {
         const response = await axios.post('/student/studsignup', data);
         console.log(response.data);
         setSuccess(response.data.message);
+        toast.success(response.data.message);
         reset();
         
     } catch (err:any) {
@@ -77,7 +76,7 @@ const onSubmit = async (data:any) => {
         }
     } finally {
         setLoading(false);
-        router.push('/dashboard/students/studentList');
+        router.push('/dashboard');
     }
 };
   return (
@@ -117,7 +116,7 @@ const onSubmit = async (data:any) => {
             >
             
             
-            <div className="usernameEmail" style={{display:"flex",gap:"5%"}}>
+            <div className="fullnameEmail" style={{display:"flex",gap:"5%"}}>
             <TextField
              margin="normal"
              fullWidth
@@ -128,8 +127,8 @@ const onSubmit = async (data:any) => {
              
              autoFocus
              {...register('fullname', { required: 'Full Name is required' })}
-            //  error={!!errors.username}
-            //  helperText={errors.username?.message}
+             error={!!errors.fullname}
+             helperText={errors.fullname?.message}
             
                 variant="outlined"
                 InputProps={{
@@ -150,8 +149,8 @@ const onSubmit = async (data:any) => {
                 autoComplete="email"
                 autoFocus
                 {...register('email', { required: 'Email is required' })}
-                // error={!!errors.email}
-                // helperText={errors.email?.message}
+                error={!!errors.email}
+                helperText={errors.email?.message}
                 
                   variant="outlined"
                   InputProps={{
@@ -176,8 +175,8 @@ const onSubmit = async (data:any) => {
             //  autoComplete="username"
              autoFocus
              {...register('address', { required: 'Address is required' })}
-            //  error={!!errors.username}
-            //  helperText={errors.username?.message}
+             error={!!errors.address}
+             helperText={errors.address?.message}
             
                 variant="outlined"
                 InputProps={{
@@ -199,10 +198,10 @@ const onSubmit = async (data:any) => {
                 autoComplete="phone"
                 style={{ width: "50%" ,marginTop:'15px'}}
                 required
-                // helperText={errors.phone?.message}
                 autoFocus
                 {...register('phone',{required:'Phone number is required.'})}
-                // error={!!errors.phone}
+                error={!!errors.phone}
+                helperText={errors.phone?.message}
                 
                 // onChange={/*(e) => {
                 //   const value = e.target.value.replace(/[^0-9]/g, ""); // It will allow only numbers
@@ -247,8 +246,8 @@ const onSubmit = async (data:any) => {
               defaultValue="select"
               select
               {...register('studylevel', { required: 'Study Level is required' })}
-              // error={!!errors.email}
-              // helperText={errors.email?.message}
+              error={!!errors.studylevel}
+              helperText={errors.studylevel?.message}
               
                 variant="outlined"
                 InputProps={{
@@ -289,8 +288,8 @@ const onSubmit = async (data:any) => {
               defaultValue="select"
               select
               {...register('gender', { required: 'Gender is required' })}
-              // error={!!errors.email}
-              // helperText={errors.email?.message}
+              error={!!errors.gender}
+              helperText={errors.gender?.message}
               
                 variant="outlined"
                 InputProps={{
@@ -322,7 +321,8 @@ const onSubmit = async (data:any) => {
                 style={{ width: "47.5%" }}
                 required
                 {...register('password',{required:'Password is required.'})}
-                // error={!!errors.password}
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 
                 variant="outlined"
                 InputProps={{
@@ -342,7 +342,6 @@ const onSubmit = async (data:any) => {
                     </InputAdornment>
                   ),
                 }}
-                // helperText={errors.password?.message}
              />
               </div>
             </Box>

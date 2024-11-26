@@ -78,9 +78,9 @@ const Portal = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} lg={4}>
+            {/* <Grid item xs={12} lg={4}>
               <RecentTransactions />
-            </Grid>
+            </Grid> */}
          
             <Grid item xs={12} lg={8}>
               <FeesPerformance invoices={invoices}/>

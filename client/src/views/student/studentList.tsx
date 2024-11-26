@@ -40,10 +40,10 @@ const StudentList = () => {
   const handleEditSubmit = async () => {
     if (!editingStudent) return;
 
-    const { id, username, email } = editingStudent;
+    const { id, fullname, email } = editingStudent;
 
     // Validation
-    if (!username || !email) {
+    if (!fullname || !email) {
       alert("All fields are required.");
       return;
     }
@@ -62,7 +62,7 @@ const StudentList = () => {
       // Update the local state to reflect the changes
       setStudents(prevStudents =>
         prevStudents.map(student =>
-          student.id === id ? { ...student, username, email } : student
+          student.id === id ? { ...student, fullname, email } : student
         )
       );
 
@@ -276,8 +276,8 @@ const StudentList = () => {
         <DialogTitle>Edit Student</DialogTitle>
         <DialogContent>
           <TextField
-            label="Username"
-            value={editingStudent?.username || ''}
+            label="Fullname"
+            value={editingStudent?.fullname || ''}
             onChange={(e) => handleInputChange(e, 'username')}
             fullWidth
             margin="normal"

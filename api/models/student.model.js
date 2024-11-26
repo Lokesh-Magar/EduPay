@@ -5,7 +5,7 @@ const studentSchema = new mongoose.Schema(
     fullname: {
       type: String,
       required: true,
-      unique: true,
+      
     },
     email: {
       type: String,
@@ -15,7 +15,7 @@ const studentSchema = new mongoose.Schema(
     address: {
       type: String,
       required: true,
-      unique: true,
+      
     },
     phone:{
       type:Number,
@@ -25,12 +25,12 @@ const studentSchema = new mongoose.Schema(
     studylevel:{
       type:String,
       required:true,
-      unique:true
+     
     },
     gender:{
       type:String,
       required:true,
-      unique:true
+   
     },
     password: {
       type: String,

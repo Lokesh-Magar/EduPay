@@ -21,16 +21,17 @@ export const createInvoice = async (req, res) => {
       }
 
       const invoice = new Invoice({ fullname,email,phone, amount,pendingAmount, dueDate, status  });
-      await invoice.save();
-      res.status(201).send({ message: 'Invoice created successfully' });
+      invoice.save();
+
+      const newNotification = new Notification({
+       message: `New invoice added with amount ${amount}. Invoice ID: ${invoice._id}.`,
+       email:email
+     });
+     newNotification.save();
+      res.status(200).send({ message: 'Invoice created successfully' });
 
       // Create a Notification
-     const newNotification = new Notification({
-      
-      message: `New invoice added by the system with amount ${amount}. Invoice ID: ${invoice._id}.`,
-    });
 
-   await newNotification.save();
 
     }
 
@@ -202,12 +203,12 @@ export const uploadCSV = async (req, res) => {
         // Log each row to see what data is being parsed
         console.log('Parsed row:', row);
 
-        const { username, email, amount, pendingAmount, dueDate, status } = row;
+        const { fullname, email, amount, pendingAmount, dueDate, status } = row;
 
         // Validate and push if required fields are present
-        if (username && email && amount && pendingAmount && dueDate) {
+        if (fullname && email && amount && pendingAmount && dueDate) {
           const invoice = {
-            username,
+            fullname,
             email,
             amount: parseFloat(amount),
             pendingAmount: parseFloat(pendingAmount),
@@ -240,7 +241,4 @@ export const uploadCSV = async (req, res) => {
     res.status(500).json({ error: 'Server error during CSV upload' });
   }
 };
-
-
-
 

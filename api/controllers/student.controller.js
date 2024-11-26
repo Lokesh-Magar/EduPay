@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 import Notification from '../models/notification.model.js';
 
-export const studsignup=async (req, res, next)=>{
+export const studsignup=async(req, res, next)=>{
 
 const {fullname,email,address,phone,studylevel,gender,password}=req.body;
 if(
@@ -24,7 +24,7 @@ if(
     gender===''||
     password===''
 ){
-    next(errorHandler(400, 'All fields are required'));
+    res.json({message:"All fields are required"});
 }
 
 const hashedPassword=bcryptjs.hashSync(password,10);
@@ -40,9 +40,9 @@ const newStudent = new Student({
 });
 
 try {
-    newStudent.save();
+  newStudent.save();
     // It is used to send a JSON response to the client
-    res.json('Student Signup successful');
+    res.json({ message: 'Signup successful' });
 
 
 //     //Creating Notification for the new user
@@ -55,7 +55,7 @@ try {
 //     await notification.save();
 }
 catch (error) {
-    next(error);
+    res.json({ message: 'Error occurred during signup' });
 }
 };
 
@@ -146,7 +146,7 @@ export const studsignin = async (req, res, next) => {
 
   export const updateStudent = async (req, res) => {
     const studentId = req.params.id;
-    const { username, email } = req.body;
+    const { fullname, email } = req.body;
   
     // Validate the studentId before using it
     if (!mongoose.Types.ObjectId.isValid(studentId)) {
@@ -156,7 +156,7 @@ export const studsignin = async (req, res, next) => {
     try {
       const student = await Student.findByIdAndUpdate(
         studentId,
-        { username, email }, // Directly update the fields
+        { fullname, email }, // Directly update the fields
         { new: true } // Return the updated student object
       );
   
