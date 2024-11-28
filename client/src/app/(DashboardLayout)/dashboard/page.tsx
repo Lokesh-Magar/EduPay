@@ -5,12 +5,14 @@ import FeesOverview from "@/app/(DashboardLayout)/components/dashboard/FeesOverv
 import UploadCSV from "@/app/(DashboardLayout)/components/dashboard/CSVUploader";
 import RecentTransactions from "@/app/(DashboardLayout)/components/dashboard/RecentTransactions";
 import FeesPerformance from "@/app/(DashboardLayout)/components/dashboard/FeesPerformance";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import FeesBreakup from "@/app/(DashboardLayout)/components/dashboard/FeesBreakup";
 import InvoiceClearings from "@/app/(DashboardLayout)/components/dashboard/InvoiceClearings";
+
 
 const Dashboard = () => {
 const router=useRouter();
@@ -24,8 +26,9 @@ const [invoices, setInvoices] = useState([]);
       try {
         const response = await axios.get("/invoice/fetchInvData",{params:{type:"analysis"}}); 
         setInvoices(response.data);
-      } catch (error) {
-        console.error("Error fetching invoice:", error);
+        
+      } catch (error:any) {
+        toast.error("Error fetching invoice:", error);
       } finally {
         setLoading(false);
       }
@@ -41,6 +44,7 @@ const checkAuthentication= async()=>{
     if (response.status !== 200) {
       router.push('/backlogin'); 
     }
+    toast.success("Welcome To Admin Dashboard.")
   }
   catch(error){
     router.push('/backlogin');
@@ -56,6 +60,7 @@ if(loading) {return <div>Loading...</div>}
   return (
     <PageContainer title="Dashboard" description="This is Dashboard">
       <Box>
+        <ToastContainer position="top-right"/>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={8}>
             <FeesOverview invoices={invoices}/>

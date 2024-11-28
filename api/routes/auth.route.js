@@ -8,9 +8,6 @@ router.get('/checkAuth', verifyToken, (req, res) => {
     res.status(200).json({ message: 'User is authenticated' });
   });
 
-router.get('/dashboard',verifyToken,(req, res) => {
-    res.status(200).json({ success: true, message: 'Welcome to the dashboard' });
-})
 router.post('/signup', signup);
 router.post('/signin', signin);
 router.post('/signout',signout)

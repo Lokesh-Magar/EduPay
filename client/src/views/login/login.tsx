@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-import { UserProvider, useUser } from "@/UserContext";
+import {  useUser } from "@/UserContext";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -73,13 +73,12 @@ const Login: React.FC<LoginProps> = ({
     try {
         const response = await axios.post('/student/studsignin',data,{withCredentials:true});
   
-        setUser(response.data);//Update the set user context
+        setUser(response.data);
         toast.success("Login successful");
        
         // setSuccess(response.data.message);
         router.push('/portal');
    
- 
     } catch (err:any) {
         if (err.response) {
             setError(err.response.data.message || 'An error occurred');

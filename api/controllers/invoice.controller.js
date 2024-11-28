@@ -39,7 +39,7 @@ export const createInvoice = async (req, res) => {
       res.status(400).send({ message: 'Error creating invoice' });
     }
 }
-//Code for Fetching invoice data in ADMIN dashboard, shows all of the available invoices in the database //paignation not workig...
+//Code for Fetching invoice data in ADMIN dashboard, shows all of the available invoices in the database //
 export const getInvData = async (req, res) => {
     try {
       // Getting the data from the database

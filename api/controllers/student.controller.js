@@ -73,6 +73,7 @@ export const studsignin = async (req, res, next) => {
         return next(errorHandler(404, 'Student not found'));
       }
       const validPassword = bcryptjs.compareSync(password, validUser.password);
+      
       if (!validPassword) {
         return next(errorHandler(400, 'Invalid password'));
       }

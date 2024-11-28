@@ -1,6 +1,6 @@
 //This is for student portal profile section dropdown with portal sign out.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -11,10 +11,11 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-
+import { toast, ToastContainer } from "react-toastify";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useUser } from "@/UserContext";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -24,6 +25,31 @@ const Profile = () => {
 
   const router = useRouter();
 
+
+  //Check authentication useEffect
+  useEffect(()=>{
+    const checkAuthentication= async()=>{
+    
+      try{
+        const response = await axios.get('/auth/checkAuth',{withCredentials:true})
+        if (response.status !== 200) {
+          router.push('/'); 
+        }
+      }
+      catch(error){
+        router.push('/'); 
+      }
+      finally{
+        setLoading(false);
+      }
+    }
+    checkAuthentication();
+    },[router]);
+
+
+  //Context variables
+  const { fullname, email } = useUser();   
+  
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget);
   };
@@ -34,24 +60,18 @@ const Profile = () => {
 
   const signout = async () => {
     setError(null);
-    setLoading(true);  // Start loading
+    setLoading(true);
     
     console.log("Logout Pressed");
 
     try {
       const response = await axios.post('/auth/signout',
-        {}, // Empty body since you only need to trigger the signout
+        {},
         { withCredentials: true } 
       );
+      toast.success("Logged Out Successfully");
+      router.push('/backlogin');
 
-      if (response.status === 200) {
-   
-        localStorage.removeItem('access_token');
-
-        router.push('/');
-      } else {
-        setError(response.data.message || 'An error occurred during signout');
-      }
     }
     catch (err: any) {
       setError('An error occurred during signout');
@@ -76,6 +96,7 @@ const Profile = () => {
         }}
         onClick={handleClick2}
       >
+        <div className="name" style={{ marginRight: "10px" }}>{email}</div>
         <Avatar
           src="/images/profile/user-1.jpg"
           alt="Profile"

@@ -13,7 +13,7 @@ import {useRouter} from 'next/navigation';
 import axios from "axios";
 import { useUser } from "@/UserContext";
 import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -23,9 +23,6 @@ const Profile = () => {
 
   //Context variables
   const { fullname, email } = useUser();   
- 
- const {setUser} = useUser();
-
   const router = useRouter();
 
   const handleClick2 = (event: any) => {
@@ -62,20 +59,15 @@ const Profile = () => {
 
     try {
       const response = await axios.post('/student/studsignout',
-        {}, // Empty body since you only need to trigger the signout
+        {}, 
         { withCredentials: true } 
       );
 
-      // if (response.status === 200) {
-   
-        // localStorage.removeItem('access_token');
-
+      toast.success("Logged Out Successfully");
         router.push('/');
-        toast.success("Logged Out Successfully");
-      // } else {
-        // setError(response.data.message || 'An error occurred during signout');
+     
       }
-    // }
+    
     catch (err: any) {
       setError('An error occurred during signout');
     } 
@@ -86,6 +78,7 @@ const Profile = () => {
 
   return (
     <Box>
+      <ToastContainer />
       <IconButton
         size="large"
         aria-label="show 11 new notifications"

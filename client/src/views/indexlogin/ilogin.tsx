@@ -16,16 +16,21 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import styles from '../../app/Form.module.css';
 import Image from "next/image";
+import { UserProvider, useUser } from "@/UserContext";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ILogin = () => {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter()
-
+    console.log('Frontend URI:', process.env.NEXT_PUBLIC_FRONTEND_URI);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState<string | null>(null);
-  
+
+    const {setUser}=useUser();
+
     const handleTogglePasswordVisibility = () => {
       setShowPassword((prevState) => !prevState);
     };
@@ -37,11 +42,20 @@ const ILogin = () => {
       setLoading(true);
       setError(null);
       setSuccess(null);
-
+      
       try {
-          const response = await axios.post('/auth/signin', data);
-            setSuccess(response.data.message);
-          router.push('/dashboard')
+          const response = await axios.post('/auth/signin', data,{withCredentials:true});
+          setUser(response.data.user);
+        
+          toast.success("Login Successful.");
+          
+          if (response.status == 200) {
+            router.push(`http://${process.env.NEXT_PUBLIC_FRONTEND_URI}/dashboard`);
+          
+          }
+          else {
+            toast.error("Error2")
+          }
    
       } catch (err:any) {
           if (err.response) {
@@ -69,6 +83,7 @@ const ILogin = () => {
       },
     }}
     >
+      <ToastContainer position="top-right" />
     <Grid
       container
       spacing={0}
@@ -123,7 +138,7 @@ const ILogin = () => {
             }}
             noValidate
             autoComplete="off"
-          >
+          ><ToastContainer position="top-center" />
             <TextField
               type="email"
               id="email"
@@ -133,7 +148,7 @@ const ILogin = () => {
               autoFocus
               {...register('email', { required: 'Email is required' })}
               error={!!errors.username}
-              // helperText={errors.email?.message}
+              helperText={errors.email?.message}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -217,10 +232,7 @@ const ILogin = () => {
                 color="textSecondary"
                 mb={1}
               ></Typography>
-           
-            
-          
-        </Card>
+            </Card>
       </Grid>
     </Grid>
     </Box>
