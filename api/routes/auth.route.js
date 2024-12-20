@@ -3,7 +3,7 @@ import { google, signin, signup, signout } from '../controllers/auth.controller.
 import { verifyToken } from '../middlewares/verifyUser.js';
 const router = express.Router();
 
-//
+
 router.get('/checkAuth', verifyToken, (req, res) => {
     res.status(200).json({ message: 'User is authenticated' });
   });

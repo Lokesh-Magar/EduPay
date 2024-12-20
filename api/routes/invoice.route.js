@@ -18,6 +18,4 @@ router.get('/getStudent',verifyToken,getStudInvData);
 router.put('/invoice/update/:id',verifyToken,updateInvoice);
 router.post('/invoice/uploadCSV',upload.single('file'),uploadCSV);
 
-
-
 export default router;

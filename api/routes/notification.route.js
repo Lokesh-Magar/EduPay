@@ -5,7 +5,7 @@ import { verifyToken } from '../middlewares/verifyUser.js';
 import { getStudNotifyData ,getAdminNotifyData} from '../controllers/notification.controller.js';
 const router = express.Router();
 
-// GET: Fetch all notifications sorted by creation date (newest first)
+//Fetch all notifications sorted by creation date (newest first)
 router.get('/notifications', async (req, res) => {
   try {
     const notifications = await Notification.find().sort({ createdAt: -1 });  // Sort by date(newest first)
